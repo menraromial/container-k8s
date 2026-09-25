@@ -134,6 +134,7 @@ Les versions ci-dessous ont été relevées en septembre 2026, avant l'écriture
 | Outil | Version relevée | Chapitre |
 |---|---|---|
 | Docker Compose | 5.5.1 | 7 |
+| Docker Buildx | 0.37.1 (BuildKit 0.32.2 dans le constructeur) | 13 |
 | Trivy | 0.74.0 | 14 |
 | cosign | 3.1.3 | 14, 47 |
 | Gateway API | 1.6.2 | 28 |

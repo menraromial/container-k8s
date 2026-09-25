@@ -1,0 +1,12 @@
+FROM golang:1.27 AS construction
+WORKDIR /src
+COPY . .
+RUN CGO_ENABLED=0 go build -o /tampon .
+
+FROM scratch
+COPY --from=construction /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=construction /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=construction /tampon /tampon
+USER 65534:65534
+EXPOSE 8080
+ENTRYPOINT ["/tampon"]

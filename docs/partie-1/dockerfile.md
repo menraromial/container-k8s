@@ -440,7 +440,7 @@ Voici le Dockerfile complet, qui reprend tout ce qui précède. C'est celui du k
 
 ```dockerfile title="Dockerfile"
 # Image de Colis : une seule image pour l'API, le worker et la purge.
-# Construite au chapitre 4 ; allégée et durcie au chapitre 13.
+# Construite au chapitre 4 ; allégée et durcie au défi II.
 FROM python:3.14-slim
 
 LABEL org.opencontainers.image.title="colis" \

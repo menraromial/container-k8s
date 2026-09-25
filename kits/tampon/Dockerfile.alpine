@@ -1,0 +1,9 @@
+FROM golang:1.27 AS construction
+WORKDIR /src
+COPY . .
+RUN go build -o /tampon .
+
+FROM alpine:3.24
+COPY --from=construction /tampon /usr/local/bin/tampon
+EXPOSE 8080
+CMD ["tampon"]

@@ -1,0 +1,9 @@
+FROM golang:1.27 AS construction
+WORKDIR /src
+COPY . .
+RUN CGO_ENABLED=0 go build -o /tampon .
+
+FROM scratch
+COPY --from=construction /tampon /tampon
+EXPOSE 8080
+ENTRYPOINT ["/tampon"]

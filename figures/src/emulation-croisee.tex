@@ -1,0 +1,26 @@
+% Figure 13.2 : construire pour arm64 sur une machine amd64, par émulation ou par compilation croisée (mesures du chapitre 13).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    c/.style={qbox, text width=3.6cm, align=center, font=\footnotesize, minimum height=1.25cm, inner sep=4pt},
+    lent/.style={c, draw=QBrique, fill=QBriqueBg},
+    vite/.style={c, draw=QVert, fill=QVertBg},
+    fin/.style={c, draw=QBleu, fill=QBleuBg},
+    lig/.style={font=\titrefig\normalsize, anchor=east, align=right}]
+
+  \node[lig, text=QBrique] at (-2.3,1.5) {émulation\\{\ttfamily\scriptsize FROM golang:1.27}};
+  \node[lent] (e1) at (0,1.5) {{\ttfamily golang} pour \textbf{arm64}\\exécuté par QEMU};
+  \node[lent] (e2) at (4.6,1.5) {{\ttfamily go build}\\instruction par instruction\\traduite};
+  \node[fin] (e3) at (9.8,1.5) {binaire arm64};
+  \draw[qarr] (e1) -- (e2); \draw[qarr] (e2) -- node[qlblc=QBrique, above=2pt, font=\titrefig\normalsize, fill=QPaper, inner sep=1pt] {109 s} (e3);
+
+  \node[lig, text=QVert] at (-2.3,-0.4) {compilation croisée\\{\ttfamily\scriptsize FROM -{}-platform=\$BUILDPLATFORM}};
+  \node[vite] (c1) at (0,-0.4) {{\ttfamily golang} pour \textbf{amd64}\\natif};
+  \node[vite] (c2) at (4.6,-0.4) {{\ttfamily GOARCH=arm64}\\{\ttfamily go build}};
+  \node[fin] (c3) at (9.8,-0.4) {binaire arm64};
+  \draw[qarr] (c1) -- (c2); \draw[qarr] (c2) -- node[qlblc=QVert, above=2pt, font=\titrefig\normalsize, fill=QPaper, inner sep=1pt] {7,6 s} (c3);
+
+  \node[qlbl, align=left, anchor=west] at (11.9,0.55) {copié ensuite dans\\{\ttfamily distroless/static}\\pour arm64};
+\end{tikzpicture}
+\end{document}

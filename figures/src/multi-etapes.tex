@@ -1,0 +1,31 @@
+% Figure 13.1 : une construction en deux étapes, tailles réelles du chapitre 13.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    etage/.style={qcadre, minimum width=5.6cm, minimum height=3.9cm},
+    c/.style={qbox, text width=4.6cm, align=left, font=\footnotesize, inner sep=4pt},
+    jete/.style={c, draw=QGris, fill=QGrisBg},
+    garde/.style={c, draw=QVert, fill=QVertBg},
+    base/.style={c, draw=QBleu, fill=QBleuBg}]
+
+  % étape de construction
+  \node[etage, draw=QGris] at (0,0) {};
+  \node[font=\titrefig\normalsize, anchor=north west] at (-2.7,1.85) {étape « construction »};
+  \node[jete] at (0,0.85) {\textbf{golang:1.27}, 885 Mo\\compilateur, Debian, outils};
+  \node[jete] at (0,-0.1) {sources : {\ttfamily main.go}, {\ttfamily go.mod}};
+  \node[garde] (bin) at (0,-1.1) {{\ttfamily /tampon}, binaire statique\\7,1 Mo};
+
+  % étape finale
+  \node[etage, draw=QVert] at (9.6,0) {};
+  \node[font=\titrefig\normalsize, anchor=north west] at (6.9,1.85) {image finale};
+  \node[base] at (9.6,0.6) {\textbf{distroless/static}, 2,4 Mo\\certificats, fuseaux horaires,\\{\ttfamily /etc/passwd}, utilisateur 65532};
+  \node[garde] (bin2) at (9.6,-1.1) {{\ttfamily /tampon}\\7,1 Mo};
+
+  \draw[qarr, draw=QVert] (bin.east) -- node[qlblc=QVert, above, font=\ttfamily\scriptsize, align=center] {COPY\\-{}-from=construction} (bin2.west);
+
+  \node[qlbl, align=center] at (0,-2.4) {jetée à la fin de la construction};
+  \node[qlblc=QVert, align=center, font=\titrefig\normalsize] at (9.6,-2.4) {9,47 Mo};
+  \node[qlbl, align=center] at (4.8,-3.1) {une seule étape ({\ttfamily Dockerfile.naif}) : tout reste dans l'image, 989 Mo};
+\end{tikzpicture}
+\end{document}

@@ -17,7 +17,7 @@ C'est la partie la plus exigeante du cours, et c'est elle qui fait la différenc
 | [10. Les systèmes de fichiers en couches](overlayfs.md) | overlayfs, la copie à l'écriture, les couches d'une image |
 | [11. Les runtimes](runtimes.md) | la spécification OCI, runc, containerd, les shims |
 | [12. La sécurité d'un conteneur](securite.md) | capabilities, seccomp, AppArmor, utilisateurs non root, rootless |
-| 13. Des images de production | constructions en plusieurs étapes, images minimales, multi-architecture |
+| [13. Des images de production](images-production.md) | constructions en plusieurs étapes, images minimales, multi-architecture |
 | 14. La chaîne d'approvisionnement | analyse de vulnérabilités, SBOM, signature des images |
 | Défi II | réduire l'image de Colis sous un seuil de taille et de vulnérabilités |
 
