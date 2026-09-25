@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direction B : Cahier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF; --ink:#17181C; --muted:#6B6F7B; --faint:#9A9EA8; --rule:#E4E5EA;
+  --accent:#3A36C4; --accent-soft:#EEEDFB; --accent-ink:#2A2699;
+  --mark:#FFF1A8;
+  --code-bg:#F6F6F8; --out-ink:#50545F;
+  --warn:#B4441F;
+  --fig-line:#3A36C4; --fig-line2:#17181C; --fig-fill:#F2F1FC; --fig-fill2:#FFFFFF; --fig-text:#17181C;
+}
+[data-theme="dark"]{
+  --bg:#131318; --ink:#E6E6EB; --muted:#9A9DA8; --faint:#6E7180; --rule:#2A2B33;
+  --accent:#9C98FF; --accent-soft:#23224A; --accent-ink:#C4C1FF;
+  --mark:#4A4212;
+  --code-bg:#1B1B22; --out-ink:#B3B6C0; --warn:#F08A63;
+  --fig-line:#9C98FF; --fig-line2:#C9CAD2; --fig-fill:#1E1D3A; --fig-fill2:#131318; --fig-text:#E6E6EB;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17.5px/1.72 "Hanken Grotesk",system-ui,sans-serif;font-feature-settings:"ss01"}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
+code,pre{font-family:"Geist Mono",ui-monospace,monospace}
+.label{font:500 12px/1 "Geist Mono";letter-spacing:.04em;color:var(--faint);padding:28px 40px 10px}
+.label b{color:var(--ink);font-weight:500}
+.toggle{position:fixed;top:14px;right:18px;z-index:10;font:500 12px "Geist Mono";background:var(--bg);color:var(--ink);border:1px solid var(--rule);padding:6px 12px;cursor:pointer}
+
+.nav{display:flex;align-items:center;gap:30px;padding:0 40px;height:60px;border-bottom:1px solid var(--rule)}
+.brand{font:600 17px "Hanken Grotesk";letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+.brand i{width:14px;height:14px;border:2px solid var(--accent);display:inline-block;box-shadow:4px 4px 0 -2px var(--bg),4px 4px 0 0 var(--accent)}
+.nav a{color:var(--muted);text-decoration:none;font-size:15px}
+.nav .sp{flex:1}
+.search{border:1px solid var(--rule);color:var(--faint);padding:5px 12px;width:230px;font:13px "Geist Mono"}
+
+/* accueil : une table des matières d'ouvrage */
+.home{max-width:1080px;margin:0 auto;padding:80px 40px 70px}
+.kicker{font:500 13px "Geist Mono";color:var(--accent);letter-spacing:.02em}
+.home h1{font:300 68px/1.02 "Hanken Grotesk";letter-spacing:-.035em;margin:16px 0 26px;max-width:12em}
+.home h1 b{font-weight:600}
+.lede{font-size:20px;line-height:1.6;max-width:36em;color:var(--ink);margin:0 0 12px}
+.lede2{max-width:38em;color:var(--muted);margin:0 0 30px}
+.btn{display:inline-block;background:var(--ink);color:var(--bg);text-decoration:none;padding:11px 20px;font-weight:600;font-size:15px}
+.btn.alt{background:none;color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule);margin-left:8px}
+.contents{margin-top:70px;border-top:1px solid var(--ink)}
+.row{display:grid;grid-template-columns:70px 1fr 2fr 110px;gap:20px;padding:18px 0;border-bottom:1px solid var(--rule);align-items:baseline}
+.row .n{font:500 14px "Geist Mono";color:var(--accent)}
+.row h3{margin:0;font:600 20px/1.3 "Hanken Grotesk";letter-spacing:-.01em}
+.row p{margin:0;color:var(--muted);font-size:16px;line-height:1.55}
+.row .c{font:13px "Geist Mono";color:var(--faint);text-align:right}
+.tier{font:500 12px "Geist Mono";color:var(--faint);padding:26px 0 4px;letter-spacing:.06em;text-transform:uppercase}
+
+/* page de chapitre : colonne de lecture + marge de notes */
+.doc{display:grid;grid-template-columns:260px minmax(0,1fr);max-width:1400px;margin:0 auto}
+.side{padding:30px 0 30px 40px;font-size:15px;border-right:1px solid var(--rule)}
+.side .grp{font:500 12px "Geist Mono";color:var(--faint);letter-spacing:.04em;margin:22px 0 8px}
+.side .grp:first-child{margin-top:0}
+.side a{display:block;color:var(--muted);text-decoration:none;padding:4px 16px 4px 0;line-height:1.4}
+.side a.on{color:var(--ink);font-weight:600}
+.side a.on::before{content:"";display:inline-block;width:6px;height:6px;background:var(--accent);margin:0 8px 2px -14px;vertical-align:middle}
+.page{padding:44px 0 90px 72px}
+.chead{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:end;max-width:680px;margin-bottom:34px;padding-bottom:28px;border-bottom:1px solid var(--rule)}
+.chead .num{font:300 110px/0.8 "Hanken Grotesk";letter-spacing:-.05em;color:var(--accent)}
+.chead .num small{font-size:44px}
+.chead .k{font:500 13px "Geist Mono";color:var(--muted);margin-bottom:8px}
+.chead h1{margin:0;font:600 44px/1.05 "Hanken Grotesk";letter-spacing:-.03em}
+.flow{display:grid;grid-template-columns:minmax(0,680px) 250px;column-gap:48px}
+.flow > *{grid-column:1}
+.flow .note{grid-column:2;font-size:14px;line-height:1.55;color:var(--muted);border-top:1px solid var(--rule);padding-top:8px;align-self:start}
+.flow .note b{color:var(--ink);font-weight:600}
+.flow .note .src{display:block;margin-top:6px;font:12px "Geist Mono";color:var(--faint)}
+.flow .note.warn b{color:var(--warn)}
+.flow h2{font:600 26px/1.25 "Hanken Grotesk";letter-spacing:-.02em;margin:44px 0 8px}
+.flow p{margin:0 0 16px}
+sup.r{font:500 11px "Geist Mono";color:var(--accent)}
+p code,.ex code{background:var(--code-bg);padding:2px 5px;font-size:.84em;border-radius:3px}
+.term{background:var(--code-bg);margin:20px 0 24px;border-radius:4px;overflow:hidden}
+.term .cmd{padding:14px 18px 12px;font-size:14px;line-height:1.6;white-space:pre;overflow:auto;border-left:3px solid var(--accent)}
+.term .cmd .p{color:var(--faint);user-select:none}
+.term .out{padding:10px 18px 14px 21px;font-size:13.2px;line-height:1.55;color:var(--out-ink);white-space:pre;overflow:auto;border-top:1px dashed var(--rule)}
+.term .out::before{content:"sortie";display:block;font:500 10.5px "Geist Mono";letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:4px}
+mark{background:var(--mark);color:inherit;padding:0 2px}
+figure{margin:30px 0 26px}
+figcaption{font-size:14.5px;color:var(--muted);margin-top:12px;max-width:620px}
+figcaption b{color:var(--ink);font-weight:600}
+.ex{margin:32px 0 10px;padding:18px 0 4px;border-top:2px solid var(--ink)}
+.ex .h{font:500 13px "Geist Mono";color:var(--accent);margin-bottom:6px}
+details{margin:6px 0 18px;border-bottom:1px solid var(--rule)}
+details summary{cursor:pointer;font:500 14px "Geist Mono";color:var(--muted);padding:6px 0 10px}
+details div{padding:0 0 14px}
+.sep{height:1px;background:var(--ink);margin:50px 40px 0;opacity:.25}
+</style>
+</head>
+<body>
+<button class="toggle" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'">clair / sombre</button>
+
+<div class="label">Direction B : <b>Cahier</b>, sobre et éditorial, notes en marge. Écran 1 : accueil</div>
+<div class="nav">
+  <div class="brand"><i></i>Conteneurs et Kubernetes</div>
+  <a href="#">Le cours</a><a href="#">Colis</a><a href="#">Annexes</a>
+  <div class="sp"></div><div class="search">rechercher  ctrl K</div>
+</div>
+
+<section class="home">
+  <div class="kicker">cours complet · exécutable sur minikube</div>
+  <h1>Du premier conteneur à <b>l'expertise Kubernetes</b></h1>
+  <p class="lede">On part d'un terminal et d'une commande <code style="font-size:.8em">docker run</code>. On s'arrête quand vous savez expliquer ce qui se passe entre <code style="font-size:.8em">kubectl apply</code> et le processus qui tourne sur le nœud, et écrire votre propre opérateur.</p>
+  <p class="lede2">Tout tourne sur votre portable. Chaque commande du cours a été exécutée pour de vrai, et les sorties que vous lirez sont celles qu'elle a produites.</p>
+  <a class="btn" href="#">Commencer la lecture</a><a class="btn alt" href="#">Préparer son poste</a>
+
+  <div class="contents">
+    <div class="tier">Utiliser</div>
+    <div class="row"><div class="n">I</div><h3>Utiliser des conteneurs</h3><p>Lancer, construire, brancher des volumes et des réseaux, assembler Colis avec Compose.</p><div class="c">ch. 1 à 7</div></div>
+    <div class="tier">Comprendre le mécanisme</div>
+    <div class="row"><div class="n">II</div><h3>Sous le capot des conteneurs</h3><p>Namespaces, cgroups, overlayfs, runc : fabriquer un conteneur sans Docker.</p><div class="c">ch. 8 à 14</div></div>
+    <div class="tier">Utiliser</div>
+    <div class="row"><div class="n">III</div><h3>Premiers pas avec Kubernetes</h3><p>Pods, Deployments, Services, configuration et santé : Colis tourne sur minikube.</p><div class="c">ch. 15 à 24</div></div>
+    <div class="tier">Exploiter et étendre</div>
+    <div class="row"><div class="n">IV</div><h3>Kubernetes au quotidien</h3><p>Stockage, StatefulSets, Ingress, Helm, autoscaling, ordonnancement fin.</p><div class="c">ch. 25 à 33</div></div>
+  </div>
+</section>
+
+<div class="sep"></div>
+<div class="label">Écran 2 : page de chapitre (extrait réel du chapitre 0.2, sorties obtenues sur minikube 1.39)</div>
+<div class="nav">
+  <div class="brand"><i></i>Conteneurs et Kubernetes</div>
+  <a href="#">Le cours</a><a href="#">Colis</a><a href="#">Annexes</a>
+  <div class="sp"></div><div class="search">rechercher  ctrl K</div>
+</div>
+<div class="doc">
+  <nav class="side">
+    <div class="grp">0 · démarrer</div>
+    <a href="#">Comment ce cours fonctionne</a>
+    <a href="#" class="on">Préparer son poste</a>
+    <a href="#">Versions utilisées</a>
+    <div class="grp">I · utiliser des conteneurs</div>
+    <div class="grp">II · sous le capot</div>
+    <div class="grp">III · premiers pas</div>
+    <div class="grp">IV · au quotidien</div>
+    <div class="grp">V · anatomie du cluster</div>
+    <div class="grp">VI · sécurité</div>
+  </nav>
+  <div class="page">
+    <div class="chead">
+      <div class="num">0<small>.2</small></div>
+      <div><div class="k">partie 0 · démarrer</div><h1>Préparer son poste</h1></div>
+    </div>
+    <div class="flow">
+      <p>Trois programmes doivent s'entendre sur votre machine. Docker fait tourner des conteneurs. minikube s'en sert pour fabriquer un cluster Kubernetes complet, rangé tout entier dans un seul conteneur. Et kubectl est l'outil avec lequel vous parlerez à ce cluster pendant tout le cours.</p>
+
+      <h2>Démarrer un cluster</h2>
+      <p>Le cluster du cours reçoit deux processeurs et quatre gigaoctets de mémoire. C'est assez pour tout ce que nous ferons jusqu'à la partie VI, et ça laisse de la place à votre navigateur.</p>
+      <div class="note"><b>Pilote.</b> La manière dont minikube crée le nœud : un conteneur (docker, podman) ou une machine virtuelle (kvm2, virtualbox).<span class="src">minikube.sigs.k8s.io/docs/drivers</span></div>
+      <div class="term">
+<div class="cmd"><span class="p">$ </span>minikube start --driver=docker --cpus=2 --memory=4g</div>
+<div class="out">* minikube v1.39.0 sur Ubuntu 26.04
+* Utilisation du pilote docker basé sur la configuration de l'utilisateur
+<mark>* Préparation de Kubernetes v1.37.0 sur containerd 2.3.4...</mark>
+* Terminé ! kubectl est maintenant configuré pour utiliser "minikube" cluster
+  et espace de noms "default" par défaut.</div>
+      </div>
+      <p>Relisez la ligne surlignée. À l'intérieur du nœud, ce n'est pas Docker qui lancera vos conteneurs, c'est containerd. Docker ne sert ici qu'à fabriquer la « machine » qui joue le rôle de nœud. Cette distinction paraît byzantine le premier jour ; elle devient évidente au chapitre 11, quand on démonte la pile des runtimes.</p>
+
+      <figure>
+        <svg viewBox="0 0 680 250" width="100%" role="img" aria-label="Poupées russes : le poste, Docker, le conteneur minikube, containerd, les Pods">
+          <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--fig-line)"/></marker></defs>
+          <g font-family="Hanken Grotesk" font-size="14" fill="var(--fig-text)">
+            <rect x="4" y="4" width="672" height="242" rx="6" fill="none" stroke="var(--fig-line2)" stroke-width="1"/>
+            <text x="18" y="26" font-weight="600">votre poste Linux</text>
+            <text x="18" y="44" font-size="12.5" fill="var(--muted)">Docker Engine</text>
+            <rect x="30" y="58" width="620" height="170" rx="6" fill="var(--fig-fill)" stroke="var(--fig-line)" stroke-width="1.3"/>
+            <text x="46" y="82" font-weight="600" fill="var(--accent-ink)">conteneur « minikube » : le nœud</text>
+            <text x="520" y="82" font-family="Geist Mono" font-size="12" fill="var(--muted)">192.168.49.2</text>
+            <rect x="52" y="96" width="576" height="116" rx="5" fill="var(--fig-fill2)" stroke="var(--fig-line)" stroke-width="1" stroke-dasharray="3 3"/>
+            <text x="68" y="118" font-size="13">containerd 2.3.4</text>
+            <g font-family="Geist Mono" font-size="12">
+              <rect x="68" y="134" width="128" height="34" rx="4" fill="none" stroke="var(--fig-line2)"/><text x="80" y="156">kube-apiserver</text>
+              <rect x="206" y="134" width="70" height="34" rx="4" fill="none" stroke="var(--fig-line2)"/><text x="226" y="156">etcd</text>
+              <rect x="286" y="134" width="90" height="34" rx="4" fill="none" stroke="var(--fig-line2)"/><text x="302" y="156">coredns</text>
+              <rect x="430" y="134" width="180" height="34" rx="4" fill="var(--fig-fill)" stroke="var(--fig-line)" stroke-width="1.4"/><text x="446" y="156">Pod bonjour (nginx)</text>
+            </g>
+            <text x="68" y="198" font-size="12" fill="var(--muted)">plan de contrôle</text>
+            <text x="430" y="198" font-size="12" fill="var(--muted)">vos applications</text>
+          </g>
+        </svg>
+        <figcaption><b>Figure 0.1.</b> Un cluster entier dans un conteneur. Le nœud minikube est un conteneur Docker ; à l'intérieur, containerd lance les composants du plan de contrôle et vos propres Pods.</figcaption>
+      </figure>
+      <div class="note warn"><b>Avec Podman.</b> minikube accepte <code>--driver=podman</code>, mais ce pilote reste marqué expérimental. L'annexe B donne la configuration rootless qui fonctionne.</div>
+
+      <h2>Un premier déploiement pour vérifier</h2>
+      <div class="term">
+<div class="cmd"><span class="p">$ </span>kubectl create deployment bonjour --image=nginx:1.29-alpine
+<span class="p">$ </span>kubectl expose deployment bonjour --type=NodePort --port=80
+<span class="p">$ </span>curl -s $(minikube service bonjour --url) | grep title</div>
+<div class="out">deployment.apps/bonjour created
+service/bonjour exposed
+&lt;title&gt;Welcome to nginx!&lt;/title&gt;</div>
+      </div>
+      <div class="note"><b>NodePort.</b> Port ouvert sur chaque nœud, entre 30000 et 32767, qui redirige vers le Service.<sup class="r">1</sup><span class="src">[1] kubernetes.io/docs/concepts/services-networking/service</span></div>
+      <p>Si <code>curl</code> ne renvoie rien du premier coup, relancez-le une seconde plus tard : kube-proxy n'a pas toujours fini de poser ses règles quand le Service vient d'être créé.</p>
+
+      <div class="ex"><div class="h">exercice 0.1</div>Combien de mémoire le cluster consomme-t-il vraiment au repos ? Trouvez la commande Docker qui répond, puis comparez avec les 4 Go réservés.</div>
+      <details><summary>voir le corrigé</summary><div><code>docker stats --no-stream minikube</code> affiche environ 530 Mio sur le poste de référence. Les 4 Go sont un plafond, pas une réservation.</div></details>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,546 @@
+/*
+ * Direction « Quai » : signalétique portuaire.
+ * Titres en Barlow Condensed, texte en Atkinson Hyperlegible Next,
+ * code en Red Hat Mono ; une couleur de conteneur par partie du cours.
+ */
+@import '@fontsource-variable/atkinson-hyperlegible-next/wght.css';
+@import '@fontsource-variable/atkinson-hyperlegible-next/wght-italic.css';
+@import '@fontsource/barlow-condensed/500.css';
+@import '@fontsource/barlow-condensed/600.css';
+@import '@fontsource/barlow-condensed/700.css';
+@import '@fontsource-variable/red-hat-mono/wght.css';
+
+/* ------------------------------------------------------------------ */
+/* Jetons                                                              */
+/* ------------------------------------------------------------------ */
+:root {
+  --q-bg: #f4f6f8;
+  --q-surface: #ffffff;
+  --q-ink: #16212b;
+  --q-muted: #5a6773;
+  --q-rule: #d5dce2;
+  --q-nav: #12283a;
+  --q-nav-ink: #e8eef3;
+  --q-term-bg: #0f1d29;
+  --q-term-ink: #dce6ee;
+  --q-term-muted: #7f93a4;
+  --q-term-accent: #f08a4b;
+  --q-out-bg: #e9eef2;
+  --q-out-ink: #33414d;
+  --q-code-inline: #e6ebef;
+
+  /* couleurs des parties : 0 à IX */
+  --p0: #5f6b76;
+  --p1: #d9622b;
+  --p2: #a63d2a;
+  --p3: #1f5f99;
+  --p4: #3c7a4a;
+  --p5: #16707a;
+  --p6: #7a2940;
+  --p7: #b07a12;
+  --p8: #5b4a8b;
+  --p9: #2e3a45;
+  --part: var(--p0);
+  --part-soft: #e6e9ec;
+
+  --q-font-titre: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+
+  --ifm-font-family-base: 'Atkinson Hyperlegible Next Variable', system-ui, sans-serif;
+  --ifm-font-family-monospace: 'Red Hat Mono Variable', ui-monospace, monospace;
+  --ifm-heading-font-family: var(--q-font-titre);
+  --ifm-font-size-base: 107%;
+  --ifm-line-height-base: 1.68;
+  --ifm-heading-line-height: 1.12;
+  --ifm-code-font-size: 88%;
+
+  --ifm-background-color: var(--q-bg);
+  --ifm-background-surface-color: var(--q-surface);
+  --ifm-font-color-base: var(--q-ink);
+  --ifm-color-emphasis-300: var(--q-rule);
+  --ifm-toc-border-color: var(--q-rule);
+  --ifm-hr-border-color: var(--q-rule);
+
+  --ifm-color-primary: #1f5f99;
+  --ifm-color-primary-dark: #1c568a;
+  --ifm-color-primary-darker: #1a5182;
+  --ifm-color-primary-darkest: #15436b;
+  --ifm-color-primary-light: #2268a8;
+  --ifm-color-primary-lighter: #246db0;
+  --ifm-color-primary-lightest: #297bc7;
+
+  --ifm-navbar-background-color: var(--q-nav);
+  --ifm-navbar-link-color: var(--q-nav-ink);
+  --ifm-navbar-link-hover-color: #ffffff;
+  --ifm-navbar-height: 3.6rem;
+  --ifm-global-radius: 0;
+  --ifm-code-border-radius: 2px;
+  --ifm-code-padding-horizontal: 0.3rem;
+  --ifm-menu-color: var(--q-ink);
+  --ifm-menu-color-background-active: var(--part-soft);
+  --ifm-menu-color-active: var(--q-ink);
+  --ifm-footer-background-color: var(--q-nav);
+  --docusaurus-highlighted-code-line-bg: rgba(217, 98, 43, 0.12);
+}
+
+[data-theme='dark'] {
+  --q-bg: #0e151c;
+  --q-surface: #141e27;
+  --q-ink: #e3eaf0;
+  --q-muted: #98a6b3;
+  --q-rule: #27343f;
+  --q-nav: #0a1118;
+  --q-nav-ink: #e3eaf0;
+  --q-term-bg: #070d13;
+  --q-term-ink: #dce6ee;
+  --q-term-muted: #7f93a4;
+  --q-term-accent: #f39a63;
+  --q-out-bg: #1b2731;
+  --q-out-ink: #c3cfd9;
+  --q-code-inline: #1f2c37;
+
+  --p0: #8c98a3;
+  --p1: #ee8150;
+  --p2: #d06a55;
+  --p3: #6fa6dc;
+  --p4: #74b083;
+  --p5: #56aeb8;
+  --p6: #c0677f;
+  --p7: #d9a745;
+  --p8: #9c8bd0;
+  --p9: #8594a2;
+  --part-soft: #1d2831;
+
+  --ifm-color-primary: #7db5e8;
+  --ifm-color-primary-dark: #63a6e4;
+  --ifm-color-primary-darker: #569fe2;
+  --ifm-color-primary-darkest: #2f89db;
+  --ifm-color-primary-light: #97c4ec;
+  --ifm-color-primary-lighter: #a4cbee;
+  --ifm-color-primary-lightest: #cbe2f5;
+  --docusaurus-highlighted-code-line-bg: rgba(238, 129, 80, 0.16);
+}
+
+/* Couleur de la partie courante : posée par la barre latérale (catégorie)
+   et par src/theme/DocItem/Layout (page). */
+.partie-0 { --part: var(--p0); }
+.partie-1 { --part: var(--p1); }
+.partie-2 { --part: var(--p2); }
+.partie-3 { --part: var(--p3); }
+.partie-4 { --part: var(--p4); }
+.partie-5 { --part: var(--p5); }
+.partie-6 { --part: var(--p6); }
+.partie-7 { --part: var(--p7); }
+.partie-8 { --part: var(--p8); }
+.partie-9 { --part: var(--p9); }
+.partie-annexes { --part: var(--p9); }
+
+body {
+  background: var(--q-bg);
+}
+
+/* ------------------------------------------------------------------ */
+/* Barre de navigation : le liseré est fait des couleurs des dix parties */
+/* ------------------------------------------------------------------ */
+.navbar {
+  box-shadow: none;
+  border-bottom: 0;
+}
+.navbar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 4px;
+  background: linear-gradient(90deg,
+    var(--p0) 0 10%, var(--p1) 10% 20%, var(--p2) 20% 30%, var(--p3) 30% 40%,
+    var(--p4) 40% 50%, var(--p5) 50% 60%, var(--p6) 60% 70%, var(--p7) 70% 80%,
+    var(--p8) 80% 90%, var(--p9) 90%);
+}
+.navbar__title {
+  font-family: var(--q-font-titre);
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: 0.01em;
+}
+.navbar__logo {
+  height: 1.7rem;
+}
+.navbar__link {
+  font-family: var(--q-font-titre);
+  font-weight: 500;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.navbar__toggle,
+.navbar .clean-btn {
+  color: var(--q-nav-ink);
+}
+.navbar-sidebar {
+  background: var(--q-surface);
+}
+.navbar-sidebar .navbar__link {
+  color: var(--q-ink);
+}
+.navbar .navbar__search input,
+.navbar [class*='searchBar'] input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--q-nav-ink);
+  border-radius: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Barre latérale                                                      */
+/* ------------------------------------------------------------------ */
+.theme-doc-sidebar-container {
+  background: var(--q-surface);
+}
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link {
+  font-family: var(--q-font-titre);
+  font-weight: 600;
+  font-size: 0.92rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  margin-right: 9px;
+  flex: none;
+  background: var(--part);
+}
+.menu__link {
+  border-radius: 0;
+  line-height: 1.35;
+}
+.menu__list .menu__list .menu__link--active {
+  background: var(--part-soft);
+  box-shadow: inset 4px 0 0 var(--part);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------ */
+/* Contenu                                                             */
+/* ------------------------------------------------------------------ */
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4 {
+  font-family: var(--q-font-titre);
+  letter-spacing: 0.005em;
+}
+.markdown h1 {
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1.02;
+  margin-top: 0.7rem;
+}
+.markdown h2 {
+  font-size: 1.95rem;
+  font-weight: 600;
+  margin-top: 2.8rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--q-rule);
+}
+.markdown h3 {
+  font-size: 1.45rem;
+  font-weight: 600;
+  margin-top: 2rem;
+}
+.markdown > p,
+.markdown li {
+  max-width: 44rem;
+}
+.markdown :not(pre) > code {
+  background: var(--q-code-inline);
+  border: 0;
+}
+.markdown pre code {
+  background: transparent;
+}
+.markdown a code {
+  color: inherit;
+}
+.markdown blockquote {
+  border-left-color: var(--part);
+  color: var(--q-muted);
+}
+.markdown table {
+  display: table;
+  width: 100%;
+  font-size: 0.95rem;
+  border-collapse: collapse;
+}
+.markdown table thead tr {
+  border-bottom: 2px solid var(--part);
+}
+.markdown table th {
+  font-family: var(--q-font-titre);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: transparent;
+  text-align: left;
+}
+.markdown table tr,
+.markdown table td,
+.markdown table th {
+  border: 0;
+  border-bottom: 1px solid var(--q-rule);
+  background: transparent;
+}
+.markdown sup a {
+  text-decoration: none;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.75em;
+}
+
+/* Plaque « Partie · Chapitre » au-dessus du titre */
+.plaque {
+  display: inline-flex;
+  border: 2px solid var(--part);
+  font-family: var(--q-font-titre);
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.plaque span {
+  padding: 0.45rem 0.75rem;
+}
+.plaque span:first-child {
+  background: var(--part);
+  color: #fff;
+}
+[data-theme='dark'] .plaque span:first-child {
+  color: var(--q-bg);
+}
+
+/* Table des matières de droite */
+.table-of-contents__link--active {
+  color: var(--q-ink);
+  font-weight: 600;
+}
+.table-of-contents {
+  font-size: 0.85rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Blocs de code                                                        */
+/* bash  : commande à taper (bloc sombre, type terminal)                */
+/* sortie: ce que la commande affiche (bloc clair, filet de la partie)  */
+/* autres: fichiers (YAML, Dockerfile, Python...) avec leur titre       */
+/* ------------------------------------------------------------------ */
+.theme-code-block {
+  border-radius: 0;
+  box-shadow: none;
+  border: 1px solid var(--q-rule);
+}
+.theme-code-block [class*='codeBlockTitle'] {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.45rem 1rem;
+  border-bottom: 1px solid var(--q-rule);
+}
+
+.theme-code-block.language-bash,
+.theme-code-block.language-shell {
+  --prism-background-color: var(--q-term-bg) !important;
+  --prism-color: var(--q-term-ink) !important;
+  border-color: var(--q-term-bg);
+}
+.theme-code-block.language-bash pre,
+.theme-code-block.language-shell pre {
+  background-color: var(--q-term-bg) !important;
+  color: var(--q-term-ink) !important;
+}
+.theme-code-block.language-bash .token,
+.theme-code-block.language-shell .token {
+  color: var(--q-term-ink) !important;
+  font-style: normal !important;
+}
+.theme-code-block.language-bash .token.comment,
+.theme-code-block.language-shell .token.comment {
+  color: var(--q-term-muted) !important;
+}
+.theme-code-block.language-bash .token.string,
+.theme-code-block.language-bash .token.variable,
+.theme-code-block.language-shell .token.string {
+  color: #f5b48a !important;
+}
+.theme-code-block.language-bash .token.function,
+.theme-code-block.language-shell .token.function {
+  color: #9fd0ff !important;
+}
+.theme-code-block.language-bash [class*='codeBlockTitle'] {
+  background: #182a3a;
+  color: var(--q-term-ink);
+  border-bottom-color: #25384a;
+}
+.theme-code-block.language-bash button {
+  color: var(--q-term-ink);
+  border-color: #3a4f61;
+  background: #182a3a;
+}
+
+.theme-code-block.language-sortie {
+  --prism-background-color: var(--q-out-bg) !important;
+  --prism-color: var(--q-out-ink) !important;
+  border: 0;
+  border-left: 4px solid var(--part);
+}
+.theme-code-block.language-sortie pre {
+  background-color: var(--q-out-bg) !important;
+  color: var(--q-out-ink) !important;
+  font-size: 0.84rem;
+}
+.theme-code-block.language-sortie [class*='codeBlockTitle'] {
+  background: var(--q-out-bg);
+  color: var(--q-muted);
+  font-family: var(--q-font-titre);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+/* une sortie qui suit sa commande s'y accroche */
+.theme-code-block.language-bash:has(+ .theme-code-block.language-sortie) {
+  margin-bottom: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Encadrés : pas d'icône, un filet épais de couleur et un titre en      */
+/* capitales, comme une plaque de signalisation                          */
+/* ------------------------------------------------------------------ */
+.theme-admonition {
+  --q-adm: var(--p3);
+  background: var(--q-surface);
+  border: 1px solid var(--q-rule);
+  border-left: 6px solid var(--q-adm);
+  border-radius: 0;
+  box-shadow: none;
+  color: var(--q-ink);
+  padding: 0.9rem 1.2rem;
+}
+.theme-admonition [class*='admonitionIcon'] {
+  display: none;
+}
+.theme-admonition [class*='admonitionHeading'] {
+  font-family: var(--q-font-titre);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--q-adm);
+  margin-bottom: 0.3rem;
+}
+.theme-admonition a {
+  color: var(--ifm-color-primary);
+  text-decoration: underline;
+}
+.theme-admonition code {
+  background: var(--q-code-inline);
+}
+.theme-admonition-note { --q-adm: var(--p0); }
+.theme-admonition-tip { --q-adm: var(--p4); }
+.theme-admonition-info { --q-adm: var(--p3); }
+.theme-admonition-warning { --q-adm: var(--p7); }
+.theme-admonition-danger { --q-adm: var(--p2); }
+.theme-admonition-podman { --q-adm: var(--p5); }
+.theme-admonition-panne { --q-adm: var(--p2); }
+
+.theme-admonition-exercice {
+  --q-adm: var(--part);
+  background: var(--part-soft);
+  border: 0;
+  border-top: 3px solid var(--part);
+  margin-top: 2rem;
+}
+.theme-admonition-exercice [class*='admonitionHeading'] {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: none;
+  color: var(--q-ink);
+}
+
+/* Corrigés repliés */
+.markdown details {
+  --docusaurus-details-decoration-color: var(--part);
+  background: var(--q-surface);
+  border: 1px solid var(--q-rule);
+  border-radius: 0;
+  box-shadow: none;
+  color: var(--q-ink);
+}
+.markdown details > summary {
+  font-weight: 600;
+}
+.markdown details [class*='collapsibleContent'] {
+  border-top-color: var(--q-rule);
+}
+.theme-admonition-exercice + details {
+  margin-top: -0.6rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Figures                                                              */
+/* ------------------------------------------------------------------ */
+.figure {
+  margin: 2rem 0;
+  padding: 1.3rem 1.2rem 0.9rem;
+  background: var(--q-surface);
+  border: 1px solid var(--q-rule);
+}
+.figure svg,
+.figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+.figure figcaption {
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
+  color: var(--q-muted);
+  line-height: 1.5;
+}
+.figure figcaption b {
+  font-family: var(--q-font-titre);
+  font-size: 1.02rem;
+  letter-spacing: 0.05em;
+  color: var(--q-ink);
+  margin-right: 0.3rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Pied de page, pagination                                             */
+/* ------------------------------------------------------------------ */
+.footer {
+  font-size: 0.85rem;
+}
+.pagination-nav__link {
+  border-radius: 0;
+  border-color: var(--q-rule);
+  background: var(--q-surface);
+}
+.pagination-nav__sublabel {
+  font-family: var(--q-font-titre);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.pagination-nav__label {
+  font-family: var(--q-font-titre);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+@media (max-width: 996px) {
+  .markdown h1 {
+    font-size: 2.4rem;
+  }
+}

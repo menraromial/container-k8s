@@ -1,0 +1,33 @@
+% Figure 0.1 : l'application fil rouge Colis.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    svc/.style={qbox, minimum width=2.9cm, minimum height=1.25cm, font=\footnotesize}]
+  \node[svc, draw=QGris, fill=QGrisBg] (nav) at (0,0)   {{\ttfamily\normalsize navigateur}\\utilisateur};
+  \node[svc, draw=QBleu, fill=QBleuBg] (web) at (3.9,0)  {{\ttfamily\normalsize web}\\nginx, pages statiques};
+  \node[svc, draw=QBleu, fill=QBleuBg] (api) at (7.8,0)  {{\ttfamily\normalsize api}\\Python, FastAPI};
+  \node[svc, draw=QVert, fill=QVertBg] (pg)  at (12.3,0) {{\ttfamily\normalsize postgres}\\les colis};
+  \node[svc, draw=QVert, fill=QVertBg] (rd)  at (7.8,-2.9) {{\ttfamily\normalsize redis}\\file de tâches};
+  \node[svc, draw=QViolet, fill=QVioletBg] (wk) at (12.3,-2.9) {{\ttfamily\normalsize worker}\\calcule les délais};
+  \node[svc, draw=QOcre, fill=QOcreBg] (pu) at (12.3,2.9) {{\ttfamily\normalsize purge}\\chaque nuit};
+
+  \draw[qarr] (nav) -- node[above, qlbl] {HTTP} (web);
+  \draw[qarr] (web) -- node[above, qlbl] {/api} (api);
+  \draw[qarr] (api) -- node[above, qlbl] {lit, écrit} (pg);
+  \draw[qarr] (api) -- node[left, qlbl, align=right] {dépose\\une tâche} (rd);
+  \draw[qarr] (rd) -- node[below, qlbl] {consomme} (wk);
+  \draw[qarr] (wk) -- node[right, qlbl, align=left] {enregistre\\le délai} (pg);
+  \draw[qarr] (pu) -- node[right, qlbl, align=left] {supprime les colis\\livrés depuis 30 jours} (pg);
+
+  % légende
+  \begin{scope}[shift={(-1.45,-4.7)}]
+    \foreach \x/\c/\cbg/\t in {0/QBleu/QBleuBg/service sans état,
+        3.8/QVert/QVertBg/service avec état, 7.6/QViolet/QVioletBg/traitement en arrière-plan,
+        12.3/QOcre/QOcreBg/tâche planifiée} {
+      \draw[draw=\c, fill=\cbg, line width=0.8pt] (\x,0) rectangle ++(0.45,0.3);
+      \node[qlbl, anchor=west] at (\x+0.55,0.15) {\t};
+    }
+  \end{scope}
+\end{tikzpicture}
+\end{document}

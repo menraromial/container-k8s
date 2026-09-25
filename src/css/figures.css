@@ -1,0 +1,49 @@
+/* Fichier généré par figures/palette.py : ne pas modifier à la main. */
+:root {
+  --fig-ink: #16212B;
+  --fig-line: #2E4A62;
+  --fig-muted: #5A6773;
+  --fig-paper: #FFFFFF;
+  --fig-bleu: #1F5F99;
+  --fig-bleu-bg: #E8F0F7;
+  --fig-orange: #D9622B;
+  --fig-orange-bg: #FBEDE4;
+  --fig-vert: #3C7A4A;
+  --fig-vert-bg: #E7F2EA;
+  --fig-brique: #A63D2A;
+  --fig-brique-bg: #F6E6E2;
+  --fig-sarcelle: #16707A;
+  --fig-sarcelle-bg: #E2F1F2;
+  --fig-bordeaux: #7A2940;
+  --fig-bordeaux-bg: #F4E4E9;
+  --fig-ocre: #B07A12;
+  --fig-ocre-bg: #F7EFDC;
+  --fig-violet: #5B4A8B;
+  --fig-violet-bg: #ECE9F4;
+  --fig-gris: #5F6B76;
+  --fig-gris-bg: #EEF0F2;
+}
+[data-theme='dark'] {
+  --fig-ink: #E3EAF0;
+  --fig-line: #9DB6CB;
+  --fig-muted: #98A6B3;
+  --fig-paper: #141E27;
+  --fig-bleu: #6FA6DC;
+  --fig-bleu-bg: #172838;
+  --fig-orange: #EE8150;
+  --fig-orange-bg: #2E1F16;
+  --fig-vert: #74B083;
+  --fig-vert-bg: #16291C;
+  --fig-brique: #D06A55;
+  --fig-brique-bg: #2E1A16;
+  --fig-sarcelle: #56AEB8;
+  --fig-sarcelle-bg: #10282B;
+  --fig-bordeaux: #C0677F;
+  --fig-bordeaux-bg: #2B1820;
+  --fig-ocre: #D9A745;
+  --fig-ocre-bg: #2B2412;
+  --fig-violet: #9C8BD0;
+  --fig-violet-bg: #211D33;
+  --fig-gris: #8C98A3;
+  --fig-gris-bg: #1D2831;
+}

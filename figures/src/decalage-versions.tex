@@ -1,0 +1,39 @@
+% Figure 0.4 : politique de décalage de versions (version skew), pour un API server en 1.37.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1.55cm,y=1cm,
+    ok/.style={draw=QVert, fill=QVertBg, line width=0.8pt, minimum width=1.4cm, minimum height=0.72cm, font=\ttfamily\footnotesize},
+    ko/.style={draw=QBrique, fill=QPaper, line width=0.5pt, dashed, minimum width=1.4cm, minimum height=0.72cm, font=\ttfamily\footnotesize, text=QMuted},
+    ref/.style={draw=QBleu, fill=QBleuBg, line width=1.2pt, minimum width=1.4cm, minimum height=0.72cm, font=\ttfamily\footnotesize},
+    ligne/.style={font=\ttfamily\small, anchor=east, text=QInk}]
+  % en-têtes de colonnes
+  \foreach \v [count=\i from 0] in {1.33,1.34,1.35,1.36,1.37,1.38,1.39} {
+    \node[qlbl] at (\i,3.25) {\v};
+  }
+  \node[qlbl, anchor=east] at (-0.6,3.25) {version mineure};
+
+  % API server
+  \node[ligne] at (-0.6,2.4) {kube-apiserver};
+  \node[ref] at (4,2.4) {1.37};
+
+  % kubectl : une version de part et d'autre
+  \node[ligne] at (-0.6,1.2) {kubectl};
+  \foreach \i/\v in {0/1.33,1/1.34,2/1.35,6/1.39} { \node[ko] at (\i,1.2) {\v}; }
+  \foreach \i/\v in {3/1.36,4/1.37,5/1.38} { \node[ok] at (\i,1.2) {\v}; }
+  \draw[decorate, decoration={brace, amplitude=4pt, mirror}, QVert, line width=0.8pt]
+    (2.55,0.72) -- (5.45,0.72) node[midway, below=5pt, qlblc=QVert] {une version mineure de part et d'autre};
+
+  % kubelet : jusqu'à trois versions plus ancien, jamais plus récent
+  \node[ligne] at (-0.6,-0.6) {kubelet};
+  \foreach \i/\v in {0/1.33,5/1.38,6/1.39} { \node[ko] at (\i,-0.6) {\v}; }
+  \foreach \i/\v in {1/1.34,2/1.35,3/1.36,4/1.37} { \node[ok] at (\i,-0.6) {\v}; }
+  \draw[decorate, decoration={brace, amplitude=4pt, mirror}, QVert, line width=0.8pt]
+    (0.55,-1.08) -- (4.45,-1.08) node[midway, below=5pt, qlblc=QVert] {jusqu'à trois versions plus ancien};
+  \node[qlblc=QBrique, align=center] at (5.5,-1.55) {jamais plus récent\\que l'API server};
+
+  % repère vertical sur la version de l'API server
+  \draw[QBleu, line width=0.6pt, dotted] (4,2.02) -- (4,1.58);
+  \draw[QBleu, line width=0.6pt, dotted] (4,0.82) -- (4,-0.22);
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,35 @@
+% Figure 0.2 : ce que fait « minikube start », étape par étape et lieu par lieu.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    etape/.style={qbox, text width=4.2cm, align=left, font=\footnotesize, inner sep=5pt, minimum height=9mm}]
+  % trois couloirs : où se passe chaque étape
+  \foreach \x/\titre/\c/\cbg in {0/{Votre poste (minikube, kubectl)}/QInk/QGrisBg,
+                                  5.3/Docker Engine/QInk/QGrisBg,
+                                  10.6/Nœud minikube (containerd)/QOrange/QOrangeBg} {
+    \fill[\cbg] (\x,0) rectangle ++(5.0,10.9);
+    \node[qtitre, font=\titrefig\normalsize, text=\c] at (\x+0.25,10.7) {\titre};
+  }
+  % étapes (colonne du couloir, ordonnée)
+  \node[etape] (e1) at (2.5,9.4)  {vérifie le pilote, les 2 CPU et les 4 Go demandés};
+  \node[etape] (e2) at (7.8,8.25) {télécharge l'image de base \texttt{kicbase} (508 Mo, une seule fois)};
+  \node[etape] (e3) at (2.5,7.1)  {télécharge le préchargement de Kubernetes v1.37.0 (348 Mo)};
+  \node[etape] (e4) at (7.8,5.95) {crée le réseau \texttt{minikube} (192.168.49.0/24) puis le conteneur};
+  \node[etape, draw=QOrange] (e5) at (13.1,4.8)  {décompresse les images des composants dans containerd};
+  \node[etape, draw=QOrange] (e6) at (13.1,3.45) {\texttt{kubeadm init} : certificats, etcd, API server, scheduler, controller-manager};
+  \node[etape, draw=QOrange] (e7) at (13.1,2.05) {réseau des Pods (kindnet), CoreDNS, addons par défaut};
+  \node[etape] (e8) at (2.5,0.9)  {écrit le contexte \texttt{minikube} dans \texttt{\textasciitilde/.kube/config}};
+
+  \foreach \i in {1,...,8} {
+    \node[qnum=QLine] at ([xshift=1pt,yshift=-1pt]e\i.north west) {\i};
+  }
+  \draw[qarr] (e1.east) -| (e2.north);
+  \draw[qarr] (e2.west) -| (e3.north);
+  \draw[qarr] (e3.east) -| (e4.north);
+  \draw[qarr] (e4.east) -| (e5.north);
+  \draw[qarr] (e5) -- (e6);
+  \draw[qarr] (e6) -- (e7);
+  \draw[qarr] (e7.south) |- (e8.east);
+\end{tikzpicture}
+\end{document}

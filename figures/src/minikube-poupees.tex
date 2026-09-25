@@ -1,0 +1,40 @@
+% Figure 0.3 : un cluster entier dans un conteneur.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  % enveloppes, de l'extérieur vers l'intérieur
+  \draw[qcadre, fill=QGrisBg] (0,0) rectangle (17.6,7.4);
+  \node[qtitre] at (0.3,7.15) {Votre poste Linux};
+  \begin{scope}[xshift=1cm]
+  \draw[qcadre] (3.6,0.4) rectangle (16.2,6.7);
+  \node[qtitre, font=\titrefig\normalsize, text=QMuted] at (3.85,6.5) {Docker Engine};
+  \draw[qcadre, draw=QOrange, line width=1.1pt, fill=QOrangeBg] (4.0,0.8) rectangle (15.8,6.0);
+  \node[qtitre, text=QOrange] at (4.25,5.8) {conteneur « minikube » : le nœud};
+  \node[qlbl, anchor=north east, font=\ttfamily\footnotesize] at (15.6,5.78) {192.168.49.2};
+  \draw[qcadre, dashed] (4.4,1.2) rectangle (15.4,4.95);
+  \node[qlbl, anchor=north west] at (4.6,4.8) {containerd 2.3.4 lance tous les conteneurs du nœud};
+
+  % plan de contrôle
+  \begin{scope}[every node/.style={qcomp, font=\ttfamily\scriptsize, draw=QVert, fill=QVertBg, minimum height=7mm}]
+    \node (api)   at (6.0,3.75)  {kube-apiserver};
+    \node (etcd)  at (7.95,3.75) {etcd};
+    \node (sched) at (10.0,3.75) {kube-scheduler};
+    \node (cm)    at (13.35,3.75) {kube-controller-manager};
+  \end{scope}
+  % services du cluster et Pod de l'utilisateur
+  \begin{scope}[every node/.style={qcomp, font=\ttfamily\scriptsize, draw=QGris, fill=QGrisBg, minimum height=7mm}]
+    \node (dns)   at (8.5,2.05)  {coredns};
+    \node (proxy) at (10.5,2.05) {kube-proxy};
+    \node (cni)   at (12.5,2.05) {kindnet};
+  \end{scope}
+  \node[qcomp, font=\ttfamily\scriptsize, draw=QBleu, fill=QBleuBg, line width=1.1pt, minimum height=7mm] (pod) at (6.0,2.05) {Pod bonjour};
+
+  \end{scope}
+  % outils sur le poste
+  \node[qcomp, minimum width=1.9cm] (kubectl) at (1.55,3.75) {kubectl};
+  \node[qcomp, minimum width=1.9cm] (curl)    at (1.55,2.05) {curl};
+  \draw[qarr] (kubectl) -- node[above, qlbl, font=\ttfamily\scriptsize, align=center, pos=0.33] {HTTPS\\:8443} (api);
+  \draw[qarr, draw=QBleu] (curl) -- node[below, qlblc=QBleu, font=\ttfamily\scriptsize, align=center, pos=0.29] {NodePort\\:30358} (pod);
+\end{tikzpicture}
+\end{document}

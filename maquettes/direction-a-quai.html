@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direction A : Quai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=Red+Hat+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F6F8; --surface:#FFFFFF; --ink:#16212B; --muted:#5A6773; --rule:#D5DCE2;
+  --nav:#12283A; --nav-ink:#E8EEF3;
+  --link:#1F5F99;
+  --term-bg:#0F1D29; --term-ink:#DCE6EE; --term-prompt:#F08A4B;
+  --out-bg:#E9EEF2; --out-ink:#33414D;
+  --p0:#5F6B76; --p1:#D9622B; --p2:#A63D2A; --p3:#1F5F99; --p4:#3C7A4A;
+  --p5:#16707A; --p6:#7A2940; --p7:#B07A12; --p8:#5B4A8B; --p9:#2E3A45;
+  --part:var(--p0); --part-soft:#E6E9EC;
+  --fig-line:#2E4A62; --fig-fill1:#E8F0F7; --fig-fill2:#FBEDE4; --fig-fill3:#E7F2EA; --fig-text:#16212B;
+}
+[data-theme="dark"]{
+  --bg:#0E151C; --surface:#141E27; --ink:#E3EAF0; --muted:#98A6B3; --rule:#27343F;
+  --nav:#0A1118; --nav-ink:#E3EAF0; --link:#7DB5E8;
+  --term-bg:#070D13; --term-ink:#DCE6EE; --term-prompt:#F39A63;
+  --out-bg:#1B2731; --out-ink:#C3CFD9;
+  --p0:#8C98A3; --p1:#EE8150; --p2:#D06A55; --p3:#6FA6DC; --p4:#74B083;
+  --p5:#56AEB8; --p6:#C0677F; --p7:#D9A745; --p8:#9C8BD0; --p9:#8594A2;
+  --part-soft:#1D2831;
+  --fig-line:#9DB6CB; --fig-fill1:#172838; --fig-fill2:#2E1F16; --fig-fill3:#16291C; --fig-text:#E3EAF0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.68 "Atkinson Hyperlegible Next",system-ui,sans-serif}
+a{color:var(--link)}
+code,pre{font-family:"Red Hat Mono",ui-monospace,monospace}
+.label{font:600 12px/1 "Barlow Condensed",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:28px 32px 10px}
+.label b{color:var(--ink)}
+.toggle{position:fixed;top:14px;right:18px;z-index:10;font:600 13px "Barlow Condensed";letter-spacing:.08em;text-transform:uppercase;background:var(--surface);color:var(--ink);border:1px solid var(--rule);padding:6px 12px;cursor:pointer}
+
+/* barre de navigation : le liseré est fait des couleurs des dix parties */
+.nav{background:var(--nav);color:var(--nav-ink);display:flex;align-items:center;gap:28px;padding:0 32px;height:58px;position:relative}
+.nav::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:4px;
+  background:linear-gradient(90deg,var(--p0) 0 10%,var(--p1) 10% 20%,var(--p2) 20% 30%,var(--p3) 30% 40%,var(--p4) 40% 50%,var(--p5) 50% 60%,var(--p6) 60% 70%,var(--p7) 70% 80%,var(--p8) 80% 90%,var(--p9) 90%)}
+.brand{font:700 22px/1 "Barlow Condensed";letter-spacing:.02em}
+.brand span{font-weight:500;opacity:.7}
+.nav a{color:var(--nav-ink);text-decoration:none;font:500 16px "Barlow Condensed";letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+.nav .sp{flex:1}
+.search{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:var(--nav-ink);padding:6px 12px;width:220px;font-size:14px;opacity:.8}
+
+/* accueil */
+.hero{padding:72px 32px 40px;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.25fr 1fr;gap:56px;align-items:end}
+.hero h1{font:700 64px/0.98 "Barlow Condensed";margin:0 0 20px;letter-spacing:-.005em}
+.hero h1 em{font-style:normal;color:var(--p1)}
+.hero p{margin:0 0 14px;max-width:34em;color:var(--ink)}
+.hero .cta{display:inline-block;margin-top:12px;background:var(--p1);color:#fff;text-decoration:none;font:600 17px "Barlow Condensed";letter-spacing:.08em;text-transform:uppercase;padding:12px 22px}
+.hero .cta.alt{background:transparent;color:var(--ink);border:1.5px solid var(--ink);margin-left:10px}
+.stack{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.stack div{height:46px;position:relative}
+.stack div::after{content:"";position:absolute;inset:6px 8px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.22) 0 2px,transparent 2px 9px)}
+.parts{max-width:1180px;margin:0 auto;padding:10px 32px 70px;display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.part{background:var(--surface);border:1px solid var(--rule);border-top:6px solid var(--c);padding:18px 22px 20px;display:grid;grid-template-columns:64px 1fr;gap:4px 16px}
+.part .n{grid-row:span 2;font:700 44px/1 "Barlow Condensed";color:var(--c)}
+.part h3{margin:0;font:600 24px/1.1 "Barlow Condensed";letter-spacing:.01em}
+.part p{margin:4px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.part .ch{grid-column:2;font:500 13px "Barlow Condensed";letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+
+/* page de chapitre */
+.doc{display:grid;grid-template-columns:280px minmax(0,1fr) 220px;max-width:1440px;margin:0 auto}
+.side{border-right:1px solid var(--rule);padding:26px 0;font-size:15px;background:var(--surface)}
+.side .grp{font:600 13px "Barlow Condensed";letter-spacing:.12em;text-transform:uppercase;padding:14px 22px 6px;display:flex;align-items:center;gap:8px}
+.side .grp i{width:10px;height:10px;background:var(--c);display:inline-block}
+.side a{display:block;padding:5px 22px 5px 40px;color:var(--ink);text-decoration:none;line-height:1.35}
+.side a.on{background:var(--part-soft);border-left:4px solid var(--part);padding-left:36px;font-weight:600}
+.side .dim{color:var(--muted)}
+main{padding:34px 64px 80px;max-width:860px}
+.plate{display:inline-flex;align-items:stretch;border:2px solid var(--part);font:600 14px/1 "Barlow Condensed";letter-spacing:.14em;text-transform:uppercase}
+.plate span{padding:7px 12px}
+.plate span:first-child{background:var(--part);color:#fff}
+main h1{font:700 52px/1.02 "Barlow Condensed";margin:14px 0 26px}
+main h2{font:600 30px/1.15 "Barlow Condensed";margin:44px 0 10px;padding-top:6px;border-top:1px solid var(--rule)}
+main p{margin:0 0 16px}
+main code{background:var(--out-bg);padding:1px 5px;font-size:.88em}
+.term{margin:22px 0 24px}
+.term .cmd{background:var(--term-bg);color:var(--term-ink);padding:14px 18px;font-size:14.5px;line-height:1.55;position:relative;white-space:pre;overflow:auto}
+.term .cmd .p{color:var(--term-prompt);user-select:none}
+.term .cmd .t{position:absolute;top:0;right:0;font:600 11px "Barlow Condensed";letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;background:rgba(255,255,255,.08);color:#9fb1c0}
+.term .out{background:var(--out-bg);color:var(--out-ink);padding:12px 18px;font-size:13.5px;line-height:1.55;white-space:pre;overflow:auto;border-left:4px solid var(--part)}
+figure{margin:30px 0;background:var(--surface);border:1px solid var(--rule);padding:22px 20px 14px}
+figcaption{font-size:14.5px;color:var(--muted);margin-top:10px}
+figcaption b{color:var(--ink);font-family:"Barlow Condensed";font-size:16px;letter-spacing:.05em}
+.aside{border:1px solid var(--rule);border-left:6px solid var(--p5);background:var(--surface);padding:14px 20px;margin:24px 0}
+.aside .h{font:600 14px "Barlow Condensed";letter-spacing:.14em;text-transform:uppercase;color:var(--p5);margin-bottom:4px}
+.aside p{margin:0;font-size:16px}
+details{border:1px solid var(--rule);background:var(--surface);margin:18px 0}
+details summary{padding:12px 18px;cursor:pointer;font-weight:600}
+details div{padding:0 18px 14px}
+.ex{background:var(--part-soft);padding:18px 22px;margin:28px 0 8px;border-top:3px solid var(--part)}
+.ex .h{font:700 20px "Barlow Condensed";letter-spacing:.03em;margin-bottom:6px}
+.toc{padding:34px 22px;font-size:14px}
+.toc .h{font:600 12px "Barlow Condensed";letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.toc a{display:block;color:var(--muted);text-decoration:none;padding:4px 0 4px 12px;border-left:2px solid var(--rule)}
+.toc a.on{color:var(--ink);border-left-color:var(--part)}
+.sep{height:40px;background:repeating-linear-gradient(135deg,var(--rule) 0 2px,transparent 2px 12px);margin-top:10px}
+</style>
+</head>
+<body>
+<button class="toggle" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'">Clair / sombre</button>
+
+<div class="label">Direction A : <b>Quai</b>, signalétique portuaire, une couleur de conteneur par partie. Écran 1 : accueil</div>
+<div class="nav">
+  <div class="brand">Conteneurs <span>&amp;</span> Kubernetes</div>
+  <a href="#">Le cours</a><a href="#">Colis</a><a href="#">Annexes</a>
+  <div class="sp"></div><div class="search">Rechercher…</div>
+</div>
+
+<section class="hero">
+  <div>
+    <h1>Du premier conteneur<br>à <em>l'expertise</em> Kubernetes</h1>
+    <p>Un cours complet qui part d'une ligne de commande et d'une curiosité, et qui s'arrête quand vous savez écrire votre propre opérateur. Entre les deux, on démonte tout : les namespaces du noyau, l'API server, le scheduler, le réseau des Pods.</p>
+    <p>Tout se fait sur votre portable, avec minikube. Pas de compte cloud, pas de carte bancaire.</p>
+    <a class="cta" href="#">Commencer</a><a class="cta alt" href="#">Préparer son poste</a>
+  </div>
+  <div class="stack">
+    <div style="background:var(--p0)"></div><div style="background:var(--p1)"></div><div style="background:var(--p2)"></div>
+    <div style="background:var(--p3)"></div><div style="background:var(--p4)"></div><div style="background:var(--p5)"></div>
+    <div style="background:var(--p6)"></div><div style="background:var(--p7)"></div><div style="background:var(--p8)"></div>
+    <div style="background:var(--p9);grid-column:2"></div>
+  </div>
+</section>
+
+<section class="parts">
+  <div class="part" style="--c:var(--p1)"><div class="n">I</div><h3>Utiliser des conteneurs</h3><p>Lancer, construire, brancher des volumes et des réseaux, assembler Colis avec Compose.</p><div class="ch">Chapitres 1 à 7</div></div>
+  <div class="part" style="--c:var(--p2)"><div class="n">II</div><h3>Sous le capot des conteneurs</h3><p>Namespaces, cgroups, overlayfs, runc : fabriquer un conteneur sans Docker.</p><div class="ch">Chapitres 8 à 14</div></div>
+  <div class="part" style="--c:var(--p3)"><div class="n">III</div><h3>Premiers pas avec Kubernetes</h3><p>Pods, Deployments, Services, configuration et santé : Colis tourne sur minikube.</p><div class="ch">Chapitres 15 à 24</div></div>
+  <div class="part" style="--c:var(--p4)"><div class="n">IV</div><h3>Kubernetes au quotidien</h3><p>Stockage, StatefulSets, Ingress, Helm, autoscaling, ordonnancement fin.</p><div class="ch">Chapitres 25 à 33</div></div>
+</section>
+
+<div class="sep"></div>
+<div class="label">Écran 2 : page de chapitre (extrait réel du chapitre 0.2, sorties obtenues sur minikube 1.39)</div>
+
+<div class="nav">
+  <div class="brand">Conteneurs <span>&amp;</span> Kubernetes</div>
+  <a href="#">Le cours</a><a href="#">Colis</a><a href="#">Annexes</a>
+  <div class="sp"></div><div class="search">Rechercher…</div>
+</div>
+<div class="doc" style="--part:var(--p0)">
+  <nav class="side">
+    <div class="grp" style="--c:var(--p0)"><i></i>0 · Démarrer</div>
+    <a href="#" class="dim">Comment ce cours fonctionne</a>
+    <a href="#" class="on">Préparer son poste</a>
+    <a href="#" class="dim">Versions utilisées</a>
+    <div class="grp" style="--c:var(--p1)"><i></i>I · Utiliser des conteneurs</div>
+    <div class="grp" style="--c:var(--p2)"><i></i>II · Sous le capot</div>
+    <div class="grp" style="--c:var(--p3)"><i></i>III · Premiers pas</div>
+    <div class="grp" style="--c:var(--p4)"><i></i>IV · Au quotidien</div>
+    <div class="grp" style="--c:var(--p5)"><i></i>V · Anatomie du cluster</div>
+    <div class="grp" style="--c:var(--p6)"><i></i>VI · Sécurité</div>
+  </nav>
+  <main>
+    <div class="plate"><span>Partie 0</span><span>Chapitre 0.2</span></div>
+    <h1>Préparer son poste</h1>
+    <p>Trois programmes doivent s'entendre sur votre machine. Docker fait tourner des conteneurs. minikube s'en sert pour fabriquer un cluster Kubernetes complet, rangé tout entier dans un seul conteneur. Et kubectl est l'outil avec lequel vous parlerez à ce cluster pendant tout le cours.</p>
+
+    <h2>Démarrer un cluster</h2>
+    <p>Le cluster du cours reçoit deux processeurs et quatre gigaoctets de mémoire. C'est assez pour tout ce que nous ferons jusqu'à la partie VI, et ça laisse de la place à votre navigateur.</p>
+    <div class="term">
+<div class="cmd"><span class="t">Terminal</span><span class="p">$ </span>minikube start --driver=docker --cpus=2 --memory=4g</div>
+<div class="out">* minikube v1.39.0 sur Ubuntu 26.04
+* Utilisation du pilote docker basé sur la configuration de l'utilisateur
+* Préparation de Kubernetes v1.37.0 sur containerd 2.3.4...
+* Terminé ! kubectl est maintenant configuré pour utiliser "minikube" cluster
+  et espace de noms "default" par défaut.</div>
+    </div>
+    <p>Relisez la troisième ligne. À l'intérieur du nœud, ce n'est pas Docker qui lancera vos conteneurs, c'est containerd. Docker ne sert ici qu'à fabriquer la « machine » qui joue le rôle de nœud. Cette distinction paraît byzantine le premier jour ; elle devient évidente au chapitre 11, quand on démonte la pile des runtimes.</p>
+
+    <figure>
+      <svg viewBox="0 0 720 250" width="100%" role="img" aria-label="Poupées russes : le poste, Docker, le conteneur minikube, containerd, les Pods">
+        <g font-family="Atkinson Hyperlegible Next" font-size="14" fill="var(--fig-text)">
+          <rect x="6" y="6" width="708" height="238" fill="var(--fig-fill1)" stroke="var(--fig-line)" stroke-width="1.4"/>
+          <text x="20" y="30" font-weight="700">Votre poste Linux</text>
+          <rect x="30" y="44" width="660" height="186" fill="var(--surface)" stroke="var(--fig-line)" stroke-width="1.2"/>
+          <text x="44" y="66">Docker Engine</text>
+          <rect x="56" y="80" width="612" height="136" fill="var(--fig-fill2)" stroke="var(--p1)" stroke-width="1.6"/>
+          <text x="70" y="102" font-weight="700" fill="var(--p1)">conteneur « minikube » = le nœud</text>
+          <text x="440" y="102" font-size="12.5" fill="var(--muted)">192.168.49.2</text>
+          <rect x="80" y="116" width="564" height="86" fill="var(--surface)" stroke="var(--fig-line)" stroke-width="1.1" stroke-dasharray="4 3"/>
+          <text x="94" y="136" font-size="13">containerd 2.3.4 (runtime du nœud)</text>
+          <g font-family="Red Hat Mono" font-size="12">
+            <rect x="96" y="148" width="130" height="40" fill="var(--fig-fill3)" stroke="var(--p4)"/><text x="108" y="173">kube-apiserver</text>
+            <rect x="238" y="148" width="92" height="40" fill="var(--fig-fill3)" stroke="var(--p4)"/><text x="264" y="173">etcd</text>
+            <rect x="342" y="148" width="98" height="40" fill="var(--fig-fill3)" stroke="var(--p4)"/><text x="358" y="173">coredns</text>
+            <rect x="452" y="148" width="176" height="40" fill="var(--fig-fill1)" stroke="var(--p3)" stroke-width="1.6"/><text x="466" y="173">Pod bonjour (nginx)</text>
+          </g>
+        </g>
+      </svg>
+      <figcaption><b>Figure 0.1</b> · Un cluster entier dans un conteneur. Le nœud minikube est un conteneur Docker ; à l'intérieur, containerd lance les composants du plan de contrôle et vos propres Pods.</figcaption>
+    </figure>
+
+    <div class="aside"><div class="h">Avec Podman</div><p>minikube accepte <code>--driver=podman</code>, mais ce pilote reste marqué expérimental. Si vous n'avez que Podman, l'annexe B donne la configuration qui fonctionne en mode rootless.</p></div>
+
+    <h2>Un premier déploiement pour vérifier</h2>
+    <div class="term">
+<div class="cmd"><span class="t">Terminal</span><span class="p">$ </span>kubectl create deployment bonjour --image=nginx:1.29-alpine
+<span class="p">$ </span>kubectl expose deployment bonjour --type=NodePort --port=80
+<span class="p">$ </span>curl -s $(minikube service bonjour --url) | grep title</div>
+<div class="out">deployment.apps/bonjour created
+service/bonjour exposed
+&lt;title&gt;Welcome to nginx!&lt;/title&gt;</div>
+    </div>
+    <p>Si <code>curl</code> ne renvoie rien du premier coup, relancez-le une seconde plus tard : kube-proxy n'a pas toujours fini de poser ses règles quand le Service vient d'être créé.</p>
+
+    <div class="ex"><div class="h">Exercice 0.1</div>Combien de mémoire le cluster consomme-t-il vraiment au repos ? Trouvez la commande Docker qui répond, puis comparez avec les 4 Go réservés.</div>
+    <details><summary>Corrigé</summary><div><code>docker stats --no-stream minikube</code> affiche environ 530 Mio sur le poste de référence. Les 4 Go sont un plafond, pas une réservation.</div></details>
+  </main>
+  <aside class="toc"><div class="h">Sur cette page</div><a href="#">Ce qu'il faut installer</a><a href="#" class="on">Démarrer un cluster</a><a href="#">Un premier déploiement</a><a href="#">Nettoyer</a></aside>
+</div>
+</body>
+</html>

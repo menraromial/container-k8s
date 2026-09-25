@@ -1,0 +1,157 @@
+.page {
+  background: var(--q-bg);
+}
+
+.hero {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 4.5rem 2rem 2.5rem;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 3.5rem;
+  align-items: end;
+}
+.hero h1 {
+  font-family: var(--q-font-titre);
+  font-weight: 700;
+  font-size: 4rem;
+  line-height: 0.98;
+  margin: 0 0 1.4rem;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--p1);
+}
+.hero p {
+  max-width: 36em;
+  margin-bottom: 0.9rem;
+}
+
+.boutons {
+  margin-top: 1.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+.cta {
+  display: inline-block;
+  background: var(--p1);
+  color: #fff;
+  font-family: var(--q-font-titre);
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.4rem;
+  border: 1.5px solid var(--p1);
+}
+.cta:hover {
+  color: #fff;
+  text-decoration: none;
+  filter: brightness(1.08);
+}
+.alt {
+  background: transparent;
+  color: var(--q-ink);
+  border-color: var(--q-ink);
+}
+.alt:hover {
+  color: var(--q-ink);
+  background: var(--q-surface);
+}
+
+/* pile de conteneurs, une couleur par partie */
+.pile {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.pile div {
+  height: 46px;
+  position: relative;
+}
+.pile div::after {
+  content: '';
+  position: absolute;
+  inset: 6px 8px;
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.24) 0 2px, transparent 2px 9px);
+}
+.pile div:last-child {
+  grid-column: 2;
+}
+
+.parties {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0.5rem 2rem 4.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.1rem;
+}
+.carte {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  column-gap: 1rem;
+  align-content: start;
+  background: var(--q-surface);
+  border: 1px solid var(--q-rule);
+  border-top: 6px solid var(--c);
+  padding: 1.1rem 1.4rem 1.2rem;
+  color: var(--q-ink);
+}
+a.carte:hover {
+  text-decoration: none;
+  color: var(--q-ink);
+  border-color: var(--c);
+}
+.carte h3 {
+  margin: 0;
+  font-family: var(--q-font-titre);
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+.carte p {
+  grid-column: 2;
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--q-muted);
+}
+.num {
+  grid-row: span 3;
+  font-family: var(--q-font-titre);
+  font-weight: 700;
+  font-size: 2.8rem;
+  line-height: 1;
+  color: var(--c);
+}
+.chap {
+  grid-column: 2;
+  margin-top: 0.55rem;
+  font-family: var(--q-font-titre);
+  font-weight: 500;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--q-muted);
+}
+.inactive {
+  opacity: 0.78;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding-top: 2.5rem;
+  }
+  .hero h1 {
+    font-size: 2.8rem;
+  }
+  .pile {
+    display: none;
+  }
+  .parties {
+    grid-template-columns: 1fr;
+  }
+}
