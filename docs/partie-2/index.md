@@ -19,6 +19,6 @@ C'est la partie la plus exigeante du cours, et c'est elle qui fait la différenc
 | [12. La sécurité d'un conteneur](securite.md) | capabilities, seccomp, AppArmor, utilisateurs non root, rootless |
 | [13. Des images de production](images-production.md) | constructions en plusieurs étapes, images minimales, multi-architecture |
 | [14. La chaîne d'approvisionnement](chaine-approvisionnement.md) | analyse de vulnérabilités, SBOM, signature des images |
-| Défi II | réduire l'image de Colis sous un seuil de taille et de vulnérabilités |
+| [Défi II](defi.md) | réduire l'image de Colis sous un seuil de taille et de vulnérabilités |
 
-Il vous faut Docker et, pour le chapitre 11, le cluster minikube du chapitre 0.2. Tout le reste est fourni par le laboratoire.
+Il vous faut Docker avec buildx et, pour les chapitres 11 et 12, le cluster minikube du chapitre 0.2. Les outils du noyau et des runtimes (`unshare`, `runc`, `crun`, `skopeo`, `umoci`) sont fournis par l'image du laboratoire, construite au chapitre 8 ; le chapitre 14 installe Trivy et cosign.
