@@ -1,0 +1,28 @@
+% Figure 12.1 : les trois barrières que traverse l'appel mount dans un conteneur Docker (relevés réels du chapitre 12).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    b/.style={qbox, text width=3.0cm, align=center, font=\footnotesize, minimum height=1.5cm, inner sep=4pt},
+    proc/.style={b, draw=QBleu, fill=QBleuBg},
+    porte/.style={b, draw=QBrique, fill=QBriqueBg},
+    ok/.style={b, draw=QVert, fill=QVertBg},
+    res/.style={font=\scriptsize, text width=3.0cm, align=center, text=QBrique},
+    opt/.style={font=\ttfamily\scriptsize, text width=3.2cm, align=center, text=QMuted}]
+
+  \node[proc] (p) at (0,0) {\textbf{processus}\\{\ttfamily mount -t tmpfs}\\dans le conteneur};
+  \node[porte] (s) at (3.9,0) {\textbf{1. seccomp}\\filtre à l'entrée\\de l'appel système};
+  \node[porte] (a) at (7.8,0) {\textbf{2. AppArmor}\\profil {\ttfamily docker-default}\\(module LSM)};
+  \node[porte] (c) at (11.7,0) {\textbf{3. capability}\\{\ttfamily CAP\_SYS\_ADMIN}\\présente ?};
+  \node[ok] (k) at (15.6,0) {\textbf{le noyau monte}\\le tmpfs};
+  \foreach \x/\y in {p/s, s/a, a/c, c/k} { \draw[qarr] (\x) -- (\y); }
+
+  \node[res] at (3.9,-1.35) {refus : EPERM\\« are you root? »};
+  \node[res] at (7.8,-1.35) {refus : EACCES\\« Permission denied »};
+  \node[res] at (11.7,-1.35) {refus : EPERM\\« are you root? »};
+
+  \node[opt] at (3.9,1.5) {{\rmfamily levée par}\\-{}-security-opt seccomp=unconfined\\ou -{}-cap-add SYS\_ADMIN};
+  \node[opt] at (7.8,1.5) {{\rmfamily levée par}\\-{}-security-opt\\apparmor=unconfined};
+  \node[opt] at (11.7,1.5) {{\rmfamily levée par}\\-{}-cap-add SYS\_ADMIN};
+\end{tikzpicture}
+\end{document}

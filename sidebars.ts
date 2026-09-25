@@ -43,6 +43,7 @@ const sidebars: SidebarsConfig = {
         'partie-2/cgroups',
         'partie-2/overlayfs',
         'partie-2/runtimes',
+        'partie-2/securite',
       ],
     },
   ],

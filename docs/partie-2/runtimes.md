@@ -624,7 +624,7 @@ Les numéros d'inode, que le chapitre 8 nous a appris à lire, sont formels : r�
 ]
 ```
 
-Un namespace sans `path` est créé ; un namespace avec `path` est rejoint, par un `setns` sur le fichier indiqué, exactement comme `nsenter` au chapitre 8. Le `cgroupsPath` du même fichier, `kubepods-besteffort-pod0cf858a9_….slice:cri-containerd:…`, place le conteneur dans l'arbre de cgroups de Kubernetes, que la partie VII détaillera à propos des requêtes et des limites.
+Un namespace sans `path` est créé ; un namespace avec `path` est rejoint, par un `setns` sur le fichier indiqué, exactement comme `nsenter` au chapitre 8. Le `cgroupsPath` du même fichier, `kubepods-besteffort-pod0cf858a9_….slice:cri-containerd:…`, place le conteneur dans l'arbre de cgroups de Kubernetes, que la partie III détaillera à propos des requêtes et des limites.
 
 <Figure svg={podPause} num="11.2" alt="Un Pod, avec son shim de PID 4022, contient deux colonnes : pause, PID 4047, et nginx, PID 4071. Les namespaces net, uts et ipc de nginx portent les mêmes numéros que ceux de pause, qu'il a rejoints par /proc/4047/ns. Les namespaces pid et mnt sont différents pour chacun.">
 Un Pod vu par le runtime : un conteneur <code>pause</code> crée les namespaces réseau, UTS et IPC, et chaque conteneur du Pod les rejoint. Numéros relevés dans le nœud minikube.
@@ -716,7 +716,7 @@ root      639040  597564  1 14:54 ?        00:00:00 nginx: master process nginx 
 101       639063  639040  0 14:54 ?        00:00:00 nginx: worker process
 ```
 
-`CAP_CHOWN` permet le `chown`, `CAP_SETUID` et `CAP_SETGID` le passage à l'UID 101. Docker les accorde par défaut, parmi ses 14 capabilities, c'est pourquoi l'image fonctionne sans effort avec `docker run`. Quant au réseau, `runc exec web ip addr` ne montre que l'interface `lo` : `runc` a créé un namespace réseau vide et n'y branche rien. Brancher une paire veth et un pont, comme au chapitre 8, c'est le travail de Docker (au chapitre 6) ou, dans Kubernetes, d'un greffon CNI (partie VI). Arrêtez et supprimez : `runc kill web TERM`, `runc delete web`, `rm -rf /labo/bundle-nginx /labo/web.log`.
+`CAP_CHOWN` permet le `chown`, `CAP_SETUID` et `CAP_SETGID` le passage à l'UID 101. Docker les accorde par défaut, parmi ses 14 capabilities, c'est pourquoi l'image fonctionne sans effort avec `docker run`. Quant au réseau, `runc exec web ip addr` ne montre que l'interface `lo` : `runc` a créé un namespace réseau vide et n'y branche rien. Brancher une paire veth et un pont, comme au chapitre 8, c'est le travail de Docker (au chapitre 6) ou, dans Kubernetes, d'un greffon CNI (partie V). Arrêtez et supprimez : `runc kill web TERM`, `runc delete web`, `rm -rf /labo/bundle-nginx /labo/web.log`.
 
 </details>
 
