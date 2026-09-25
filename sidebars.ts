@@ -45,6 +45,7 @@ const sidebars: SidebarsConfig = {
         'partie-2/runtimes',
         'partie-2/securite',
         'partie-2/images-production',
+        'partie-2/chaine-approvisionnement',
       ],
     },
   ],

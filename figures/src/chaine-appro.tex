@@ -1,0 +1,35 @@
+% Figure 14.1 : la chaîne d'approvisionnement de tampon, de la source au déploiement (outils du chapitre 14).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    e/.style={qbox, text width=2.55cm, align=center, font=\footnotesize, minimum height=1.55cm, inner sep=4pt},
+    src/.style={e, draw=QGris, fill=QGrisBg},
+    fab/.style={e, draw=QBleu, fill=QBleuBg},
+    reg/.style={e, draw=QSarcelle, fill=QSarcelleBg},
+    ctl/.style={e, draw=QOrange, fill=QOrangeBg},
+    dep/.style={e, draw=QVert, fill=QVertBg},
+    art/.style={qbox, font=\scriptsize, text width=2.3cm, align=center, draw=QLine, fill=QPaper, inner sep=3pt}]
+
+  \node[src] (s) at (0,0) {\textbf{sources}\\{\ttfamily main.go}\\{\ttfamily Dockerfile}};
+  \node[fab] (b) at (3.3,0) {\textbf{construction}\\BuildKit\\{\ttfamily buildx build}};
+  \node[reg] (r) at (6.6,0) {\textbf{registre}\\{\ttfamily localhost:5001}};
+  \node[ctl] (t) at (9.9,0) {\textbf{analyse}\\Trivy\\failles, secrets};
+  \node[ctl] (c) at (13.2,0) {\textbf{signature}\\cosign\\clé privée};
+  \node[dep] (d) at (16.5,0) {\textbf{déploiement}\\vérification\\de la signature};
+  \foreach \a/\b in {s/b, b/r, r/t, t/c, c/d} { \draw[qarr] (\a) -- (\b); }
+
+  \node[art] (i) at (3.3,-2.2) {image amd64 + arm64};
+  \node[art] (sb) at (6.6,-2.2) {SBOM (SPDX)};
+  \node[art] (p) at (9.9,-2.2) {provenance (SLSA)};
+  \node[art] (sg) at (13.2,-2.2) {signature, SBOM attesté};
+  \draw[qdarr] (b.south) -- (i.north);
+  \draw[qdarr] (b.south) to[out=-60, in=150] (sb.north west);
+  \draw[qdarr] (b.south) to[out=-40, in=160] (p.north west);
+  \draw[qdarr] (c.south) -- (sg.north);
+  \node[qlbl, align=center] at (8.25,-3.15) {tout est rangé dans le registre, à côté de l'image, et désigné par son empreinte};
+
+  \node[qlbl, align=center, font=\scriptsize] at (1.65,1.15) {{\ttfamily -{}-check}};
+  \node[qlbl, align=center, font=\scriptsize] at (16.5,1.15) {partie VI};
+\end{tikzpicture}
+\end{document}

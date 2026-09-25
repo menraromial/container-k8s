@@ -1,0 +1,24 @@
+% Figure 14.2 : une étiquette déplacée vers une image pirate ; la signature reste attachée à l'empreinte d'origine.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    idx/.style={qbox, font=\ttfamily\footnotesize, text width=3.4cm, align=center, minimum height=1.1cm, inner sep=4pt},
+    bon/.style={idx, draw=QVert, fill=QVertBg},
+    mal/.style={idx, draw=QBrique, fill=QBriqueBg},
+    tag/.style={qbox, font=\ttfamily\footnotesize, draw=QBleu, fill=QBleuBg, inner sep=4pt},
+    sig/.style={qbox, font=\footnotesize, draw=QOcre, fill=QOcreBg, text width=2.6cm, align=center, inner sep=4pt}]
+
+  \node[bon] (o) at (0,0) {index 56569db2…\\{\rmfamily version 1.0.0}};
+  \node[mal] (p) at (7,0) {index 59b35b7c…\\{\rmfamily version 1.0.0-pirate}};
+  \node[tag] (t) at (3.5,2.1) {cours/tampon:1.0.0};
+  \node[sig] (s) at (0,-2.3) {signature\\{\ttfamily sha256-56569db2…}};
+
+  \draw[qdarr, draw=QMuted] (t.south west) -- node[qlbl, left, font=\scriptsize] {avant} (o.north);
+  \draw[qarr, draw=QBrique] (t.south east) -- node[qlblc=QBrique, right, font=\scriptsize] {après le push pirate} (p.north);
+  \draw[qarr, draw=QOcre] (s.north) -- node[qlblc=QOcre, right, font=\scriptsize] {signe} (o.south);
+
+  \node[qlblc=QVert, align=left, anchor=west, font=\scriptsize] at (-1.7,-3.2) {{\ttfamily cosign verify …@sha256:56569db2…} : code 0};
+  \node[qlblc=QBrique, align=left, anchor=west, font=\scriptsize] at (4.6,-1.3) {{\ttfamily cosign verify …:1.0.0}\\no signatures found : code 10};
+\end{tikzpicture}
+\end{document}

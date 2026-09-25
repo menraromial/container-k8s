@@ -18,7 +18,7 @@ C'est la partie la plus exigeante du cours, et c'est elle qui fait la différenc
 | [11. Les runtimes](runtimes.md) | la spécification OCI, runc, containerd, les shims |
 | [12. La sécurité d'un conteneur](securite.md) | capabilities, seccomp, AppArmor, utilisateurs non root, rootless |
 | [13. Des images de production](images-production.md) | constructions en plusieurs étapes, images minimales, multi-architecture |
-| 14. La chaîne d'approvisionnement | analyse de vulnérabilités, SBOM, signature des images |
+| [14. La chaîne d'approvisionnement](chaine-approvisionnement.md) | analyse de vulnérabilités, SBOM, signature des images |
 | Défi II | réduire l'image de Colis sous un seuil de taille et de vulnérabilités |
 
 Il vous faut Docker et, pour le chapitre 11, le cluster minikube du chapitre 0.2. Tout le reste est fourni par le laboratoire.

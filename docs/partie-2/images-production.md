@@ -309,7 +309,7 @@ nobody:x:65534:65534:nobody:/nonexistent:/sbin/nologin
 nonroot:x:65532:65532:nonroot:/home/nonroot:/sbin/nologin
 ```
 
-Le système de fichiers de `tampon` est entièrement lisible, avec ses outils à nous. On ajoute `--network container:t13` pour voir aussi le réseau du conteneur, comme au chapitre 8 avec `nsenter`. Kubernetes a formalisé la même idée sous le nom de **conteneurs éphémères**, avec la commande `kubectl debug`, que la partie IV utilisera. L'image de production reste minimale ; les outils de dépannage ne viennent qu'au moment où l'on en a besoin.
+Le système de fichiers de `tampon` est entièrement lisible, avec ses outils à nous. On ajoute `--network container:t13` pour voir aussi le réseau du conteneur, comme au chapitre 8 avec `nsenter`. Kubernetes a formalisé la même idée sous le nom de **conteneurs éphémères**, avec la commande `kubectl debug`, que la partie VII utilisera. L'image de production reste minimale ; les outils de dépannage ne viennent qu'au moment où l'on en a besoin.
 
 ## Et pour Python ?
 
