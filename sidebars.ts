@@ -32,6 +32,19 @@ const sidebars: SidebarsConfig = {
         'partie-1/defi',
       ],
     },
+    {
+      type: 'category',
+      label: 'II · Sous le capot',
+      className: 'partie-2',
+      collapsed: false,
+      link: {type: 'doc', id: 'partie-2/index'},
+      items: [
+        'partie-2/namespaces',
+        'partie-2/cgroups',
+        'partie-2/overlayfs',
+        'partie-2/runtimes',
+      ],
+    },
   ],
 };
 

@@ -1,0 +1,33 @@
+% Figure 9.2 : cpu.max = 20000 100000, un quota de 20 ms par période de 100 ms (mesures réelles du chapitre 9).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  % cinq périodes de 100 ms, 2,6 cm chacune
+  \foreach \i in {0,...,4} {
+    \pgfmathsetmacro{\x}{\i*2.6}
+    \fill[QVertBg] (\x,0) rectangle ++(0.52,1);
+    \draw[QVert, line width=0.8pt] (\x,0) rectangle ++(0.52,1);
+    \fill[QBriqueBg] (\x+0.52,0) rectangle ++(2.08,1);
+    \draw[QBrique, line width=0.5pt, dashed] (\x+0.52,0) rectangle ++(2.08,1);
+    \draw[QLine] (\x,-0.1) -- (\x,1.1);
+    \node[qlbl, font=\ttfamily\scriptsize] at (\x+1.3,-0.35) {période \the\numexpr\i+1\relax};
+  }
+  \draw[QLine] (13,-0.1) -- (13,1.1);
+  \node[font=\scriptsize, text=QVert] at (0.26,1.3) {20 ms};
+  \node[font=\scriptsize, text=QBrique] at (1.56,0.5) {bridé};
+  \draw[{Stealth[length=2mm]}-{Stealth[length=2mm]}, QLine, line width=0.6pt] (0,1.65) -- node[qlbl, above, font=\ttfamily\scriptsize] {100 ms} (2.6,1.65);
+  \node[qlbl, anchor=west] at (13.2,0.5) {...};
+
+  % légende et mesures
+  \begin{scope}[shift={(0,-1.6)}]
+    \draw[QVert, fill=QVertBg, line width=0.8pt] (0,0) rectangle ++(0.5,0.3);
+    \node[qlbl, anchor=west] at (0.6,0.15) {le processus tourne (quota)};
+    \draw[QBrique, fill=QBriqueBg, dashed] (4.6,0) rectangle ++(0.5,0.3);
+    \node[qlbl, anchor=west] at (5.2,0.15) {le noyau le suspend jusqu'à la période suivante};
+  \end{scope}
+  \node[qbox, draw=QInk, fill=QPaper, align=left, font=\footnotesize, anchor=north west] at (0,-2.3)
+    {\textbf{mesuré sur 5 s} : 1,03 s de processeur utilisé, bridé pendant 51 périodes sur 52\\
+     sans limite : 5,00 s de processeur, 6,4 fois plus de travail accompli};
+\end{tikzpicture}
+\end{document}

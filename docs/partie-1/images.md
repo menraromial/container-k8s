@@ -52,7 +52,7 @@ IMAGE          CREATED      CREATED BY                                      SIZE
 <missing>      7 days ago   ADD alpine-minirootfs-3.24.2-x86_64.tar.gz /…   8.42MB    buildkit.dockerfile.v0
 ```
 
-Lisez-la de bas en haut. Tout commence par l'ajout d'une archive, `alpine-minirootfs-3.24.2`, qui pèse 8,42 Mo : c'est l'image Alpine tout entière, construite sept jours plus tôt. Les mainteneurs de nginx sont partis de là. Ils ont créé un utilisateur (`addgroup -g 101...`, 4,3 Mo), copié quelques scripts de démarrage, puis installé nginx et ses modules dans une grosse étape de 49,7 Mo. Chaque ligne est une instruction du fichier qui a servi à construire l'image, le Dockerfile, que nous apprendrons à écrire au chapitre 4.
+Lisez-la de bas en haut. Tout commence par l'ajout d'une archive, `alpine-minirootfs-3.24.2`, qui pèse 8,42 Mo : c'est l'image Alpine tout entière, construite sept jours plus tôt. Les mainteneurs de nginx sont partis de là. Ils ont créé un utilisateur et installé nginx dans une même étape (`addgroup -g 101...`, 4,3 Mo), copié quelques scripts de démarrage, puis ajouté des modules supplémentaires dans une grosse étape de 49,7 Mo. Chaque ligne est une instruction du fichier qui a servi à construire l'image, le Dockerfile, que nous apprendrons à écrire au chapitre 4.
 
 Les lignes de taille `0B` ne produisent aucun fichier : elles modifient seulement la configuration. `ENV` définit une variable d'environnement, `EXPOSE` déclare un port, `CMD` et `ENTRYPOINT` disent quelle commande lancer. Cette configuration se lit avec `docker image inspect` :
 

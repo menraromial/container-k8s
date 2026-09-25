@@ -1,0 +1,47 @@
+% Figure 10.1 : les trois étages d'overlayfs et ce que devient chaque opération (expérience réelle du chapitre 10).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    f/.style={qbox, font=\ttfamily\scriptsize, minimum width=2.7cm, minimum height=0.7cm, inner sep=2pt, align=center},
+    bas/.style={f, draw=QGris, fill=QGrisBg},
+    haut/.style={f, draw=QOrange, fill=QOrangeBg},
+    vu/.style={f, draw=QBleu, fill=QBleuBg},
+    vide/.style={f, draw=QGris, dashed, fill=QPaper, text=QMuted},
+    etage/.style={font=\titrefig\normalsize, anchor=east, align=right}]
+
+  \node[etage, text=QBleu] at (-0.3,4.2) {fusion\\{\rmfamily\scriptsize ce que voit le conteneur}};
+  \node[etage, text=QOrange] at (-0.3,2.4) {haut\\{\rmfamily\scriptsize modifiable (upperdir)}};
+  \node[etage, text=QInk] at (-0.3,0.6) {bas\\{\rmfamily\scriptsize lecture seule (lowerdir)}};
+
+  % colonnes : un fichier chacune
+  \foreach \x/\t in {1.6/lire, 4.6/modifier, 7.6/créer, 10.6/supprimer, 13.6/remplacer un dossier} {
+    \node[font=\titrefig\normalsize] at (\x,5.35) {\t};
+  }
+  % lire
+  \node[vu] (v1) at (1.6,4.2) {lisez-moi.txt};
+  \node[bas] (b1) at (1.6,0.6) {lisez-moi.txt};
+  \draw[qarr, draw=QBleu] (b1.north) -- node[qlblc=QBleu, right, font=\scriptsize, align=left] {rien en haut :\\lu en bas} (v1.south);
+  % modifier : copie vers le haut
+  \node[vu] (v2) at (4.6,4.2) {config.txt};
+  \node[haut] (h2) at (4.6,2.4) {config.txt\\copie modifiée};
+  \node[bas] (b2) at (4.6,0.6) {config.txt\\intact};
+  \draw[qarr, draw=QOrange] (b2.north) -- node[qlblc=QOrange, right, font=\scriptsize] {copie} (h2.south);
+  \draw[qarr, draw=QBleu] (h2.north) -- (v2.south);
+  % créer
+  \node[vu] (v3) at (7.6,4.2) {nouveau.txt};
+  \node[haut] (h3) at (7.6,2.4) {nouveau.txt};
+  \node[vide] at (7.6,0.6) {rien};
+  \draw[qarr, draw=QBleu] (h3.north) -- (v3.south);
+  % supprimer : whiteout
+  \node[vide] at (10.6,4.2) {absent};
+  \node[haut] (h4) at (10.6,2.4) {lisez-moi.txt\\{\rmfamily c 0, 0 : whiteout}};
+  \node[bas] at (10.6,0.6) {lisez-moi.txt\\intact};
+  % remplacer un dossier : opaque
+  \node[vu] at (13.6,4.2) {dossier/c.txt};
+  \node[haut] (h5) at (13.6,2.4) {dossier/ opaque\\c.txt};
+  \node[bas] at (13.6,0.6) {dossier/\\a.txt, b.txt};
+  \node[qlbl, font=\scriptsize] at (13.6,-0.35) {cachés par l'attribut opaque};
+  \node[qlbl, font=\scriptsize] at (10.6,-0.35) {caché par le whiteout};
+\end{tikzpicture}
+\end{document}

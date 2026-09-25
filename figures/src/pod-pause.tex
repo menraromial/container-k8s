@@ -1,0 +1,30 @@
+% Figure 11.2 : deux conteneurs d'un même Pod, vus par le runtime (inodes réels du chapitre 11).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    ns/.style={qbox, font=\ttfamily\scriptsize, minimum width=2.6cm, minimum height=0.62cm, inner sep=2pt},
+    part/.style={ns, draw=QSarcelle, fill=QSarcelleBg},
+    propre/.style={ns, draw=QGris, fill=QGrisBg}]
+
+  \node[qcadre, minimum width=10.8cm, minimum height=5.9cm, draw=QOcre] at (2.9,1.15) {};
+  \node[font=\titrefig\normalsize, text=QOcre, anchor=north west] at (-2.4,4.0) {Pod demo-runtime};
+  \node[font=\ttfamily\scriptsize, text=QMuted, anchor=north east] at (8.2,4.0) {containerd-shim, PID 4022};
+
+  \node[font=\titrefig\normalsize] at (0,3.05) {pause (PID 4047)};
+  \node[font=\titrefig\normalsize] at (5.8,3.05) {nginx (PID 4071)};
+
+  \foreach \y/\t/\i in {2.2/net/4026534223, 1.35/uts/4026534287, 0.5/ipc/4026534288} {
+    \node[part] (p\t) at (0,\y) {\t:[\i]};
+    \node[part] (n\t) at (5.8,\y) {\t:[\i]};
+    \draw[qarr, draw=QSarcelle] (n\t.west) -- (p\t.east);
+  }
+  \node[propre] at (0,-0.35) {pid:[4026534289]};
+  \node[propre] at (5.8,-0.35) {pid:[4026534291]};
+  \node[propre] at (0,-1.2) {mnt:[4026534286]};
+  \node[propre] at (5.8,-1.2) {mnt:[4026534290]};
+
+  \node[qlblc=QSarcelle, font=\scriptsize, fill=QPaper, inner sep=1.5pt] at (2.9,2.62) {rejoint, par {\ttfamily /proc/4047/ns/…}};
+  \node[qlbl, font=\scriptsize, fill=QPaper, inner sep=1.5pt] at (2.9,-0.77) {créés pour chacun};
+\end{tikzpicture}
+\end{document}

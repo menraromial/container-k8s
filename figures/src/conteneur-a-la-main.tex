@@ -1,0 +1,21 @@
+% Figure 8.2 : les étapes d'un conteneur fait à la main, et ce qui lui manque encore.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    etape/.style={qbox, text width=3.1cm, align=left, font=\footnotesize, minimum height=1.9cm, inner sep=5pt},
+    fait/.style={etape, draw=QVert, fill=QVertBg},
+    manque/.style={etape, draw=QBrique, fill=QPaper, dashed}]
+
+  \node[fait] (e1) at (0,0) {\textbf{1. des fichiers}\\{\ttfamily\scriptsize skopeo copy}\\{\ttfamily\scriptsize umoci unpack}\\un dossier rootfs};
+  \node[fait] (e2) at (3.8,0) {\textbf{2. des namespaces}\\{\ttfamily\scriptsize unshare --mount --uts}\\{\ttfamily\scriptsize --ipc --net --pid --fork}};
+  \node[fait] (e3) at (7.6,0) {\textbf{3. une racine}\\{\ttfamily\scriptsize chroot rootfs}\\le processus ne voit plus que ce dossier};
+  \node[fait] (e4) at (11.4,0) {\textbf{4. l'intérieur}\\{\ttfamily\scriptsize mount -t proc}\\{\ttfamily\scriptsize hostname}\\{\ttfamily\scriptsize ip link ... veth}};
+  \foreach \a/\b in {e1/e2, e2/e3, e3/e4} { \draw[qarr] (\a) -- (\b); }
+
+  \node[manque] (m1) at (3.8,-2.9) {\textbf{des limites}\\mémoire, processeur\\{\itshape cgroups, chapitre 9}};
+  \node[manque] (m2) at (7.6,-2.9) {\textbf{des couches}\\partage, copie à l'écriture\\{\itshape overlayfs, chapitre 10}};
+  \node[manque] (m3) at (11.4,-2.9) {\textbf{des protections}\\capabilities, seccomp\\{\itshape chapitre 12}};
+  \node[qlblc=QBrique, anchor=east, align=right] at (1.85,-2.9) {ce qui manque encore\\à notre conteneur};
+\end{tikzpicture}
+\end{document}

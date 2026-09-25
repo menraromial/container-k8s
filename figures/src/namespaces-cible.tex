@@ -1,0 +1,37 @@
+% Figure 8.1 : les namespaces du poste et ceux du conteneur « cible » (numéros réels relevés au chapitre 8).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    ns/.style={qbox, font=\ttfamily\scriptsize, minimum width=2.9cm, minimum height=0.5cm, inner sep=2pt},
+    type/.style={font=\ttfamily\small, anchor=east},
+    role/.style={font=\scriptsize, text=QMuted, anchor=west}]
+
+  \node[qtitre] at (0.2,9.0) {processus 1 du poste};
+  \node[qtitre] at (4.0,9.0) {nginx, dans « cible »};
+
+  \foreach \t/\h/\c/\r/\y in {
+      mnt/4026531832/4026534000/{les points de montage, donc les fichiers}/8.1,
+      uts/4026531838/4026534001/{le nom de la machine}/7.3,
+      ipc/4026531839/4026534002/{la mémoire partagée, les files de messages}/6.5,
+      pid/4026531836/4026534003/{les numéros de processus}/5.7,
+      net/4026531833/4026534005/{interfaces, adresses, routes, ports}/4.9,
+      cgroup/4026531835/4026534119/{la vue sur l'arbre des cgroups}/4.1} {
+    \node[type] at (0.1,\y) {\t};
+    \node[ns, draw=QGris, fill=QGrisBg, anchor=west] at (0.2,\y) {\h};
+    \node[ns, draw=QBleu, fill=QBleuBg, anchor=west] at (4.0,\y) {\c};
+    \node[role] at (7.1,\y) {\r};
+  }
+  \foreach \t/\h/\y in {
+      user/4026531837/3.0,
+      time/4026531834/2.2} {
+    \node[type] at (0.1,\y) {\t};
+    \node[ns, draw=QOrange, fill=QOrangeBg, minimum width=6.7cm, anchor=west] at (0.2,\y) {\h \quad partagé};
+  }
+  \node[role] at (7.1,3.0) {les utilisateurs : root dehors = root dedans};
+  \node[role] at (7.1,2.2) {les horloges};
+  \draw[QMuted, dashed] (-1.3,3.55) -- (12.6,3.55);
+  \node[qlblc=QBleu, anchor=west, font=\scriptsize] at (0.2,1.4) {en bleu : un namespace propre au conteneur ;};
+  \node[qlblc=QOrange, anchor=west, font=\scriptsize] at (6.3,1.4) {en orange : le même que celui du poste};
+\end{tikzpicture}
+\end{document}

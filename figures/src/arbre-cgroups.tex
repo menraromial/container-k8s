@@ -1,0 +1,29 @@
+% Figure 9.1 : l'arbre des cgroups du poste, avec deux conteneurs Docker (valeurs réelles du chapitre 9).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    cg/.style={qbox, font=\ttfamily\scriptsize, align=left, inner sep=4pt},
+    lien/.style={draw=QLine, line width=0.7pt}]
+
+  \node[cg, draw=QInk, fill=QGrisBg, text width=5.6cm] (racine) at (7.2,6.2)
+    {/sys/fs/cgroup\\{\rmfamily\footnotesize contrôleurs : cpu, memory, pids, io, cpuset...}};
+
+  \node[cg, draw=QGris, fill=QPaper] (init) at (0.9,4.3) {init.scope\\{\rmfamily\footnotesize systemd, PID 1}};
+  \node[cg, draw=QGris, fill=QPaper] (user) at (4.3,4.3) {user.slice\\{\rmfamily\footnotesize vos sessions}};
+  \node[cg, draw=QOrange, fill=QOrangeBg] (sys) at (9.6,4.3) {system.slice\\{\rmfamily\footnotesize les services}};
+  \node[cg, draw=QGris, fill=QPaper] (mach) at (13.4,4.3) {machine.slice\\{\rmfamily\footnotesize machines virtuelles}};
+  \foreach \n in {init,user,sys,mach} { \draw[lien] (racine.south) -- (\n.north); }
+
+  \node[cg, draw=QGris, fill=QPaper] (dock) at (5.6,2.2) {docker.service\\{\rmfamily\footnotesize dockerd}};
+  \node[cg, draw=QBleu, fill=QBleuBg, text width=3.6cm] (cible) at (9.3,1.9)
+    {docker-090cfd...scope\\{\rmfamily\footnotesize conteneur cible}\\memory.max max\\cpu.max max 100000\\pids.max 16221};
+  \node[cg, draw=QBrique, fill=QBriqueBg, text width=3.6cm, line width=1.1pt] (lim) at (13.3,1.9)
+    {docker-500cc0...scope\\{\rmfamily\footnotesize conteneur limite}\\memory.max 67108864\\cpu.max 50000 100000\\pids.max 50};
+  \foreach \n in {dock,cible,lim} { \draw[lien] (sys.south) -- (\n.north); }
+
+  \node[qlblc=QBrique, align=left, font=\ttfamily\scriptsize, anchor=north] at (13.3,0.55)
+    {-{}-memory 64m -{}-cpus 0.5\\-{}-pids-limit 50};
+  \node[qlbl, align=left, font=\scriptsize, anchor=north] at (9.3,0.55) {aucune limite : « max »};
+\end{tikzpicture}
+\end{document}

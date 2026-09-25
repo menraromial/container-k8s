@@ -1,0 +1,45 @@
+% Figure 11.1 : la chaîne qui lance un conteneur, chez Docker et chez Kubernetes (relevés réels du chapitre 11).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    c/.style={qbox, text width=4.3cm, align=left, font=\footnotesize, minimum height=1.05cm, inner sep=5pt},
+    haut/.style={c, draw=QBleu, fill=QBleuBg},
+    cd/.style={c, draw=QSarcelle, fill=QSarcelleBg},
+    shim/.style={c, draw=QOcre, fill=QOcreBg},
+    bas/.style={c, draw=QOrange, fill=QOrangeBg, dashed},
+    proc/.style={c, draw=QVert, fill=QVertBg},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1.5pt}]
+
+  \node[font=\titrefig\large] at (0,8.35) {Docker, sur votre poste};
+  \node[font=\titrefig\large] at (6.2,8.35) {Kubernetes, dans le nœud};
+
+  % colonne Docker
+  \node[haut] (d1) at (0,7.3) {\textbf{\ttfamily docker}\\le client en ligne de commande};
+  \node[haut] (d2) at (0,5.75) {\textbf{\ttfamily dockerd}\\API, réseau, volumes, build};
+  \node[cd] (d3) at (0,4.2) {\textbf{\ttfamily containerd}\\images, couches, conteneurs};
+  \node[shim] (d4) at (0,2.65) {\textbf{\ttfamily containerd-shim-runc-v2}\\un par conteneur, reste en place};
+  \node[bas] (d5) at (0,1.1) {\textbf{\ttfamily runc}\\crée le conteneur, puis s'en va};
+  \node[proc] (d6) at (0,-0.45) {\textbf{\ttfamily nginx}\\le processus du conteneur};
+  \draw[qarr] (d1) -- node[lien, right=2pt] {API HTTP} (d2);
+  \draw[qarr] (d2) -- node[lien, right=2pt] {gRPC} (d3);
+  \draw[qarr] (d3) -- node[lien, right=2pt] {lance} (d4);
+  \draw[qarr] (d4) -- node[lien, right=2pt] {bundle OCI} (d5);
+  \draw[qarr] (d5) -- node[lien, right=2pt] {exec} (d6);
+
+  % colonne Kubernetes
+  \node[haut] (k1) at (6.2,7.3) {\textbf{\ttfamily kubelet}\\l'agent du nœud};
+  \node[cd] (k3) at (6.2,4.2) {\textbf{\ttfamily containerd}\\avec son greffon CRI};
+  \node[shim] (k4) at (6.2,2.65) {\textbf{\ttfamily containerd-shim-runc-v2}\\un par Pod, reste en place};
+  \node[bas] (k5) at (6.2,1.1) {\textbf{\ttfamily runc}\\crée le conteneur, puis s'en va};
+  \node[proc] (k6) at (6.2,-0.45) {\textbf{\ttfamily pause} + \textbf{\ttfamily nginx}\\les processus du Pod};
+  \draw[qarr] (k1) -- node[lien, right=2pt, align=left] {CRI (gRPC)\\{\ttfamily containerd.sock}} (k3);
+  \draw[qarr] (k3) -- node[lien, right=2pt] {lance} (k4);
+  \draw[qarr] (k4) -- node[lien, right=2pt] {bundle OCI} (k5);
+  \draw[qarr] (k5) -- node[lien, right=2pt] {exec} (k6);
+
+  % niveaux
+  \draw[QMuted, line width=0.6pt, decorate, decoration={brace, amplitude=5pt}] (9.1,4.75) -- node[qlbl, right=7pt, align=left] {runtime de\\haut niveau} (9.1,2.1);
+  \draw[QMuted, line width=0.6pt, decorate, decoration={brace, amplitude=5pt}] (9.1,1.65) -- node[qlbl, right=7pt, align=left] {runtime de\\bas niveau (OCI)} (9.1,0.55);
+\end{tikzpicture}
+\end{document}
