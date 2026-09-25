@@ -1,0 +1,29 @@
+% Figure 2.2 : ce que fait docker stop, avec un PID 1 qui ignore SIGTERM et avec --init.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    sig/.style={qbox, font=\ttfamily\footnotesize, inner sep=3pt},
+    fin/.style={qbox, font=\footnotesize, inner sep=4pt, align=center}]
+
+  % axe du temps
+  \draw[qarr, draw=QMuted] (0,-0.2) -- (13.6,-0.2) node[qlbl, anchor=west] {temps};
+  \foreach \t/\l in {0/0 s, 11.5/10 s} {
+    \draw[QMuted] (\t,-0.3) -- (\t,-0.1);
+    \node[qlbl] at (\t,-0.55) {\l};
+  }
+
+  % cas 1 : sleep est le PID 1 et ignore SIGTERM
+  \node[qtitre, font=\titrefig\normalsize] at (0,3.35) {sleep en PID 1, sans gestionnaire de signal};
+  \node[sig, draw=QOrange, fill=QOrangeBg] (t1) at (1,2.4) {SIGTERM};
+  \draw[QMuted, dashed] (2.1,2.4) -- node[qlbl, above] {ignoré : le noyau ne livre pas SIGTERM à un PID 1 qui ne l'attend pas} (10.35,2.4);
+  \node[sig, draw=QBrique, fill=QBriqueBg] (k1) at (11.5,2.4) {SIGKILL};
+  \node[fin, draw=QBrique, fill=QBriqueBg, anchor=west] at (12.4,2.4) {10,24 s\\code 137};
+
+  % cas 2 : --init
+  \node[qtitre, font=\titrefig\normalsize] at (0,1.35) {même conteneur avec \texttt{-{}-init}};
+  \node[sig, draw=QOrange, fill=QOrangeBg] (t2) at (1,0.55) {SIGTERM};
+  \node[fin, draw=QVert, fill=QVertBg, anchor=west] at (2.2,0.55) {0,19 s\\code 143};
+  \node[qlbl, anchor=west, align=left] at (4.1,0.55) {tini, le PID 1 ajouté par \texttt{-{}-init}, transmet\\le signal à sleep, qui s'arrête aussitôt};
+\end{tikzpicture}
+\end{document}

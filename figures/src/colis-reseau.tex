@@ -1,0 +1,28 @@
+% Figure 6.2 : Colis assemblé à la main sur le réseau « colis ».
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    svc/.style={qbox, minimum width=2.9cm, minimum height=1.15cm, font=\footnotesize, align=center}]
+
+  \draw[qcadre, draw=QVert, dashed, fill=QPaper] (2.6,-3.9) rectangle (16.9,1.6);
+  \node[qtitre, text=QVert] at (2.85,1.4) {réseau {\ttfamily colis} : chacun joint les autres par leur nom};
+
+  \node[svc, draw=QGris, fill=QGrisBg] (nav) at (-0.6,0) {navigateur\\{\ttfamily\scriptsize localhost:8080}};
+  \node[svc, draw=QBleu, fill=QBleuBg] (web) at (4.6,0) {{\ttfamily\normalsize web}\\nginx};
+  \node[svc, draw=QBleu, fill=QBleuBg] (api) at (9.6,0) {{\ttfamily\normalsize api}\\{\ttfamily\scriptsize :8000, non publié}};
+  \node[svc, draw=QVert, fill=QVertBg] (pg)  at (14.8,0) {{\ttfamily\normalsize postgres}\\{\ttfamily\scriptsize :5432}};
+  \node[svc, draw=QVert, fill=QVertBg] (rd)  at (9.6,-2.6) {{\ttfamily\normalsize redis}\\{\ttfamily\scriptsize :6379}};
+  \node[svc, draw=QViolet, fill=QVioletBg] (wk) at (14.8,-2.6) {{\ttfamily\normalsize worker}};
+  \node[qbox, draw=QVert, fill=QVertBg, font=\scriptsize, align=center] (vol) at (14.8,2.55) {volume\\{\ttfamily colis-donnees}};
+
+  \draw[qarr, draw=QBrique] (nav) -- node[qlblc=QBrique, above, font=\ttfamily\scriptsize] {-p 8080:80} (web);
+  \draw[qarr] (web) -- node[qlbl, above, font=\ttfamily\scriptsize] {http://api:8000} (api);
+  \draw[qarr] (api) -- node[qlbl, above, font=\ttfamily\scriptsize] {postgres:5432} (pg);
+  \draw[qarr] (api) -- node[qlbl, left, font=\ttfamily\scriptsize] {redis:6379} (rd);
+  \draw[qarr] (wk) -- (rd);
+  \draw[qarr] (wk) -- (pg);
+  \draw[qbiarr, draw=QVert] (pg.north) -- (vol.south);
+  \node[qlblc=QBrique, font=\scriptsize, align=left, anchor=north west] at (2.8,-3.0) {seul {\ttfamily web} est joignable\\depuis la machine};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,39 @@
+% Figure 2.1 : le cycle de vie d'un conteneur et les commandes qui le font changer d'état.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    etat/.style={qbox, minimum width=2.9cm, minimum height=1.05cm, font=\titrefig\large, line width=1pt},
+    cmd/.style={font=\ttfamily\scriptsize, text=QInk, fill=QPaper, inner sep=1.5pt},
+    evt/.style={font=\footnotesize, text=QMuted, fill=QPaper, inner sep=1.5pt}]
+
+  \node[etat, draw=QGris, fill=QGrisBg]     (cree)   at (0,0)    {créé};
+  \node[etat, draw=QVert, fill=QVertBg]     (marche) at (5.6,0)  {en marche};
+  \node[etat, draw=QOcre, fill=QOcreBg]     (pause)  at (5.6,-3) {en pause};
+  \node[etat, draw=QBrique, fill=QBriqueBg] (arrete) at (11.2,0) {arrêté};
+  \node[etat, draw=QGris, dashed, fill=QPaper, text=QMuted] (suppr) at (11.2,-3) {supprimé};
+
+  % entrées
+  \draw[qarr] (-3.3,0) -- node[cmd, above=2pt] {docker create} (cree);
+  \draw[qarr] (3.5,1.7) node[cmd, above] {docker run = create + start} -- (marche.north west);
+
+  % créé -> en marche
+  \draw[qarr] (cree) -- node[cmd, above] {docker start} (marche);
+
+  % pause
+  \draw[qarr] ([xshift=-4mm]marche.south) -- node[cmd, left] {docker pause} ([xshift=-4mm]pause.north);
+  \draw[qarr] ([xshift=4mm]pause.north) -- node[cmd, right] {docker unpause} ([xshift=4mm]marche.south);
+
+  % en marche -> arrêté (trois causes)
+  \draw[qarr] ([yshift=2.5mm]marche.east) -- node[cmd, above, align=center] {docker stop\\docker kill} ([yshift=2.5mm]arrete.west);
+  \draw[qarr] ([yshift=-2.5mm]marche.east) -- node[evt, below, align=center] {le processus\\se termine} ([yshift=-2.5mm]arrete.west);
+
+  % arrêté -> en marche
+  \draw[qarr] (arrete.north) to[out=125, in=55] node[cmd, above, align=center] {docker start, docker restart\\ou politique --restart} (marche.north);
+
+  % suppression
+  \draw[qarr] (arrete) -- node[cmd, right] {docker rm} (suppr);
+  \draw[qarr] (cree.south) |- node[cmd, pos=0.75, below] {docker rm} (11.2,-4.3) -- (suppr.south);
+  \draw[qdarr, draw=QBrique] (marche.south east) -- node[cmd, sloped, above] {docker rm -f} ([yshift=3mm]suppr.west);
+\end{tikzpicture}
+\end{document}

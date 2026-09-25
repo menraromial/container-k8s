@@ -1,0 +1,41 @@
+% Figure 4.1 : l'ordre des instructions et le cache de construction, après une modification du code.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    etape/.style={qbox, font=\ttfamily\footnotesize, minimum width=6.5cm, minimum height=0.62cm, anchor=west, inner sep=3pt},
+    cache/.style={etape, draw=QVert, fill=QVertBg},
+    refait/.style={etape, draw=QBrique, fill=QBriqueBg, line width=1.1pt},
+    duree/.style={font=\footnotesize, anchor=west}]
+
+  % colonne 1 : COPY . . avant pip
+  \node[qtitre] at (0,5.35) {le code copié avant les dépendances};
+  \node[cache]  (a1) at (0,4.4) {FROM python:3.14-slim};
+  \node[cache]  (a2) at (0,3.6) {WORKDIR /app};
+  \node[refait] (a3) at (0,2.8) {COPY . .};
+  \node[refait] (a4) at (0,2.0) {RUN pip install -r requirements.txt};
+  \node[duree, text=QVert]   at (6.65,4.4) {en cache};
+  \node[duree, text=QVert]   at (6.65,3.6) {en cache};
+  \node[duree, text=QBrique] at (6.65,2.8) {refait : le code a changé};
+  \node[duree, text=QBrique] at (6.65,2.0) {refait : 9,3 s};
+  \node[qlblc=QBrique, anchor=west] at (0,1.15) {reconstruction : 10,30 s};
+  \draw[qarr, draw=QBrique] (-0.35,2.8) -- (-0.35,2.0);
+  \node[qlblc=QBrique, anchor=east, align=right] at (-0.45,2.4) {tout ce qui suit\\est refait};
+
+  % colonne 2 : dépendances d'abord
+  \begin{scope}[xshift=12.6cm]
+    \node[qtitre] at (0,5.35) {les dépendances installées d'abord};
+    \node[cache]  at (0,4.4) {FROM python:3.14-slim};
+    \node[cache]  at (0,3.6) {WORKDIR /app};
+    \node[cache]  at (0,2.8) {COPY requirements.txt .};
+    \node[cache]  at (0,2.0) {RUN pip install -r requirements.txt};
+    \node[refait] at (0,1.2) {COPY colis/ colis/};
+    \node[duree, text=QVert]   at (6.65,4.4) {en cache};
+    \node[duree, text=QVert]   at (6.65,3.6) {en cache};
+    \node[duree, text=QVert]   at (6.65,2.8) {en cache};
+    \node[duree, text=QVert]   at (6.65,2.0) {en cache};
+    \node[duree, text=QBrique] at (6.65,1.2) {refait : 0,1 s};
+    \node[qlblc=QVert, anchor=west] at (0,0.35) {reconstruction : 0,63 s};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

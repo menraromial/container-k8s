@@ -1,0 +1,38 @@
+% Figure 6.1 : un réseau pont de Docker, vu depuis la machine.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    ctr/.style={qbox, draw=QBleu, fill=QBleuBg, minimum width=3.4cm, minimum height=1.55cm, align=center},
+    iface/.style={qbox, font=\ttfamily\scriptsize, inner sep=2pt, minimum height=0.45cm}]
+
+  % machine
+  \draw[qcadre, fill=QGrisBg] (0,0) rectangle (16.2,8.4);
+  \node[qtitre] at (0.25,8.2) {votre machine};
+
+  % conteneurs
+  \foreach \x/\n/\ip in {3.2/web/172.19.0.6, 8.1/api/172.19.0.4, 13.0/postgres/172.19.0.2} {
+    \node[ctr] (c\n) at (\x,6.35) {};
+    \node[font=\ttfamily\small, anchor=north] at (\x,7.05) {\n};
+    \node[iface, draw=QBleu, fill=QPaper] (e\n) at (\x,5.85) {eth0 \ip};
+    \node[iface, draw=QOrange, fill=QOrangeBg] (v\n) at (\x,4.15) {veth};
+    \draw[QOrange, line width=1pt] (e\n.south) -- node[qlblc=QOrange, right, font=\scriptsize] {paire veth} (v\n.north);
+  }
+  \node[qlblc=QBleu, font=\scriptsize, align=center] at (8.1,7.6) {DNS intégré 127.0.0.11 : « api » $\to$ 172.19.0.4};
+
+  % pont
+  \node[qbox, draw=QVert, fill=QVertBg, line width=1.1pt, minimum width=12.6cm, minimum height=0.7cm, font=\small] (pont) at (8.1,3.1)
+    {pont {\ttfamily br-41b419c90788}, passerelle 172.19.0.1 (réseau {\ttfamily colis})};
+  \foreach \n in {web, api, postgres} { \draw[QOrange, line width=1pt] (v\n.south) -- (v\n.south |- pont.north); }
+
+  % carte réseau et NAT
+  \node[qbox, draw=QGris, fill=QPaper, font=\ttfamily\small] (wifi) at (3.2,1.0) {wlp0s20f3};
+  \node[qbox, draw=QBrique, fill=QBriqueBg, align=left, font=\scriptsize, text width=6.8cm] (nat) at (10.4,1.15)
+    {\textbf{règles iptables posées par Docker}\\ {\ttfamily DNAT : port 8080} $\to$ {\ttfamily 172.19.0.6:80}\\ {\ttfamily MASQUERADE : 172.19.0.0/16 sortant}};
+  \draw[qbiarr] (wifi.north) -- (wifi.north |- pont.south);
+
+  % trafic entrant
+  \node[qlbl, anchor=east] (nav) at (-0.4,1.0) {navigateur};
+  \draw[qarr, draw=QBrique] (nav.east) -- node[qlblc=QBrique, above, font=\ttfamily\scriptsize] {:8080} (wifi.west);
+\end{tikzpicture}
+\end{document}

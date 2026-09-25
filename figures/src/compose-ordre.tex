@@ -1,0 +1,41 @@
+% Figure 7.1 : l'ordre de démarrage de Colis avec depends_on et les sondes de santé.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    nom/.style={font=\ttfamily\small, anchor=east},
+    demarre/.style={draw=QBleu, fill=QBleuBg, line width=0.8pt, rounded corners=1pt},
+    sain/.style={draw=QVert, fill=QVertBg, line width=0.8pt, rounded corners=1pt},
+    jalon/.style={circle, fill=QVert, inner sep=1.6pt},
+    dep/.style={-{Stealth[length=2mm]}, line width=0.7pt, draw=QMuted, dashed}]
+
+  % lignes
+  \foreach \y/\n in {4/postgres, 3/redis, 2/worker, 1/api, 0/web} { \node[nom] at (-0.2,\y) {\n}; }
+
+  % barres : démarré (bleu) puis sain (vert)
+  \draw[demarre] (0,3.8) rectangle (2.6,4.2);   \draw[sain] (2.6,3.8) rectangle (13,4.2);
+  \draw[demarre] (0,2.8) rectangle (1.6,3.2);   \draw[sain] (1.6,2.8) rectangle (13,3.2);
+  \draw[demarre] (2.9,1.8) rectangle (13,2.2);
+  \draw[demarre] (2.9,0.8) rectangle (5.4,1.2); \draw[sain] (5.4,0.8) rectangle (13,1.2);
+  \draw[demarre] (5.7,-0.2) rectangle (13,0.2);
+
+  \node[jalon] (p) at (2.6,4) {}; \node[jalon] (r) at (1.6,3) {}; \node[jalon] (a) at (5.4,1) {};
+  \draw[dep] (p) to[out=-90, in=180] (2.9,2);
+  \draw[dep] (p) to[out=-90, in=180] (2.9,1);
+  \draw[dep] (a) to[out=-90, in=180] (5.7,0);
+
+  \node[qlbl, anchor=west] at (13.2,4) {pg\_isready répond};
+  \node[qlbl, anchor=west] at (13.2,3) {redis-cli ping répond};
+  \node[qlbl, anchor=west] at (13.2,2) {pas de sonde};
+  \node[qlbl, anchor=west] at (13.2,1) {/pret répond};
+  \node[qlbl, anchor=west] at (13.2,0) {port 8080 publié};
+
+  % légende
+  \begin{scope}[shift={(0,-1.3)}]
+    \draw[demarre] (0,0) rectangle ++(0.6,0.3); \node[qlbl, anchor=west] at (0.7,0.15) {démarré (Started)};
+    \draw[sain] (3.8,0) rectangle ++(0.6,0.3);  \node[qlbl, anchor=west] at (4.5,0.15) {sain (Healthy)};
+    \draw[dep] (7.3,0.15) -- ++(0.8,0); \node[qlbl, anchor=west] at (8.2,0.15) {condition : service\_healthy};
+  \end{scope}
+  \draw[qarr, draw=QMuted] (0,-0.6) -- (13,-0.6) node[qlbl, anchor=west] {temps};
+\end{tikzpicture}
+\end{document}

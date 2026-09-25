@@ -1,0 +1,51 @@
+% Figure 1.1 : machines virtuelles et conteneurs, ce qui est dupliqué et ce qui est partagé.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    couche/.style={qbox, minimum height=0.78cm, font=\footnotesize, inner sep=3pt},
+    app/.style={couche, draw=QVert, fill=QVertBg},
+    lib/.style={couche, draw=QBleu, fill=QBleuBg, align=center, text width=2.9cm},
+    noyau/.style={couche, draw=QOrange, fill=QOrangeBg},
+    base/.style={couche, draw=QGris, fill=QGrisBg}]
+
+  % ---------------- machines virtuelles ----------------
+  \node[qtitre] at (0,7.6) {Machines virtuelles};
+  \node[base, minimum width=7.2cm] at (3.6,0.4) {matériel (processeurs, mémoire, disque)};
+  \node[base, minimum width=7.2cm] at (3.6,1.3) {système hôte et hyperviseur (KVM, VirtualBox...)};
+  \foreach \x/\a/\l in {1.75/application A/Python 3.14, 5.45/application B/Python 3.9} {
+    \draw[qcadre, dashed] (\x-1.7,1.85) rectangle (\x+1.7,6.85);
+    \node[qlbl, anchor=north west] at (\x-1.6,6.8) {machine virtuelle};
+    \node[noyau, minimum width=3.1cm] at (\x,2.4) {noyau invité};
+    \node[lib, minimum width=3.1cm] at (\x,3.4) {système invité\\complet};
+    \node[lib, minimum width=3.1cm] at (\x,4.55) {\l\\et ses bibliothèques};
+    \node[app, minimum width=3.1cm] at (\x,5.6) {\a};
+  }
+  \node[qlblc=QOrange, align=center] at (3.6,-0.55) {chaque machine démarre son propre noyau\\et son propre système d'exploitation};
+
+  % ---------------- conteneurs ----------------
+  \begin{scope}[xshift=8.6cm]
+    \node[qtitre] at (0,7.6) {Conteneurs};
+    \node[base, minimum width=7.2cm] at (3.6,0.4) {matériel (processeurs, mémoire, disque)};
+    \node[noyau, minimum width=7.2cm, line width=1.1pt] at (3.6,1.3) {un seul noyau Linux, partagé};
+    \node[base, minimum width=7.2cm] at (3.6,2.2) {moteur de conteneurs (Docker, containerd, Podman)};
+    \foreach \x/\a/\l in {1.75/application A/Python 3.14, 5.45/application B/Python 3.9} {
+      \draw[qcadre, dashed] (\x-1.7,2.75) rectangle (\x+1.7,5.85);
+      \node[qlbl, anchor=north west] at (\x-1.6,5.8) {conteneur};
+      \node[lib, minimum width=3.1cm] at (\x,3.45) {\l\\et ses bibliothèques};
+      \node[app, minimum width=3.1cm] at (\x,4.6) {\a};
+    }
+    \node[qlblc=QOrange, align=center] at (3.6,-0.55) {chaque conteneur n'est qu'un processus du noyau\\hôte, qui voit ses propres fichiers};
+  \end{scope}
+
+  % légende
+  \begin{scope}[shift={(2.2,-1.75)}]
+    \foreach \x/\c/\cbg/\t in {0/QVert/QVertBg/votre application,
+        4.1/QBleu/QBleuBg/ce que l'application emporte avec elle,
+        10.2/QOrange/QOrangeBg/noyau} {
+      \draw[draw=\c, fill=\cbg, line width=0.8pt] (\x,0) rectangle ++(0.45,0.3);
+      \node[qlbl, anchor=west] at (\x+0.55,0.15) {\t};
+    }
+  \end{scope}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,35 @@
+% Figure 5.1 : volume, montage lié et tmpfs : où vivent réellement les fichiers.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    chemin/.style={qbox, font=\ttfamily\footnotesize, anchor=west, minimum width=4.6cm, minimum height=0.62cm, inner sep=3pt},
+    lieu/.style={qbox, font=\footnotesize, align=left, text width=4.4cm, inner sep=5pt}]
+
+  % le conteneur
+  \draw[qcadre, draw=QBleu, fill=QBleuBg] (0,3.2) rectangle (15.6,7.0);
+  \node[qtitre, text=QBleu] at (0.25,6.8) {ce que voit le conteneur};
+  \node[chemin, draw=QGris, fill=QGrisBg] (racine) at (0.4,5.7) {/ (image + couche modifiable)};
+  \node[chemin, draw=QVert, fill=QVertBg, line width=1.1pt] (pg) at (0.4,4.2) {/var/lib/postgresql};
+  \node[chemin, draw=QOrange, fill=QOrangeBg, line width=1.1pt] (app) at (5.5,4.2) {/app/colis};
+  \node[chemin, draw=QViolet, fill=QVioletBg, line width=1.1pt] (tmp) at (10.6,4.2) {/tmp};
+  \node[qlbl, anchor=west] at (5.7,5.7) {tout le reste de l'arborescence vient de l'image};
+
+  % la machine
+  \draw[qcadre, fill=QGrisBg] (0,-1.2) rectangle (15.6,2.4);
+  \node[qtitre] at (0.25,2.2) {où les fichiers vivent réellement, sur votre machine};
+  \node[lieu, draw=QVert, fill=QPaper] (lv) at (2.6,0.45)
+    {\textbf{volume} {\ttfamily colis-donnees}\\ {\ttfamily\scriptsize /var/lib/docker/volumes/}\\ {\ttfamily\scriptsize colis-donnees/\_data}\\ géré par Docker};
+  \node[lieu, draw=QOrange, fill=QPaper] (lb) at (7.8,0.45)
+    {\textbf{montage lié}\\ {\ttfamily\scriptsize /home/vous/colis/app/colis}\\ votre dossier, tel quel};
+  \node[lieu, draw=QViolet, fill=QPaper] (lt) at (13.0,0.45)
+    {\textbf{tmpfs}\\ en mémoire vive,\\ perdu à l'arrêt du conteneur};
+
+  \draw[qbiarr, draw=QVert]   (pg.south) -- (pg.south |- lv.north);
+  \draw[qbiarr, draw=QOrange] (app.south) -- (app.south |- lb.north);
+  \draw[qbiarr, draw=QViolet] (tmp.south) -- (tmp.south |- lt.north);
+  \node[font=\ttfamily\scriptsize, text=QVert, anchor=west]   at ([xshift=2mm]pg.south |- 0,2.8)  {-v colis-donnees:...};
+  \node[font=\ttfamily\scriptsize, text=QOrange, anchor=west] at ([xshift=2mm]app.south |- 0,2.8) {-v \$PWD/colis:...};
+  \node[font=\ttfamily\scriptsize, text=QViolet, anchor=west] at ([xshift=2mm]tmp.south |- 0,2.8) {-{}-tmpfs /tmp};
+\end{tikzpicture}
+\end{document}

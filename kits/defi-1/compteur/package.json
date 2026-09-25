@@ -1,0 +1,13 @@
+{
+  "name": "compteur",
+  "version": "1.0.0",
+  "description": "Compteur de visites stocké dans Redis (défi de la partie I)",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "redis": "6.2.1"
+  }
+}

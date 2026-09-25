@@ -1,0 +1,22 @@
+% Figure 7.2 : trois workers se partagent la file Redis (répartition réelle des colis 16 à 24).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    case/.style={qbox, font=\ttfamily\footnotesize, minimum width=0.72cm, minimum height=0.6cm, inner sep=1pt},
+    wk/.style={qbox, draw=QViolet, fill=QVioletBg, minimum width=3.2cm, minimum height=0.95cm, font=\small, align=center}]
+
+  \node[qbox, draw=QBleu, fill=QBleuBg, minimum width=2.2cm, minimum height=1cm] (api) at (0,1.6) {\ttfamily api};
+  \node[qtitre, font=\ttfamily\small, anchor=south west] at (2.1,2.35) {redis : liste colis:a-estimer};
+  \foreach \n [count=\i from 0] in {24,23,22,21,20,19,18,17,16} {
+    \node[case, draw=QVert, fill=QVertBg] (q\i) at (2.5+\i*0.78,1.6) {\n};
+  }
+  \draw[qarr] (api.east) -- node[qlbl, above, font=\ttfamily\scriptsize] {RPUSH} (q0.west);
+
+  \node[wk] (w1) at (11.6,3.0) {worker-1\\{\ttfamily\scriptsize 18, 21, 24}};
+  \node[wk] (w2) at (11.6,1.6) {worker-2\\{\ttfamily\scriptsize 17, 20, 23}};
+  \node[wk] (w3) at (11.6,0.2) {worker-3\\{\ttfamily\scriptsize 16, 19, 22}};
+  \foreach \w in {w1,w2,w3} { \draw[qarr, draw=QViolet] (q8.east) -- (\w.west); }
+  \node[qlblc=QViolet, align=center, font=\scriptsize] at (9.3,-0.55) {BLPOP : chaque colis\\est pris par un seul worker};
+\end{tikzpicture}
+\end{document}

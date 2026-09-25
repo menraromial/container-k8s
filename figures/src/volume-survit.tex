@@ -1,0 +1,29 @@
+% Figure 5.2 : la couche modifiable meurt avec le conteneur, le volume lui survit.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    ctr/.style={qbox, draw=QBleu, fill=QBleuBg, minimum width=3.6cm, minimum height=1.9cm, align=center, font=\small},
+    couche/.style={qbox, draw=QBrique, fill=QBriqueBg, font=\scriptsize, minimum width=3.2cm}]
+
+  % conteneur 1
+  \node[ctr] (c1) at (1.8,2.6) {};
+  \node[qtitre, font=\ttfamily\small, anchor=north] at (1.8,3.45) {pg};
+  \node[couche] (k1) at (1.8,2.25) {couche modifiable};
+  % suppression
+  \draw[qarr] (3.8,2.6) -- node[font=\ttfamily\footnotesize, above] {docker rm -f pg} (6.6,2.6);
+  % conteneur 2
+  \node[ctr] (c2) at (8.6,2.6) {};
+  \node[qtitre, font=\ttfamily\small, anchor=north] at (8.6,3.45) {pg2};
+  \node[couche] (k2) at (8.6,2.25) {couche modifiable neuve};
+  % la couche 1 disparaît
+  \node[couche, dashed, fill=QPaper, text=QMuted] at (5.2,1.35) {ancienne couche : perdue};
+  \draw[qdarr, draw=QBrique] (k1.south) to[out=-60, in=180] (3.55,1.35);
+
+  % le volume, sous les deux
+  \node[qbox, draw=QVert, fill=QVertBg, line width=1.1pt, minimum width=10.4cm, minimum height=0.8cm, font=\small] (v) at (5.2,-0.2)
+    {volume {\ttfamily colis-donnees} : la table {\ttfamily note} est toujours là};
+  \draw[qbiarr, draw=QVert] (1.8,1.65) -- node[qlblc=QVert, left] {monté} (1.8,0.2);
+  \draw[qbiarr, draw=QVert] (8.6,1.65) -- node[qlblc=QVert, right] {remonté} (8.6,0.2);
+\end{tikzpicture}
+\end{document}

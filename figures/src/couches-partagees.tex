@@ -1,0 +1,43 @@
+% Figure 3.1 : des images qui partagent leur couche de base.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    couche/.style={qbox, minimum height=0.55cm, font=\ttfamily\scriptsize, inner sep=2pt},
+    propre/.style={couche, draw=QBleu, fill=QBleuBg}]
+
+  % base partagée
+  \node[couche, draw=QVert, fill=QVertBg, line width=1.1pt, minimum width=11.2cm, anchor=west] (base) at (0,0)
+    {couche 74d97c428c51 : Alpine 3.24.2, 8,4 Mo, stockée une seule fois};
+
+  % alpine : rien au-dessus
+  \node[qtitre, font=\ttfamily\small, anchor=south] at (1.6,0.95) {alpine:3.24};
+  \node[qlbl, anchor=south] at (1.6,0.45) {1 couche};
+
+  % nginx : 7 couches propres
+  \foreach \i in {1,...,7} {
+    \node[propre, minimum width=3.3cm] at (5.3,\i*0.62) {};
+  }
+  \node[qlbl] at (5.3,4.95) {+ 7 couches};
+  \node[qtitre, font=\ttfamily\small, anchor=south] at (5.3,5.25) {nginx:1.30-alpine};
+
+  % registry : 4 couches propres
+  \foreach \i in {1,...,4} {
+    \node[propre, minimum width=3.3cm] at (9.3,\i*0.62) {};
+  }
+  \node[qlbl] at (9.3,3.1) {+ 4 couches};
+  \node[qtitre, font=\ttfamily\small, anchor=south] at (9.3,3.4) {registry:3};
+
+  % redis : autre base
+  \begin{scope}[xshift=12.2cm]
+    \node[couche, draw=QOrange, fill=QOrangeBg, minimum width=3.3cm, anchor=west] at (0,0) {e63b02c2b5c7 : Alpine 3.23};
+    \foreach \i in {1,...,6} {
+      \node[propre, minimum width=3.3cm, anchor=west] at (0,\i*0.62) {};
+    }
+    \node[qlbl] at (1.65,4.3) {+ 6 couches};
+    \node[qtitre, font=\ttfamily\small, anchor=south] at (1.65,4.6) {redis:8.8-alpine};
+    \node[qlblc=QOrange, align=center] at (1.65,-0.75) {autre version d'Alpine :\\aucune couche en commun};
+  \end{scope}
+  \node[qlblc=QVert, align=center] at (5.6,-0.75) {téléchargée avec alpine:3.24, puis « Already exists »\\pour nginx et « Mounted from » lors d'un push};
+\end{tikzpicture}
+\end{document}

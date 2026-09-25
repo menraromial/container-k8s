@@ -15,6 +15,23 @@ const sidebars: SidebarsConfig = {
         'demarrer/versions',
       ],
     },
+    {
+      type: 'category',
+      label: 'I · Utiliser des conteneurs',
+      className: 'partie-1',
+      collapsed: false,
+      link: {type: 'doc', id: 'partie-1/index'},
+      items: [
+        'partie-1/le-probleme',
+        'partie-1/premier-conteneur',
+        'partie-1/images',
+        'partie-1/dockerfile',
+        'partie-1/donnees',
+        'partie-1/reseau',
+        'partie-1/compose',
+        'partie-1/defi',
+      ],
+    },
   ],
 };
 

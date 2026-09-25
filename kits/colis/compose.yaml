@@ -1,0 +1,86 @@
+# Colis complet : docker compose up -d --build
+# Le mot de passe de PostgreSQL vient du fichier .env (chapitre 7).
+name: colis
+
+# Fragments réutilisés par plusieurs services (ancres YAML)
+x-image-colis: &image-colis
+  build: ./app
+  image: colis:1.0
+
+x-env-colis: &env-colis
+  COLIS_DB: postgresql://colis:${POSTGRES_PASSWORD:?définissez POSTGRES_PASSWORD dans .env}@postgres:5432/colis
+  COLIS_REDIS: redis://redis:6379/0
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: colis
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?définissez POSTGRES_PASSWORD dans .env}
+      POSTGRES_DB: colis
+    volumes:
+      - donnees:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "colis", "-d", "colis"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+    restart: unless-stopped
+
+  redis:
+    image: redis:8.8-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+    restart: unless-stopped
+
+  api:
+    <<: *image-colis
+    environment: *env-colis
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/pret', timeout=2)"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  worker:
+    <<: *image-colis
+    command: ["python", "-m", "colis.worker"]
+    environment: *env-colis
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build: ./web
+    image: colis-web:1.0
+    ports:
+      - "8080:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Lancée à la demande : docker compose run --rm purge
+  purge:
+    <<: *image-colis
+    command: ["python", "-m", "colis.purge"]
+    environment: *env-colis
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles: ["outils"]
+
+volumes:
+  donnees:
