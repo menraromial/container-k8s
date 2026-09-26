@@ -1,0 +1,40 @@
+# Deux Deployments identiques de 4 Pods demandant chacun 1 cœur : l'un placé par le scheduler par défaut,
+# l'autre par ordonnanceur-serre.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: etale
+spec:
+  replicas: 4
+  selector:
+    matchLabels: {app: etale}
+  template:
+    metadata:
+      labels: {app: etale}
+    spec:
+      containers:
+      - name: c
+        image: registry.k8s.io/e2e-test-images/agnhost:2.61
+        args: [pause]
+        resources:
+          requests: {cpu: "1", memory: 32Mi}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: serre
+spec:
+  replicas: 4
+  selector:
+    matchLabels: {app: serre}
+  template:
+    metadata:
+      labels: {app: serre}
+    spec:
+      schedulerName: ordonnanceur-serre
+      containers:
+      - name: c
+        image: registry.k8s.io/e2e-test-images/agnhost:2.61
+        args: [pause]
+        resources:
+          requests: {cpu: "1", memory: 32Mi}

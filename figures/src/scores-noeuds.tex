@@ -1,0 +1,34 @@
+% Figure 37.2 : les scores pondérés relevés dans les journaux d'ordonnanceur-serre (valeurs réelles du chapitre 37).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\newcommand{\barre}[8]{% y, étiquette, taint, fit, spread, balanced, image, total
+  \pgfmathsetmacro{\a}{#3*0.017}\pgfmathsetmacro{\b}{\a+#4*0.017}\pgfmathsetmacro{\c}{\b+#5*0.017}
+  \pgfmathsetmacro{\d}{\c+#6*0.017}\pgfmathsetmacro{\e}{\d+#7*0.017}
+  \node[qlbl, font=\ttfamily\scriptsize, text=QInk, anchor=east] at (-0.15,#1) {#2};
+  \fill[QGrisBg] (0,#1-0.2) rectangle (\a,#1+0.2); \draw[QGris, line width=0.6pt] (0,#1-0.2) rectangle (\a,#1+0.2);
+  \fill[QVertBg] (\a,#1-0.2) rectangle (\b,#1+0.2); \draw[QVert, line width=0.6pt] (\a,#1-0.2) rectangle (\b,#1+0.2);
+  \fill[QOcreBg] (\b,#1-0.2) rectangle (\c,#1+0.2); \draw[QOcre, line width=0.6pt] (\b,#1-0.2) rectangle (\c,#1+0.2);
+  \fill[QSarcelleBg] (\c,#1-0.2) rectangle (\d,#1+0.2); \draw[QSarcelle, line width=0.6pt] (\c,#1-0.2) rectangle (\d,#1+0.2);
+  \fill[QVioletBg] (\d,#1-0.2) rectangle (\e,#1+0.2); \draw[QViolet, line width=0.6pt] (\d,#1-0.2) rectangle (\e,#1+0.2);
+  \node[qlbl, font=\scriptsize, text=QVert, anchor=south] at ({(\a+\b)/2},#1+0.2) {#4};
+  \ifnum#5>0 \node[qlbl, font=\scriptsize, text=QOcre, anchor=south] at ({(\b+\c)/2},#1+0.2) {#5};\fi
+  \node[qlbl, font=\footnotesize, text=QInk, anchor=west] at (\e+0.1,#1) {\textbf{#8}};
+}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \node[qlbl, font=\footnotesize, text=QInk, anchor=west] at (-3.3,0.75) {version 1, premier Pod : {\ttfamily deux-noeuds} l'emporte de 6 points};
+  \barre{0}{deux-noeuds}{300}{17}{200}{74}{3}{594}
+  \barre{-0.9}{deux-noeuds-m02}{300}{11}{200}{74}{3}{588}
+  \node[qlbl, font=\footnotesize, text=QInk, anchor=west] at (-3.3,-1.85) {version 1, deuxième Pod : la répartition renvoie vers {\ttfamily m02}};
+  \barre{-2.65}{deux-noeuds}{300}{20}{132}{74}{3}{529}
+  \barre{-3.55}{deux-noeuds-m02}{300}{11}{200}{74}{3}{588}
+  \node[qlbl, font=\footnotesize, text=QInk, anchor=west] at (-3.3,-4.5) {version 2 (sans répartition, {\ttfamily NodeResourcesFit} × 5) : le nœud le plus rempli gagne};
+  \barre{-5.3}{deux-noeuds}{300}{110}{0}{73}{3}{486}
+  \barre{-6.2}{deux-noeuds-m02}{300}{75}{0}{74}{3}{452}
+  % légende
+  \foreach \x/\c/\n in {-2.6/QGris/TaintToleration, -0.05/QVert/NodeResourcesFit, 2.6/QOcre/PodTopologySpread, 5.45/QSarcelle/BalancedAllocation, 8.3/QViolet/ImageLocality} {
+    \fill[\c Bg] (\x,-7.1) rectangle (\x+0.3,-6.85); \draw[\c, line width=0.6pt] (\x,-7.1) rectangle (\x+0.3,-6.85);
+    \node[qlbl, font=\scriptsize, anchor=west] at (\x+0.35,-6.97) {\n};
+  }
+\end{tikzpicture}
+\end{document}

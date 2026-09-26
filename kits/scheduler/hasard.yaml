@@ -1,0 +1,16 @@
+# Six Pods confiés au scheduler « hasard ».
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hasard
+spec:
+  replicas: 6
+  selector:
+    matchLabels: {app: hasard}
+  template:
+    metadata:
+      labels: {app: hasard}
+    spec:
+      schedulerName: hasard
+      containers:
+      - {name: c, image: registry.k8s.io/e2e-test-images/agnhost:2.61, args: [pause]}

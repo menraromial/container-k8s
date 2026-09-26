@@ -98,6 +98,7 @@ const sidebars: SidebarsConfig = {
         'partie-5/api-server',
         'partie-5/etcd',
         'partie-5/controleurs',
+        'partie-5/scheduler',
       ],
     },
   ],

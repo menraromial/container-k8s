@@ -1,0 +1,45 @@
+% Figure 37.1 : le parcours d'un Pod dans le scheduler : files, cycle d'ordonnancement, cycle de liaison (chapitre 37).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    pt/.style={qbox, font=\scriptsize, text width=2.25cm, align=center, inner sep=3pt, minimum height=1.35cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    etape/.style={qnum=QBleu}]
+
+  % files d'attente
+  \node[qcadre, draw=QOcre, minimum width=3.1cm, minimum height=4.9cm] (files) at (0,0) {};
+  \node[qtitre, text=QOcre] at ([xshift=2mm,yshift=-2mm]files.north west) {files};
+  \node[pt, draw=QOcre, fill=QOcreBg, minimum height=0.8cm] (gated) at (0,1.45) {{\ttfamily gated}\\portes présentes};
+  \node[pt, draw=QOcre, fill=QOcreBg, minimum height=0.8cm] (active) at (0,0.35) {{\ttfamily active}\\triée par priorité};
+  \node[pt, draw=QOcre, fill=QOcreBg, minimum height=0.8cm] (backoff) at (0,-0.75) {{\ttfamily backoff}\\1 s, 2 s... 10 s};
+  \node[pt, draw=QOcre, fill=QOcreBg, minimum height=0.8cm] (unsched) at (0,-1.85) {{\ttfamily unschedulable}\\attend un événement};
+
+  % cycle d'ordonnancement
+  \node[qcadre, draw=QBleu, minimum width=10.9cm, minimum height=4.1cm] (cycle) at (8.2,0.55) {};
+  \node[qtitre, text=QBleu] at ([xshift=2mm,yshift=-2mm]cycle.north west) {cycle d'ordonnancement (un Pod à la fois)};
+  \node[pt, draw=QBleu, fill=QBleuBg] (pf) at (4.3,1.15) {\textbf{PreFilter}\\\textbf{Filter}\\nœuds possibles};
+  \node[pt, draw=QBleu, fill=QBleuBg] (post) at (4.3,-0.55) {\textbf{PostFilter}\\si aucun nœud :\\préemption};
+  \node[pt, draw=QBleu, fill=QBleuBg] (sc) at (8.05,1.15) {\textbf{PreScore}\\\textbf{Score}\\score × poids};
+  \node[pt, draw=QBleu, fill=QBleuBg] (res) at (11.8,1.15) {\textbf{Reserve}\\\textbf{Permit}\\nœud retenu};
+
+  % cycle de liaison
+  \node[qcadre, draw=QVert, minimum width=10.9cm, minimum height=2.1cm] (liaison) at (8.2,-3.05) {};
+  \node[qtitre, text=QVert, anchor=north east] at ([xshift=-2mm,yshift=-2mm]liaison.north east) {cycle de liaison (en parallèle)};
+  \node[pt, draw=QVert, fill=QVertBg, minimum height=1cm] (prebind) at (5.6,-3.3) {\textbf{PreBind}\\volumes};
+  \node[pt, draw=QVert, fill=QVertBg, minimum height=1cm] (bind) at (8.4,-3.3) {\textbf{Bind}\\{\ttfamily POST .../binding}};
+  \node[pt, draw=QVert, fill=QVertBg, minimum height=1cm] (postbind) at (11.2,-3.3) {\textbf{PostBind}\\événement {\ttfamily Scheduled}};
+
+  \draw[qarr] (active.east) -- node[lien, above, sloped] {PreEnqueue, QueueSort} (pf.west);
+  \draw[qarr] (pf) -- node[lien, right] {aucun nœud} (post);
+  \draw[qarr] (pf) -- node[lien, above] {au moins un} (sc);
+  \draw[qarr] (sc) -- (res);
+  \draw[qarr, draw=QVert] (res.south) -- ++(0,-2.05) -| (prebind.north);
+  \draw[qarr, draw=QVert] (prebind) -- (bind);
+  \draw[qarr, draw=QVert] (bind) -- (postbind);
+  \draw[qarr, draw=QBrique, dashed] (post.west) -- (2.1,-0.55) |- (unsched.east);
+  \node[lien, text=QBrique, anchor=west, align=left] at (2.2,-1.6) {échec : {\ttfamily FailedScheduling}};
+  \draw[qarr, draw=QOcre, dashed] (unsched.west) -- ++(-0.35,0) |- node[lien, pos=0.25, left] {événement\\utile} (active.west);
+  \draw[qarr, draw=QOcre, dashed] (gated.south) -- node[lien, right, pos=0.5] {porte retirée} (active.north);
+\end{tikzpicture}
+\end{document}

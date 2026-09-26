@@ -1,0 +1,9 @@
+# Un Pod qui désigne lui-même son nœud : aucun scheduler n'intervient.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: direct
+spec:
+  nodeName: deux-noeuds-m02
+  containers:
+  - {name: c, image: registry.k8s.io/e2e-test-images/agnhost:2.61, args: [pause]}
