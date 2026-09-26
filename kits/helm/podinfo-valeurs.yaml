@@ -1,0 +1,10 @@
+# Nos réglages pour le chart podinfo : deux répliques, un message d'accueil, des ressources.
+replicaCount: 2
+ui:
+  message: "Bonjour depuis Helm"
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    memory: 64Mi

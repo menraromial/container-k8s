@@ -80,6 +80,7 @@ const sidebars: SidebarsConfig = {
         'partie-4/statefulset',
         'partie-4/taches',
         'partie-4/http',
+        'partie-4/helm',
       ],
     },
   ],

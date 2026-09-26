@@ -1,0 +1,6 @@
+apiVersion: v2
+name: colis
+description: Colis, le service de suivi de colis du cours « Conteneurs et Kubernetes »
+type: application
+version: 0.1.1          # version du chart
+appVersion: "2.1.0"     # version de l'application qu'il déploie

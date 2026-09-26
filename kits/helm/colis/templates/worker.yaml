@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  labels:
+    {{- include "colis.etiquettes" . | nindent 4 }}
+    app.kubernetes.io/name: worker
+spec:
+  replicas: {{ .Values.worker.repliques }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: worker
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        {{- include "colis.etiquettes" . | nindent 8 }}
+        app.kubernetes.io/name: worker
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+    spec:
+      containers:
+      - name: worker
+        image: {{ include "colis.imageApi" . }}
+        command: ["python", "-m", "colis.worker"]
+        {{- include "colis.env" . | nindent 8 }}
+        resources:
+          {{- toYaml .Values.worker.ressources | nindent 10 }}

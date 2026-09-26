@@ -1,0 +1,22 @@
+% Figure 29.1 : de helm upgrade aux objets du cluster (chart de Colis, chapitre 29).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    obj/.style={qbox, font=\scriptsize, align=left, inner sep=4pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    etape/.style={qnum=QBleu}]
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg, text width=3.6cm] (chart) at (0,1.2) {\textbf{chart} {\ttfamily colis} 0.1.1\\{\ttfamily Chart.yaml}\\{\ttfamily values.yaml} (défauts)\\{\ttfamily templates/*.yaml}\\{\ttfamily templates/\_helpers.tpl}};
+  \node[obj, draw=QGris, fill=QGrisBg, text width=3.6cm] (val) at (0,-1.3) {\textbf{vos valeurs}\\{\ttfamily -f mes-valeurs.yaml}\\{\ttfamily --set api.repliques=3}\\{\ttfamily --reuse-values}};
+  \node[obj, draw=QBleu, fill=QBleuBg, text width=3.3cm] (rendu) at (4.6,0) {\textbf{rendu}\\modèles Go :\\{\ttfamily .Values}, {\ttfamily .Release},\\{\ttfamily .Chart}, {\ttfamily include},\\{\ttfamily lookup} (lit le cluster)};
+  \node[obj, draw=QBleu, fill=QBleuBg, text width=3.1cm] (man) at (8.8,0) {\textbf{manifestes}\\16 objets YAML\\(ce qu'affiche\\{\ttfamily helm template})};
+  \node[obj, draw=QOcre, fill=QOcreBg, text width=3.3cm] (hook) at (13,1.4) {hook {\ttfamily pre-upgrade}\\Job {\ttfamily sauvegarde-avant-maj}\\attendu jusqu'à sa fin};
+  \node[obj, draw=QVert, fill=QVertBg, text width=3.3cm] (obj) at (13,-0.2) {objets de la release\\appliqués ({\ttfamily server-side})};
+  \node[obj, draw=QGris, fill=QGrisBg, text width=3.3cm] (rel) at (13,-1.8) {Secret\\{\ttfamily sh.helm.release.v1.}\\{\ttfamily colis.v2} : la révision};
+  \draw[qarr] (chart.east) -- (rendu); \draw[qarr] (val.east) -- (rendu);
+  \draw[qarr] (rendu) -- (man);
+  \draw[qarr] (man.east) -- (hook.west); \draw[qarr] (man.east) -- (obj.west); \draw[qarr] (man.east) -- (rel.west);
+  \node[etape] at (11.1,1.25) {\scriptsize 1}; \node[etape] at (11.1,0.15) {\scriptsize 2}; \node[etape] at (11.1,-1.1) {\scriptsize 3};
+  \node[qlbl, font=\scriptsize, align=left, anchor=north west] at (-1.8,-2.7) {la révision précédente reste dans son propre Secret : {\ttfamily helm rollback} rejoue ses manifestes, et crée une nouvelle révision ;\\l'API server ne connaît que des objets ordinaires : Helm n'est qu'un client, rien ne tourne dans le cluster};
+\end{tikzpicture}
+\end{document}

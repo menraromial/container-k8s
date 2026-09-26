@@ -1,0 +1,22 @@
+% Figure 29.2 : ce qui reste après « helm uninstall colis » (chart de Colis 0.1.1, chapitre 29).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    obj/.style={qbox, font=\scriptsize, align=center, inner sep=3pt, text width=2.9cm, minimum height=0.9cm},
+    titre/.style={font=\titrefig\normalsize, anchor=west}]
+  \node[titre] at (-1.6,2.2) {supprimé};
+  \node[titre] at (6.4,2.2) {gardé};
+  \node[qcadre, draw=QBrique, dashed, minimum width=7.4cm, minimum height=3.6cm] at (1.9,0.25) {};
+  \node[qcadre, draw=QVert, minimum width=7.8cm, minimum height=3.6cm] at (10.2,0.25) {};
+  \node[obj, draw=QGris, fill=QGrisBg] at (0.3,1.2) {Deployments,\\StatefulSet, Services};
+  \node[obj, draw=QGris, fill=QGrisBg] at (3.5,1.2) {ConfigMap,\\CronJob, HTTPRoute};
+  \node[obj, draw=QGris, fill=QGrisBg] at (0.3,-0.4) {Secrets des révisions\\{\ttfamily sh.helm.release...}};
+  \node[obj, draw=QGris, fill=QGrisBg, dashed] at (3.5,-0.4) {Secret {\ttfamily colis-db}\\(chart 0.1.0)};
+  \node[obj, draw=QVert, fill=QVertBg] at (8.1,1.2) {PVC {\ttfamily donnees-postgres-0}\\créée par le StatefulSet};
+  \node[obj, draw=QVert, fill=QVertBg] at (11.6,1.2) {PVC {\ttfamily sauvegardes}\\{\ttfamily resource-policy: keep}};
+  \node[obj, draw=QVert, fill=QVertBg] at (8.1,-0.4) {Secret {\ttfamily colis-db}\\{\ttfamily keep} (chart 0.1.1)};
+  \node[obj, draw=QOcre, fill=QOcreBg] at (11.6,-0.4) {Job du hook, Pod de test\\(hors de la release)};
+  \node[qlbl, font=\scriptsize, align=left, anchor=north west] at (-1.6,-2.0) {chart 0.1.0 : la base est gardée mais son mot de passe est perdu ; à la réinstallation, un nouveau mot de passe est tiré,\\PostgreSQL, qui ne relit pas {\ttfamily POSTGRES\_PASSWORD} sur une base existante, garde l'ancien, et l'API échoue};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,59 @@
+# Valeurs par défaut du chart de Colis. Chaque valeur peut être remplacée avec -f ou --set.
+
+images:
+  registre: host.minikube.internal:5001
+  api:
+    depot: colis/api
+    etiquette: "2.1"       # l'étiquette publiée dans le registre (vide : l'appVersion du chart)
+  web:
+    depot: colis/web
+    etiquette: "1.0"
+  postgres: postgres:18-alpine
+  redis: redis:8.8-alpine
+
+api:
+  repliques: 2
+  ressources:
+    requests: {cpu: 100m, memory: 192Mi}
+    limits: {memory: 256Mi}
+
+worker:
+  repliques: 1
+  pause: "0.5"             # COLIS_WORKER_PAUSE, en secondes
+  ressources:
+    requests: {cpu: 50m, memory: 96Mi}
+    limits: {memory: 192Mi}
+
+web:
+  repliques: 2
+  ressources:
+    requests: {cpu: 50m, memory: 32Mi}
+    limits: {memory: 64Mi}
+
+postgres:
+  stockage: 1Gi
+  classe: ""               # vide : la StorageClass par défaut du cluster
+  ressources:
+    requests: {cpu: 100m, memory: 128Mi}
+    limits: {memory: 256Mi}
+
+redis:
+  ressources:
+    requests: {cpu: 50m, memory: 32Mi}
+    limits: {memory: 128Mi}
+
+purge:
+  planning: "0 3 * * *"
+  fuseau: Europe/Paris
+  jours: 30
+
+sauvegarde:
+  avantMiseAJour: true     # un pg_dump avant chaque helm upgrade (hook)
+  stockage: 1Gi
+
+passerelle:
+  activee: false           # publier Colis sur une Gateway (chapitre 28)
+  nom: principale
+  namespace: passerelle
+  ecouteur: http
+  hote: colis.local

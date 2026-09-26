@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: colis-config
+  labels:
+    {{- include "colis.etiquettes" . | nindent 4 }}
+data:
+  COLIS_REDIS: redis://redis:6379/0
+  COLIS_VERSION: {{ .Chart.AppVersion | quote }}
+  COLIS_PURGE_JOURS: {{ .Values.purge.jours | quote }}
+  COLIS_WORKER_PAUSE: {{ .Values.worker.pause | quote }}

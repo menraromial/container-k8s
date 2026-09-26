@@ -1,0 +1,16 @@
+# Lancé par « helm test » : Colis est-il prêt, du site jusqu'à la base ?
+apiVersion: v1
+kind: Pod
+metadata:
+  name: colis-test-pret
+  labels:
+    {{- include "colis.etiquettes" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: test
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  restartPolicy: Never
+  containers:
+  - name: test
+    image: busybox:1.37
+    command: ["sh", "-c", "wget -qO- http://web/api/pret | tee /dev/stderr | grep -q '\"pret\":true'"]

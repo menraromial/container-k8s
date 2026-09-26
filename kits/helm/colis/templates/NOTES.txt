@@ -1,0 +1,14 @@
+Colis {{ .Chart.AppVersion }} est installé dans le namespace {{ .Release.Namespace }} (révision {{ .Release.Revision }}).
+
+Vérifier que tout répond :
+  helm test {{ .Release.Name }} -n {{ .Release.Namespace }}
+{{- if .Values.passerelle.activee }}
+
+Colis est publié sur la passerelle {{ .Values.passerelle.namespace }}/{{ .Values.passerelle.nom }}, pour l'hôte {{ .Values.passerelle.hote }}.
+Le namespace {{ .Release.Namespace }} doit porter l'étiquette que la passerelle exige.
+{{- else }}
+
+Pour l'essayer sans passerelle :
+  kubectl -n {{ .Release.Namespace }} port-forward service/web 8080:80
+puis ouvrez http://localhost:8080/
+{{- end }}
