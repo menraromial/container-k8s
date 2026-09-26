@@ -138,6 +138,7 @@ Les versions ci-dessous ont été relevées en septembre 2026, avant l'écriture
 | Trivy | 0.74.0 | 14 |
 | cosign | 3.1.3 | 14, 47 |
 | Gateway API | 1.6.2 | 28 |
+| Envoy Gateway | 1.9.1 | 28 |
 | cert-manager | 1.21.2 | 28 |
 | Kustomize (intégré à kubectl) | 5.8.1 | 30 |
 | KEDA | 2.21.0 | 31 |

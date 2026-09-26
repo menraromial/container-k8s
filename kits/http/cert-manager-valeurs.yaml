@@ -1,0 +1,7 @@
+# Valeurs du chart cert-manager : installer ses CRD, et lire les Gateway pour y fournir des certificats.
+crds:
+  enabled: true
+config:
+  apiVersion: controller.config.cert-manager.io/v1alpha1
+  kind: ControllerConfiguration
+  enableGatewayAPI: true

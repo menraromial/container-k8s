@@ -1,0 +1,19 @@
+# L'API historique : un Ingress qui envoie colis.local vers le Service web de Colis.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: colis
+  namespace: colis
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: colis.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web
+            port:
+              number: 80

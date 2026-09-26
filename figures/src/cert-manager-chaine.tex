@@ -1,0 +1,24 @@
+% Figure 28.2 : comment cert-manager fournit le certificat de l'écouteur HTTPS (objets réels du chapitre 28).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    obj/.style={qbox, font=\scriptsize, align=center, inner sep=3pt, text width=3.5cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    etape/.style={qnum=QBleu}]
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg, text width=4.2cm] (gw) at (-0.4,0) {Gateway {\ttfamily principale}\\annotation\\{\ttfamily cert-manager.io/cluster-issuer}};
+  \node[obj, draw=QBleu, fill=QBleuBg] (cert) at (4.6,0) {Certificate {\ttfamily colis-tls}\\{\ttfamily colis.local}, 90 jours};
+  \node[obj, draw=QBleu, fill=QBleuBg] (cr) at (9.2,0) {CertificateRequest\\{\ttfamily colis-tls-1}};
+  \node[obj, draw=QOcre, fill=QOcreBg] (iss) at (9.2,-2.2) {ClusterIssuer {\ttfamily colis-ca}\\signe avec la clé du Secret {\ttfamily colis-ca}};
+  \node[obj, draw=QOcre, fill=QOcreBg] (root) at (13.6,-2.2) {Certificate {\ttfamily colis-ca}\\racine, {\ttfamily isCA}, 10 ans\\émise par {\ttfamily autosigne}};
+  \node[obj, draw=QGris, fill=QGrisBg] (sec) at (4.6,-2.2) {Secret {\ttfamily colis-tls}\\{\ttfamily kubernetes.io/tls}\\(ns {\ttfamily passerelle})};
+  \node[obj, draw=QOcre, fill=QOcreBg] (env) at (0,-2.2) {Envoy\\présente le certificat\\aux clients};
+  \draw[qarr] (gw) -- node[lien, above] {crée} (cert); \node[etape] at (2.3,-0.45) {\scriptsize 1};
+  \draw[qarr] (cert) -- node[lien, above] {crée} (cr); \node[etape] at (6.9,-0.45) {\scriptsize 2};
+  \draw[qarr] (cr) -- node[lien, right] {transmet} (iss); \node[etape] at (8.75,-1.1) {\scriptsize 3};
+  \draw[qarr, dashed] (root) -- node[lien, above] {clé} (iss);
+  \draw[qarr] (iss) -- node[lien, above] {écrit} (sec); \node[etape] at (6.9,-2.65) {\scriptsize 4};
+  \draw[qarr] (sec) -- node[lien, above] {chargé} (env); \node[etape] at (2.3,-2.65) {\scriptsize 5};
+  \node[qlbl, font=\scriptsize, align=left, anchor=north west] at (-1.8,-3.3) {renouvellement aux deux tiers de la durée (ici le 25 novembre) : le Secret est réécrit sur place,\\et Envoy prend le nouveau certificat sans redémarrer ni perdre de requête};
+\end{tikzpicture}
+\end{document}

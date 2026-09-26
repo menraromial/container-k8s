@@ -1,0 +1,24 @@
+# Une autre équipe, dans son namespace, veut publier sous vitrine.local le site web de Colis.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vitrine
+  labels:
+    passerelle: principale
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: vitrine
+  namespace: vitrine
+spec:
+  parentRefs:
+  - name: principale
+    namespace: passerelle
+  hostnames:
+  - vitrine.local
+  rules:
+  - backendRefs:
+    - name: web
+      namespace: colis
+      port: 80

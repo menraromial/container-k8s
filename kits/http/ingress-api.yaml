@@ -1,0 +1,23 @@
+# Envoyer /api/... directement à l'API, en retirant le préfixe : l'API Ingress ne sait pas le dire,
+# chaque contrôleur l'exprime par ses propres annotations (ici, celles d'ingress-nginx).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: colis-api
+  namespace: colis
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: colis.local
+    http:
+      paths:
+      - path: /api(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: api
+            port:
+              number: 8000

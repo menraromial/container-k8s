@@ -1,0 +1,38 @@
+% Figure 28.1 : la Gateway API sur le cluster du cours : trois rôles, trois niveaux d'objets, et le chemin d'une requête.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    obj/.style={qbox, font=\scriptsize, align=center, inner sep=3pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    role/.style={font=\titrefig\small, text=QMuted, anchor=west}]
+  % rôles
+  \node[role] at (-4.2,3.2) {fournisseur};
+  \node[role] at (-4.2,1.6) {équipe plateforme};
+  \node[role] at (-4.2,-0.4) {équipes applicatives};
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg, text width=4.3cm] (gc) at (4,3.2) {GatewayClass {\ttfamily envoy}\\{\ttfamily gateway.envoyproxy.io/...}};
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg, text width=4.3cm] (gw) at (4,1.6) {Gateway {\ttfamily principale} (ns {\ttfamily passerelle})\\écouteurs {\ttfamily http:80}, {\ttfamily https:443}\\routes des namespaces {\ttfamily passerelle=principale}};
+  \node[obj, draw=QBleu, fill=QBleuBg, text width=3.6cm] (r1) at (1.7,-0.4) {HTTPRoute {\ttfamily colis} (ns {\ttfamily colis})\\{\ttfamily colis.local}};
+  \node[obj, draw=QBleu, fill=QBleuBg, text width=3.3cm] (r2) at (6.4,-0.4) {HTTPRoute {\ttfamily vitrine}\\(ns {\ttfamily vitrine}) {\ttfamily vitrine.local}};
+  \draw[qarr, draw=QSarcelle] (gw) -- node[lien, right] {gatewayClassName} (gc);
+  \draw[qarr, draw=QBleu] (r1.north) -- node[lien, left] {parentRefs} ([xshift=-12mm]gw.south);
+  \draw[qarr, draw=QBleu] (r2.north) -- ([xshift=12mm]gw.south);
+  % services
+  \node[obj, draw=QGris, fill=QGrisBg, text width=2.2cm] (sapi) at (-0.6,-2.5) {Service {\ttfamily api}};
+  \node[obj, draw=QGris, fill=QGrisBg, text width=2.2cm] (scan) at (2.0,-2.5) {Service\\{\ttfamily api-canari}};
+  \node[obj, draw=QGris, fill=QGrisBg, text width=2.2cm] (sweb) at (4.6,-2.5) {Service {\ttfamily web}};
+  \draw[qarr] (r1.south) -- node[lien, left, pos=0.45] {/api, 90} (sapi.north);
+  \draw[qarr] (r1.south) -- node[lien, right, pos=0.55] {10} (scan.north);
+  \draw[qarr] (r1.south) -- node[lien, right, pos=0.35] {/} (sweb.north west);
+  \draw[qarr, dashed] (r2.south) -- node[lien, right, pos=0.5] {ReferenceGrant} (sweb.north east);
+  % chemin de données
+  \node[obj, draw=QOcre, fill=QOcreBg, text width=3.4cm] (ctl) at (11.3,3.2) {contrôleur {\ttfamily envoy-gateway}\\lit les objets de l'API};
+  \node[obj, draw=QOcre, fill=QOcreBg, text width=3.4cm] (env) at (11.3,1.0) {Pod Envoy\\{\ttfamily envoy-passerelle-...}};
+  \node[obj, draw=QGris, fill=QGrisBg, text width=3.4cm] (lb) at (11.3,-0.9) {Service LoadBalancer\\{\ttfamily 192.168.49.102} (MetalLB)};
+  \node[obj, draw=QGris, fill=QGrisBg, text width=3.4cm] (cl) at (11.3,-2.5) {client\\{\ttfamily Host: colis.local}};
+  \draw[qarr, draw=QOcre] (ctl) -- node[lien, right] {crée, puis\\configure (xDS)} (env);
+  \draw[qarr] (cl) -- (lb); \draw[qarr] (lb) -- (env);
+  \draw[qarr, draw=QOcre] (env.south west) to[out=-150,in=20] node[lien, right, pos=0.12] {vers les Pods} (sweb.east);
+  \draw[qarr, dashed, draw=QOcre] (gw.east) -- (ctl.west);
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,75 @@
+# La route de Colis, en HTTPS seulement, avec le canari : 10 % des requêtes /api vont à api-canari,
+# et toutes celles qui portent l'en-tête X-Canari: oui.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: colis
+  namespace: colis
+spec:
+  parentRefs:
+  - name: principale
+    namespace: passerelle
+    sectionName: https       # seulement l'écouteur HTTPS
+  hostnames:
+  - colis.local
+  rules:
+  - matches:                 # les testeurs choisissent le canari par un en-tête
+    - path:
+        type: PathPrefix
+        value: /api
+      headers:
+      - name: X-Canari
+        value: oui
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: /
+    backendRefs:
+    - name: api-canari
+      port: 8000
+  - matches:                 # /api/... va directement à l'API, sans le préfixe
+    - path:
+        type: PathPrefix
+        value: /api
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: /
+    backendRefs:
+    - name: api
+      port: 8000
+      weight: 90
+    - name: api-canari
+      port: 8000
+      weight: 10
+  - matches:                 # tout le reste va au site
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: web
+      port: 80
+---
+# Sur l'écouteur HTTP, une seule règle : rediriger vers HTTPS.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: colis-redirection
+  namespace: colis
+spec:
+  parentRefs:
+  - name: principale
+    namespace: passerelle
+    sectionName: http
+  hostnames:
+  - colis.local
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301

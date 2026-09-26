@@ -1,0 +1,15 @@
+# L'équipe de Colis autorise les HTTPRoute du namespace vitrine à viser ses Services.
+apiVersion: gateway.networking.k8s.io/v1
+kind: ReferenceGrant
+metadata:
+  name: vitrine
+  namespace: colis
+spec:
+  from:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    namespace: vitrine
+  to:
+  - group: ""
+    kind: Service
+    name: web
