@@ -1,0 +1,42 @@
+% Figure 35.1 : le compteur de révisions d'etcd et les versions d'une clé (valeurs réelles du chapitre 35).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    rev/.style={qlbl, font=\ttfamily\scriptsize, text=QInk},
+    val/.style={qbox, font=\scriptsize, inner sep=3pt, align=center},
+    lbl/.style={qlbl, font=\scriptsize, align=center, inner sep=1pt},
+    cle/.style={qlbl, font=\ttfamily\scriptsize, text=QInk, anchor=east}]
+
+  % axe des révisions globales
+  \draw[qarr] (0,0) -- (12.2,0) node[lbl, right, text=QInk] {révision\\d'etcd};
+  \foreach \r/\x in {97005/1.5, 97006/3.3, 97007/5.1, 97008/6.9, 97009/8.7, 97010/10.5} {
+    \draw[draw=QLine, line width=0.6pt] (\x,-0.1) -- (\x,0.1);
+    \node[rev, below] at (\x,-0.12) {\r};
+  }
+  % zone compactée
+  \fill[QGrisBg] (0,0.25) rectangle (0.9,3.6);
+  \draw[draw=QGris, dashed, line width=0.7pt] (0.9,0.25) -- (0.9,3.6);
+  \node[lbl, text width=1.7cm] at (0.45,3.95) {compacté :\\illisible};
+
+  % la clé suivie
+  \node[cle] at (-0.2,2.7) {/registry/configmaps/ch35/reglages};
+  \draw[draw=QMuted, line width=0.5pt, dotted] (0,2.7) -- (12,2.7);
+  \node[val, draw=QVert, fill=QVertBg] (v1) at (3.3,2.7) {version 1\\{\ttfamily couleur: bleu}};
+  \node[val, draw=QVert, fill=QVertBg] (v2) at (8.7,2.7) {version 2\\{\ttfamily couleur: vert}};
+  \node[lbl, above=1mm of v1] {création : {\ttfamily create\_revision}};
+  \node[lbl, above=1mm of v2] {{\ttfamily mod\_revision} = {\ttfamily resourceVersion}};
+
+  % les autres clés
+  \node[cle] at (-0.2,1.2) {autres clés du cluster};
+  \draw[draw=QMuted, line width=0.5pt, dotted] (0,1.2) -- (12,1.2);
+  \foreach \x in {1.5, 5.1, 6.9, 10.5} { \node[circle, draw=QBleu, fill=QBleuBg, line width=0.7pt, inner sep=2.2pt] at (\x,1.2) {}; }
+  \node[lbl, text width=3.4cm] at (6,0.62) {baux, statuts, événements : chaque écriture prend la révision suivante};
+
+  % lecture ancienne
+  \draw[qarr, draw=QOcre] (3.3,-0.95) -- (3.3,-0.45);
+  \node[lbl, text=QOcre, anchor=north] at (3.3,-1) {{\ttfamily etcdctl get --rev=97006} lit encore « bleu »};
+  \draw[qarr, draw=QBrique] (0.45,-0.95) -- (0.45,-0.45);
+  \node[lbl, text=QBrique, anchor=north west] at (-0.3,-1.5) {{\ttfamily --rev=100} : {\ttfamily required revision has been compacted}};
+\end{tikzpicture}
+\end{document}

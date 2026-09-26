@@ -96,6 +96,7 @@ const sidebars: SidebarsConfig = {
       link: {type: 'doc', id: 'partie-5/index'},
       items: [
         'partie-5/api-server',
+        'partie-5/etcd',
       ],
     },
   ],

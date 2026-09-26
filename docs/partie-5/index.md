@@ -15,7 +15,7 @@ Les parties I à IV vous ont appris à vous servir de Kubernetes. Celle-ci ne vo
 | Chapitre | Ce que vous y apprenez |
 |---|---|
 | [34. L'API server](api-server.md) | groupes, versions, verbes, l'API avec `curl`, watch, pagination, server-side apply |
-| 35. etcd | modèle clé-valeur, `resourceVersion`, concurrence optimiste, etcdctl dans minikube |
+| [35. etcd](etcd.md) | clés et révisions, `resourceVersion`, concurrence optimiste, Raft et quorum sur trois membres |
 | 36. Les contrôleurs | boucle de réconciliation, informers, ownerReferences, ramasse-miettes, finalizers |
 | 37. Le scheduler | filtrage, score, plugins ; suivre une décision |
 | 38. Le kubelet et le CRI | de la spec du Pod au processus, conteneur pause, Pods statiques, `crictl` |

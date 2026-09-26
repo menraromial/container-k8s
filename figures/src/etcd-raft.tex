@@ -1,0 +1,34 @@
+% Figure 35.2 : une écriture dans un cluster etcd de trois membres, et la règle de la majorité (chapitre 35).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    membre/.style={qbox, font=\scriptsize, text width=2.9cm, align=center, inner sep=4pt, minimum height=1.9cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    etape/.style={qnum=QBleu}]
+
+  \node[qbox, draw=QGris, fill=QGrisBg, font=\scriptsize, text width=2.4cm] (api) at (-0.6,0) {\textbf{API server}\\client d'etcd};
+  \node[membre, draw=QVert, fill=QVertBg] (l) at (4.6,0) {\textbf{leader} (e1)\\journal :\\{\ttfamily ... | 9 | 10}\\terme 3};
+  \node[membre, draw=QSarcelle, fill=QSarcelleBg] (f1) at (10.2,1.7) {\textbf{suiveur} (e2)\\journal :\\{\ttfamily ... | 9 | 10}};
+  \node[membre, draw=QSarcelle, fill=QSarcelleBg] (f2) at (10.2,-1.7) {\textbf{suiveur} (e3)\\journal :\\{\ttfamily ... | 9 | 10}};
+
+  \draw[qarr] ([yshift=3mm]api.east) -- node[lien, above, pos=0.6] {écriture} node[etape, pos=0.15, above=1mm] {1} ([yshift=3mm]l.west);
+  \draw[qarr] ([yshift=6mm]l.east) -- node[lien, above, sloped] {entrée 10} node[etape, pos=0.2, above=2mm] {2} ([yshift=2mm]f1.west);
+  \draw[qdarr, draw=QVert] ([yshift=-4mm]f1.west) -- node[lien, below, sloped] {notée} node[etape, pos=0.8, below=2mm] {3} ([yshift=2mm]l.east);
+  \draw[qarr] ([yshift=-6mm]l.east) -- node[lien, below, sloped, pos=0.6] {entrée 10} ([yshift=-2mm]f2.west);
+  \draw[qdarr, draw=QVert] ([yshift=4mm]f2.west) -- node[lien, above, sloped] {notée} ([yshift=-2mm]l.east);
+  \node[etape] (e4) at (2.2,-1.75) {4};
+  \node[lien, text width=4.2cm, anchor=west] at ([xshift=1mm]e4.east) {2 membres sur 3 l'ont notée :\\l'entrée est validée, puis appliquée};
+  \draw[qarr, draw=QVert] ([yshift=-3mm]l.west) -- node[lien, below, pos=0.4] {réponse} node[etape, pos=0.85, below=1mm] {5} ([yshift=-3mm]api.east);
+
+  % règle de la majorité
+  \begin{scope}[shift={(0,-4.1)}]
+    \node[qlbl, font=\footnotesize, text=QInk, anchor=west] at (-1.2,0.55) {la majorité (quorum) et les pannes tolérées};
+    \foreach \n/\q/\p/\x/\c/\f/\s in {1/1/0/0/QGris/QPaper/, 2/2/0/2.3/QGris/QPaper/s, 3/2/1/4.6/QVert/QVertBg/s, 4/3/1/6.9/QGris/QPaper/s, 5/3/2/9.2/QVert/QVertBg/s} {
+      \node[qbox, font=\scriptsize, text width=1.9cm, align=center, inner sep=3pt, draw=\c, fill=\f] at (\x,-0.3)
+        {\textbf{\n{} membre\s}\\quorum : \q\\pannes tolérées : \p};
+    }
+    \node[qlbl, font=\scriptsize, anchor=west, text width=11cm] at (-1.2,-1.35) {un nombre pair n'apporte rien : 4 membres tolèrent une panne, comme 3, et la majorité est plus dure à réunir.};
+  \end{scope}
+\end{tikzpicture}
+\end{document}
