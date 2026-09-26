@@ -19,7 +19,7 @@ Les parties I à IV vous ont appris à vous servir de Kubernetes. Celle-ci ne vo
 | [36. Les contrôleurs](controleurs.md) | boucle de réconciliation, un contrôleur écrit à la main, informers, ownerReferences, ramasse-miettes, finalizers |
 | [37. Le scheduler](scheduler.md) | files et cycle d'ordonnancement, plugins et poids, un second scheduler, lire les scores, le Binding à la main |
 | [38. Le kubelet et le CRI](kubelet.md) | du Pod aux processus, crictl, conteneur pause, cgroups, Pods statiques, un nœud sans kubelet |
-| 39. Le réseau des Pods | modèle réseau, CNI, veth et bridges ; Calico puis Cilium |
+| [39. Le réseau des Pods](reseau-pods.md) | le contrat, CNI, kindnet, Calico (BGP, IP dans IP) et Cilium (eBPF, VXLAN), paquets capturés |
 | 40. Les Services sous le capot | kube-proxy (iptables, IPVS, nftables), EndpointSlices, eBPF, CoreDNS |
 | 41. Les NetworkPolicies | isolation par défaut, règles d'entrée et de sortie pour Colis |
 | Défi V | suivre la création d'un Deployment de bout en bout, preuves à l'appui |

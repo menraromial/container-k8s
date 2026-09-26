@@ -1,0 +1,37 @@
+% Figure 39.2 : le même paquet entre deux Pods, sous trois réseaux (valeurs relevées au chapitre 39).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\newcommand{\champ}[5]{% x, y, largeur, couleur, texte
+  \node[draw=#4, fill=#4Bg, line width=0.7pt, minimum height=0.75cm, minimum width=#3cm, inner sep=1pt,
+        font=\scriptsize, align=center, anchor=west] at (#1,#2) {#5};}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm, lbl/.style={qlbl, font=\scriptsize, align=left, inner sep=1pt}]
+  % kindnet
+  \node[lbl, anchor=west, font=\footnotesize, text=QInk] at (0,1.05) {\textbf{kindnet} : routage direct, pas d'encapsulation};
+  \champ{0}{0.4}{1.6}{QGris}{Ethernet}
+  \champ{1.6}{0.4}{3.2}{QVert}{IP : Pod {\ttfamily 10.244.1.x}\\vers Pod {\ttfamily 10.244.0.x}}
+  \champ{4.8}{0.4}{2.2}{QBleu}{ICMP, TCP...}
+  \node[lbl, anchor=west] at (7.2,0.4) {MTU du Pod : 1500\\le réseau des nœuds doit savoir\\router les adresses des Pods};
+
+  % Calico IPIP
+  \node[lbl, anchor=west, font=\footnotesize, text=QInk] at (0,-0.55) {\textbf{Calico} (IP dans IP) : un en-tête IP de plus};
+  \champ{0}{-1.2}{1.6}{QGris}{Ethernet}
+  \champ{1.6}{-1.2}{3.2}{QOcre}{IP : nœud {\ttfamily 192.168.67.3}\\vers nœud {\ttfamily .2}, proto 4}
+  \champ{4.8}{-1.2}{3.2}{QVert}{IP : Pod vers Pod}
+  \champ{8}{-1.2}{2.2}{QBleu}{ICMP, TCP...}
+  \node[lbl, anchor=west] at (10.4,-1.2) {MTU : 1480\\(20 octets de plus)};
+
+  % Cilium VXLAN
+  \node[lbl, anchor=west, font=\footnotesize, text=QInk] at (0,-2.15) {\textbf{Cilium} (VXLAN) : une trame entière dans un datagramme UDP};
+  \champ{0}{-2.8}{1.6}{QGris}{Ethernet}
+  \champ{1.6}{-2.8}{2.5}{QOcre}{IP : nœud\\vers nœud}
+  \champ{4.1}{-2.8}{1.5}{QOcre}{UDP\\{\ttfamily 8472}}
+  \champ{5.6}{-2.8}{1.9}{QSarcelle}{VXLAN\\VNI = identité}
+  \champ{7.5}{-2.8}{1.5}{QGris}{Ethernet\\interne}
+  \champ{9}{-2.8}{2}{QVert}{IP : Pod\\vers Pod}
+  \champ{11}{-2.8}{1.7}{QBleu}{ICMP...}
+  \node[lbl, anchor=west] at (12.9,-2.8) {MTU : 1450\\(50 octets)};
+
+  \node[lbl, anchor=north west, text width=15cm] at (0,-3.45) {Les encapsulations laissent passer le trafic des Pods sur n'importe quel réseau de nœuds, au prix de quelques octets par paquet ; le MTU des Pods est réduit d'autant, pour que le paquet encapsulé tienne toujours dans les 1500 octets du réseau des nœuds.};
+\end{tikzpicture}
+\end{document}

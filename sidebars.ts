@@ -100,6 +100,7 @@ const sidebars: SidebarsConfig = {
         'partie-5/controleurs',
         'partie-5/scheduler',
         'partie-5/kubelet',
+        'partie-5/reseau-pods',
       ],
     },
   ],
