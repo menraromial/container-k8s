@@ -1,0 +1,26 @@
+# Une affinité de Pod : se placer sur le même nœud qu'un Pod « rapide » (proximité, par exemple un cache local).
+apiVersion: v1
+kind: Pod
+metadata:
+  name: voisin
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels: {role: cache}
+        topologyKey: kubernetes.io/hostname
+  containers:
+  - name: pause
+    image: registry.k8s.io/pause:3.10
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cache
+  labels: {role: cache}
+spec:
+  nodeName: deux-noeuds-m02         # placé à la main, pour l'exemple
+  containers:
+  - name: pause
+    image: registry.k8s.io/pause:3.10

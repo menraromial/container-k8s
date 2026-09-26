@@ -1,0 +1,23 @@
+% Figure 32.2 : 7 répliques qui préfèrent le SSD, sans et avec contrainte de répartition (mesures du chapitre 32).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=0.45cm,
+    lbl/.style={qlbl, font=\scriptsize},
+    pod/.style={draw=#1, fill=#1Bg, line width=0.6pt, rounded corners=1pt, minimum width=0.7cm, minimum height=0.36cm, inner sep=0pt}]
+  \foreach \titre/\x in {sans contrainte/0, {avec maxSkew: 1}/6.4} {
+    \node[font=\titrefig\small, anchor=west] at (\x-0.5,8.8) {\titre};
+    \foreach \z/\n [count=\i] in {zone-a/deux-noeuds, zone-b/m02, zone-c (SSD)/m03} {
+      \draw[QMuted, line width=0.4pt] (\x+\i*1.6-1.6-0.55,0) -- (\x+\i*1.6-1.6+0.55,0);
+      \node[lbl, below, align=center] at (\x+\i*1.6-1.6,0) {\z};
+    }
+  }
+  % sans contrainte : 0 / 0 / 7
+  \foreach \k in {1,...,7} { \node[pod=QOcre] at (3.2,\k-0.5) {}; }
+  % avec contrainte : 2 / 2 / 3
+  \foreach \k in {1,2} { \node[pod=QVert] at (6.4,\k-0.5) {}; \node[pod=QVert] at (8.0,\k-0.5) {}; }
+  \foreach \k in {1,2,3} { \node[pod=QVert] at (9.6,\k-0.5) {}; }
+  \node[lbl, align=left, anchor=west] at (-0.6,-2.6) {la préférence pour le SSD attire tout\\sur un seul nœud : une panne l'emporte};
+  \node[lbl, align=left, anchor=west] at (5.9,-2.6) {au plus une réplique d'écart entre zones :\\la préférence ne départage que le reste};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,14 @@
+# Deux classes de priorité : les tâches de fond peuvent être préemptées par ce qui compte.
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: fond
+value: 1000
+description: "Tâches de fond, préemptables"
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: critique
+value: 100000
+description: "Services qui passent avant tout"

@@ -1,0 +1,22 @@
+# Une anti-affinité obligatoire : jamais deux répliques sur le même nœud. 4 répliques pour 3 nœuds.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dispersion
+spec:
+  replicas: 4
+  selector:
+    matchLabels: {app: dispersion}
+  template:
+    metadata:
+      labels: {app: dispersion}
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels: {app: dispersion}
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - name: pause
+        image: registry.k8s.io/pause:3.10

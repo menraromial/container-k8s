@@ -1,0 +1,16 @@
+# Un Pod autorisé sur le nœud réservé au calcul (toléré), et qui le demande (nodeSelector).
+apiVersion: v1
+kind: Pod
+metadata:
+  name: calcul
+spec:
+  nodeSelector:
+    disque: ssd
+  tolerations:
+  - key: dedie
+    operator: Equal
+    value: calcul
+    effect: NoSchedule
+  containers:
+  - name: pause
+    image: registry.k8s.io/pause:3.10

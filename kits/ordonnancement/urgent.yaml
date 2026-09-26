@@ -1,0 +1,12 @@
+# Un Pod critique qui demande 5 cœurs : il n'y a plus la place, sauf à préempter un Pod de fond.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: urgent
+spec:
+  priorityClassName: critique
+  containers:
+  - name: pause
+    image: registry.k8s.io/pause:3.10
+    resources:
+      requests: {cpu: "5"}

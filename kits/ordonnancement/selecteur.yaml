@@ -1,0 +1,11 @@
+# Un Pod qui ne veut tourner que sur un nœud à disque SSD.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rapide
+spec:
+  nodeSelector:
+    disque: ssd
+  containers:
+  - name: pause
+    image: registry.k8s.io/pause:3.10

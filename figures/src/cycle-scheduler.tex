@@ -1,0 +1,19 @@
+% Figure 32.1 : le cycle de décision du scheduler pour un Pod (chapitre 32).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    obj/.style={qbox, font=\scriptsize, align=left, inner sep=4pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  \node[obj, draw=QGris, fill=QGrisBg, text width=2.5cm, align=center] (file) at (0,0) {file d'attente\\Pods sans\\{\ttfamily nodeName}};
+  \node[obj, draw=QBleu, fill=QBleuBg, text width=4.3cm] (filtre) at (4.4,0) {\textbf{1. filtrage} : quels nœuds le peuvent ?\\{\ttfamily NodeAffinity} (sélecteur, affinités)\\{\ttfamily TaintToleration} (taints)\\{\ttfamily NodeUnschedulable} (cordon)\\{\ttfamily NodeResourcesFit} (requests)\\{\ttfamily InterPodAffinity}, {\ttfamily PodTopologySpread}};
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg, text width=4.1cm] (score) at (10.3,0) {\textbf{2. score} : lequel est le meilleur ?\\chaque extension note de 0 à 100,\\multipliée par son poids :\\place libre, affinités préférées,\\répartition, image déjà présente...};
+  \node[obj, draw=QVert, fill=QVertBg, text width=2.6cm, align=center] (lie) at (15.3,0) {\textbf{3. liaison}\\{\ttfamily nodeName} écrit\\le kubelet démarre\\le Pod};
+  \node[obj, draw=QBrique, fill=QBriqueBg, text width=4.3cm] (pre) at (4.4,-3.1) {\textbf{aucun nœud} : {\ttfamily Pending}\\{\ttfamily 0/3 nodes are available: ...}\\préemption, si le Pod est prioritaire :\\évincer des Pods de priorité plus basse\\sur un nœud où cela suffit};
+  \draw[qarr] (file) -- (filtre);
+  \draw[qarr] (filtre) -- node[lien, above] {nœuds retenus} (score);
+  \draw[qarr] (score) -- node[lien, above] {le plus haut} (lie);
+  \draw[qarr, draw=QBrique] (filtre) -- (pre);
+  \draw[qarr, dashed, draw=QBrique] (pre.west) -| node[lien, left, pos=0.75] {réessayé plus tard\\ou au cycle suivant} (file.south);
+\end{tikzpicture}
+\end{document}

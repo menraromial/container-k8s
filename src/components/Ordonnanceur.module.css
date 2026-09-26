@@ -1,0 +1,86 @@
+.cadre {
+  border: 1px solid var(--q-rule);
+  border-left: 4px solid var(--part);
+  background: var(--q-surface);
+  border-radius: 3px;
+  padding: 1rem 1.1rem;
+  margin: 1.5rem 0;
+}
+
+.colonnes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.4rem;
+}
+
+.groupe {
+  flex: 1 1 18rem;
+  border: 1px solid var(--q-rule);
+  border-radius: 2px;
+  padding: 0.5rem 0.8rem 0.6rem;
+  margin: 0;
+}
+
+.groupe legend {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem;
+  color: var(--q-muted);
+  padding: 0 0.3rem;
+}
+
+.case,
+.choix {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+  margin: 0.25rem 0;
+  cursor: pointer;
+}
+
+.choix select {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.85rem;
+  color: var(--q-ink);
+  background: var(--q-bg);
+  border: 1px solid var(--q-rule);
+  border-radius: 2px;
+  padding: 0.1rem 0.3rem;
+}
+
+.table {
+  display: table;
+  width: 100%;
+  margin: 1rem 0 0.6rem;
+  font-size: 0.88rem;
+}
+
+.table th {
+  font-family: var(--ifm-font-family-monospace);
+  font-weight: normal;
+  color: var(--q-muted);
+}
+
+.detail {
+  font-size: 0.78rem;
+  color: var(--q-muted);
+}
+
+.retenu td {
+  background: var(--fig-vert-bg);
+}
+
+.ecarte td {
+  color: var(--q-muted);
+}
+
+.verdict {
+  font-size: 0.95rem;
+  margin: 0.4rem 0;
+}
+
+.note {
+  font-size: 0.82rem;
+  color: var(--q-muted);
+  margin: 0.4rem 0 0;
+}

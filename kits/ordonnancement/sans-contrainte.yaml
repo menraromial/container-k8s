@@ -1,0 +1,25 @@
+# 7 répliques qui préfèrent le nœud SSD, sans contrainte de répartition.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sans-contrainte
+spec:
+  replicas: 7
+  selector:
+    matchLabels: {app: sans-contrainte}
+  template:
+    metadata:
+      labels: {app: sans-contrainte}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: disque
+                operator: In
+                values: [ssd]
+      containers:
+      - name: pause
+        image: registry.k8s.io/pause:3.10

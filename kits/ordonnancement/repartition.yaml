@@ -1,0 +1,32 @@
+# 7 répliques qui préfèrent le nœud SSD, mais avec une contrainte de répartition :
+# au plus 1 réplique d'écart entre zones.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: repartition
+spec:
+  replicas: 7
+  selector:
+    matchLabels: {app: repartition}
+  template:
+    metadata:
+      labels: {app: repartition}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: disque
+                operator: In
+                values: [ssd]
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels: {app: repartition}
+      containers:
+      - name: pause
+        image: registry.k8s.io/pause:3.10

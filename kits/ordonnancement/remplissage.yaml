@@ -1,0 +1,20 @@
+# Des Pods de fond qui réservent presque tout le processeur des trois nœuds (2 x 10 cœurs par nœud).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: remplissage
+spec:
+  replicas: 6
+  selector:
+    matchLabels: {app: remplissage}
+  template:
+    metadata:
+      labels: {app: remplissage}
+    spec:
+      priorityClassName: fond
+      terminationGracePeriodSeconds: 2
+      containers:
+      - name: pause
+        image: registry.k8s.io/pause:3.10
+        resources:
+          requests: {cpu: "10"}

@@ -1,0 +1,11 @@
+# Un Pod qui demande un disque NVMe : aucun nœud n'en a.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: introuvable
+spec:
+  nodeSelector:
+    disque: nvme
+  containers:
+  - name: pause
+    image: registry.k8s.io/pause:3.10

@@ -1,0 +1,25 @@
+# Une affinité de nœud « préférée » : le SSD si possible, ailleurs sinon. 3 répliques.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: preference
+spec:
+  replicas: 3
+  selector:
+    matchLabels: {app: preference}
+  template:
+    metadata:
+      labels: {app: preference}
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: disque
+                operator: In
+                values: [ssd]
+      containers:
+      - name: pause
+        image: registry.k8s.io/pause:3.10
