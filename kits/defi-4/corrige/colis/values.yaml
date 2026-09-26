@@ -1,0 +1,73 @@
+# Valeurs par défaut du chart de Colis. Chaque valeur peut être remplacée avec -f ou --set.
+
+images:
+  registre: host.minikube.internal:5001
+  api:
+    depot: colis/api
+    etiquette: "2.1"       # l'étiquette publiée dans le registre (vide : l'appVersion du chart)
+  web:
+    depot: colis/web
+    etiquette: "1.0"
+  postgres: postgres:18-alpine
+  redis: redis:8.8-alpine
+
+api:
+  repliques: 2             # ignoré si l'autoscaling est actif
+  autoscaling:
+    actif: false
+    min: 2
+    max: 6
+    cibleCpu: 50           # % de la request de processeur
+  ressources:
+    requests: {cpu: 100m, memory: 192Mi}
+    limits: {memory: 256Mi}
+
+worker:
+  repliques: 1             # ignoré si KEDA est actif
+  keda:
+    actif: false
+    max: 5
+    colisParWorker: 5
+  pause: "0.5"             # COLIS_WORKER_PAUSE, en secondes
+  ressources:
+    requests: {cpu: 50m, memory: 96Mi}
+    limits: {memory: 192Mi}
+
+web:
+  repliques: 2
+  ressources:
+    requests: {cpu: 50m, memory: 32Mi}
+    limits: {memory: 64Mi}
+
+postgres:
+  stockage: 1Gi
+  classe: ""               # vide : la StorageClass par défaut du cluster
+  ressources:
+    requests: {cpu: 100m, memory: 128Mi}
+    limits: {memory: 256Mi}
+
+redis:
+  ressources:
+    requests: {cpu: 50m, memory: 32Mi}
+    limits: {memory: 128Mi}
+
+purge:
+  planning: "0 3 * * *"
+  fuseau: Europe/Paris
+  jours: 30
+
+sauvegarde:
+  avantMiseAJour: true     # un pg_dump avant chaque helm upgrade (hook)
+  stockage: 1Gi
+
+pdb:
+  actif: false             # PodDisruptionBudget pour l'API et le site (chapitre 33)
+
+passerelle:
+  activee: false           # publier Colis sur une Gateway (chapitre 28)
+  https: false             # écouteur HTTPS, et redirection de HTTP vers HTTPS
+  nom: principale
+  namespace: passerelle
+  ecouteur: http           # l'écouteur HTTP (et l'écouteur HTTPS si https est vrai)
+  ecouteurHttps: https
+  hote: colis.local

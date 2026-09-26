@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: purge
+  labels:
+    {{- include "colis.etiquettes" . | nindent 4 }}
+    app.kubernetes.io/name: purge
+spec:
+  schedule: {{ .Values.purge.planning | quote }}
+  timeZone: {{ .Values.purge.fuseau }}
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 3600
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 600
+      template:
+        metadata:
+          labels:
+            {{- include "colis.etiquettes" . | nindent 12 }}
+            app.kubernetes.io/name: purge
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: purge
+            image: {{ include "colis.imageApi" . }}
+            command: ["python", "-m", "colis.purge"]
+            {{- include "colis.env" . | nindent 12 }}
+            resources:
+              requests: {cpu: 50m, memory: 64Mi}
+              limits: {memory: 128Mi}

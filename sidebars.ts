@@ -85,6 +85,7 @@ const sidebars: SidebarsConfig = {
         'partie-4/autoscaling',
         'partie-4/ordonnancement',
         'partie-4/disponibilite',
+        'partie-4/defi',
       ],
     },
   ],

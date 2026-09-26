@@ -1,0 +1,60 @@
+{{- if .Values.sauvegarde.avantMiseAJour }}
+{{- /*
+Une sauvegarde de la base avant chaque « helm upgrade » : un hook pre-upgrade.
+La demande de volume est gardée même quand on désinstalle le chart (resource-policy: keep).
+*/}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sauvegardes
+  labels:
+    {{- include "colis.etiquettes" . | nindent 4 }}
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: {{ .Values.sauvegarde.stockage }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sauvegarde-avant-maj
+  labels:
+    {{- include "colis.etiquettes" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-weight: "0"
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  backoffLimit: 1
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      labels:
+        {{- include "colis.etiquettes" . | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: pg-dump
+        image: {{ .Values.images.postgres }}
+        env:
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: colis-db
+              key: POSTGRES_PASSWORD
+        command: ["sh", "-c"]
+        args:
+        - |
+          f=/sauvegardes/colis-revision-{{ .Release.Revision }}-$(date -u +%Y%m%d-%H%M%S).dump
+          pg_dump -h postgres -U colis -d colis -Fc -f "$f" && ls -l "$f"
+        volumeMounts:
+        - name: sauvegardes
+          mountPath: /sauvegardes
+      volumes:
+      - name: sauvegardes
+        persistentVolumeClaim:
+          claimName: sauvegardes
+{{- end }}

@@ -1,0 +1,49 @@
+# Défi IV : la passerelle du chapitre 28, avec un troisième écouteur, en HTTPS pour colis-prod.local.
+# cert-manager fournit son certificat, comme pour colis.local.
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: principale
+  namespace: passerelle
+  annotations:
+    cert-manager.io/cluster-issuer: colis-ca
+spec:
+  gatewayClassName: envoy
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    allowedRoutes:
+      namespaces:
+        from: Selector
+        selector:
+          matchLabels:
+            passerelle: principale
+  - name: https
+    protocol: HTTPS
+    port: 443
+    hostname: colis.local
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - name: colis-tls       # créé par cert-manager, dans le namespace de la passerelle
+    allowedRoutes:
+      namespaces:
+        from: Selector
+        selector:
+          matchLabels:
+            passerelle: principale
+  - name: https-prod
+    protocol: HTTPS
+    port: 443
+    hostname: colis-prod.local
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - name: colis-prod-tls
+    allowedRoutes:
+      namespaces:
+        from: Selector
+        selector:
+          matchLabels:
+            passerelle: principale

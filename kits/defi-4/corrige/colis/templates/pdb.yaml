@@ -1,0 +1,19 @@
+{{- if .Values.pdb.actif }}
+{{- range $composant := list "api" "web" }}
+---
+# Pendant une maintenance, au plus une réplique de {{ $composant }} absente à la fois (chapitre 33).
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ $composant }}
+  labels:
+    {{- include "colis.etiquettes" $ | nindent 4 }}
+spec:
+  maxUnavailable: 1
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $composant }}
+      app.kubernetes.io/instance: {{ $.Release.Name }}
+{{- end }}
+{{- end }}

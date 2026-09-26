@@ -1,0 +1,17 @@
+# Les valeurs de Colis en « production » pour le défi IV.
+api:
+  autoscaling:
+    actif: true
+    min: 2
+    max: 6
+worker:
+  keda:
+    actif: true
+    max: 5
+pdb:
+  actif: true
+passerelle:
+  activee: true
+  https: true
+  ecouteurHttps: https-prod
+  hote: colis-prod.local

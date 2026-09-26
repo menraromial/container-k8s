@@ -1,0 +1,46 @@
+{{- if .Values.api.autoscaling.actif }}
+# Le nombre de répliques de l'API suit le processeur (chapitre 31).
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api
+  labels:
+    {{- include "colis.etiquettes" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api
+  minReplicas: {{ .Values.api.autoscaling.min }}
+  maxReplicas: {{ .Values.api.autoscaling.max }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.api.autoscaling.cibleCpu }}
+{{- end }}
+{{- if .Values.worker.keda.actif }}
+---
+# Le nombre de workers suit la longueur de la file Redis, de zéro à max (chapitre 31).
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: worker
+  labels:
+    {{- include "colis.etiquettes" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    name: worker
+  minReplicaCount: 0
+  maxReplicaCount: {{ .Values.worker.keda.max }}
+  pollingInterval: 5
+  cooldownPeriod: 30
+  triggers:
+  - type: redis
+    metadata:
+      address: redis.{{ .Release.Namespace }}.svc.cluster.local:6379
+      listName: colis:a-estimer
+      listLength: {{ .Values.worker.keda.colisParWorker | quote }}
+{{- end }}

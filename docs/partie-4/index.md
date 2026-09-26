@@ -21,6 +21,6 @@ Cette partie règle ces problèmes un par un, avec les objets et les outils qu'o
 | [31. L'autoscaling](autoscaling.md) | HPA, VPA, KEDA sur la file Redis du worker |
 | [32. L'ordonnancement fin](ordonnancement.md) | affinités, taints et tolérations, répartition, priorités |
 | [33. La disponibilité](disponibilite.md) | PodDisruptionBudget, `drain` et `cordon` |
-| Défi IV | Colis avec Helm, stockage persistant, HTTPS et autoscaling |
+| [Défi IV](defi.md) | Colis avec Helm, stockage persistant, HTTPS et autoscaling |
 
 Il vous faut le cluster minikube de la partie III, avec Colis déployé comme au chapitre 24 et le registre local du chapitre 14. Quelques chapitres activent des addons de minikube ou installent des composants supplémentaires ; chacun dit ce qu'il consomme en mémoire et comment le retirer.

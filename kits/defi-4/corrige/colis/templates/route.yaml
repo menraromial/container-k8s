@@ -1,0 +1,51 @@
+{{- if .Values.passerelle.activee }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: colis
+  labels:
+    {{- include "colis.etiquettes" . | nindent 4 }}
+spec:
+  parentRefs:
+  - name: {{ .Values.passerelle.nom }}
+    namespace: {{ .Values.passerelle.namespace }}
+    sectionName: {{ if .Values.passerelle.https }}{{ .Values.passerelle.ecouteurHttps }}{{ else }}{{ .Values.passerelle.ecouteur }}{{ end }}
+  hostnames:
+  - {{ .Values.passerelle.hote | quote }}
+  rules:
+  - matches:
+    - path: {type: PathPrefix, value: /api}
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path: {type: ReplacePrefixMatch, replacePrefixMatch: /}
+    backendRefs:
+    - name: api
+      port: 8000
+  - backendRefs:
+    - name: web
+      port: 80
+{{- if .Values.passerelle.https }}
+---
+# Sur l'écouteur HTTP, une seule règle : rediriger vers HTTPS (chapitre 28).
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: colis-redirection
+  labels:
+    {{- include "colis.etiquettes" . | nindent 4 }}
+spec:
+  parentRefs:
+  - name: {{ .Values.passerelle.nom }}
+    namespace: {{ .Values.passerelle.namespace }}
+    sectionName: {{ .Values.passerelle.ecouteur }}
+  hostnames:
+  - {{ .Values.passerelle.hote | quote }}
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+{{- end }}
+{{- end }}
