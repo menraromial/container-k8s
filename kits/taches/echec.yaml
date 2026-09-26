@@ -1,0 +1,14 @@
+# Un Job qui échoue toujours : combien de fois Kubernetes réessaie-t-il, et à quel rythme ?
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: echec
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: echec
+        image: busybox:1.37
+        command: ["sh", "-c", "echo \"essai à $(date -u +%T)\"; exit 1"]

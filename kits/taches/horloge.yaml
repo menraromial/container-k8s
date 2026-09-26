@@ -1,0 +1,19 @@
+# Un CronJob qui s'exécute chaque minute et garde les deux derniers Jobs réussis.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: horloge
+spec:
+  schedule: "* * * * *"
+  timeZone: Europe/Paris
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: horloge
+            image: busybox:1.37
+            command: ["sh", "-c", "echo \"exécuté à $(date -u +%T) UTC\""]

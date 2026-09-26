@@ -1,0 +1,38 @@
+# Un Job indexé : 8 tranches de calcul, 4 à la fois. Chaque Pod lit son numéro de tranche
+# dans JOB_COMPLETION_INDEX et compte les nombres premiers de sa tranche.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: tranches
+spec:
+  completions: 8
+  parallelism: 4
+  completionMode: Indexed
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: calcul
+        image: python:3.14-alpine
+        resources:
+          requests:
+            cpu: 250m
+            memory: 64Mi
+        command: ["python", "-c"]
+        args:
+        - |
+          import os, socket, time
+          i = int(os.environ["JOB_COMPLETION_INDEX"])
+          taille = 2_000_000
+          debut, fin = i * taille, (i + 1) * taille
+          t = time.time()
+          def premier(k):
+              if k < 2: return False
+              if k % 2 == 0: return k == 2
+              d = 3
+              while d * d <= k:
+                  if k % d == 0: return False
+                  d += 2
+              return True
+          nb = sum(1 for k in range(debut, fin) if premier(k))
+          print(f"tranche {i} [{debut}, {fin}[ : {nb} premiers, {socket.gethostname()}, {time.time() - t:.1f} s")

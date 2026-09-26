@@ -1,0 +1,24 @@
+# Un Job : un calcul qui se termine. Ici, compter les nombres premiers inférieurs à 10 millions.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: compte
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: calcul
+        image: python:3.14-alpine
+        command: ["python", "-c"]
+        args:
+        - |
+          import socket, time
+          debut = time.time()
+          n = 10_000_000
+          crible = bytearray([1]) * n
+          crible[0:2] = b"\0\0"
+          for i in range(2, int(n ** 0.5) + 1):
+              if crible[i]:
+                  crible[i * i::i] = bytearray(len(range(i * i, n, i)))
+          print(f"{sum(crible)} nombres premiers sous {n}, calculés par {socket.gethostname()} en {time.time() - debut:.2f} s")

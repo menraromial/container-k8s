@@ -1,0 +1,46 @@
+# Un DaemonSet : un Pod « veilleur » par nœud, qui rapporte chaque minute la charge du nœud
+# et le nombre de Pods dont les journaux sont sur ce nœud.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: veilleur
+spec:
+  selector:
+    matchLabels:
+      app: veilleur
+  template:
+    metadata:
+      labels:
+        app: veilleur
+    spec:
+      terminationGracePeriodSeconds: 2   # busybox en PID 1 ignore SIGTERM (chapitre 22)
+      containers:
+      - name: veilleur
+        image: busybox:1.37
+        env:
+        - name: NOEUD
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        command: ["sh", "-c"]
+        args:
+        - |
+          while true; do
+            echo "$(date -u +%T) $NOEUD : charge $(cut -d' ' -f1-3 /proc/loadavg), journaux de $(ls /journaux | wc -l) Pods"
+            sleep 60
+          done
+        resources:
+          requests:
+            cpu: 10m
+            memory: 16Mi
+          limits:
+            memory: 32Mi
+        volumeMounts:
+        - name: journaux
+          mountPath: /journaux
+          readOnly: true
+      volumes:
+      - name: journaux
+        hostPath:
+          path: /var/log/pods
+          type: Directory

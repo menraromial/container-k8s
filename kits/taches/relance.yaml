@@ -1,0 +1,14 @@
+# restartPolicy: OnFailure : le kubelet relance le conteneur dans le même Pod.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: relance
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: fragile
+        image: busybox:1.37
+        command: ["sh", "-c", "echo \"essai à $(date -u +%T)\"; exit 1"]

@@ -1,0 +1,48 @@
+# La purge de Colis, chaque nuit à 3 h (heure de Paris), au lieu du Pod lancé à la main (chapitre 27).
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: purge
+  namespace: colis
+  labels:
+    app.kubernetes.io/name: purge
+    app.kubernetes.io/part-of: colis
+spec:
+  schedule: "0 3 * * *"
+  timeZone: Europe/Paris
+  concurrencyPolicy: Forbid          # jamais deux purges en même temps
+  startingDeadlineSeconds: 3600      # rattraper un départ manqué d'une heure au plus
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 600
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: purge
+            app.kubernetes.io/part-of: colis
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: purge
+            image: host.minikube.internal:5001/colis/api:2.1
+            command: ["python", "-m", "colis.purge"]
+            envFrom:
+            - configMapRef:
+                name: colis-config
+            env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: colis-db
+                  key: POSTGRES_PASSWORD
+            - name: COLIS_DB
+              value: postgresql://colis:$(POSTGRES_PASSWORD)@postgres:5432/colis
+            resources:
+              requests:
+                cpu: 50m
+                memory: 64Mi
+              limits:
+                memory: 128Mi

@@ -1,0 +1,34 @@
+% Figure 27.2 : qui crée quoi. Un CronJob crée des Jobs, un Job crée des Pods ; un DaemonSet crée un Pod par nœud (chapitre 27).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    obj/.style={qbox, font=\scriptsize, align=center, inner sep=3pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  % --- CronJob
+  \node[font=\titrefig\normalsize, anchor=west] at (-1.2,1.3) {tâches planifiées};
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg, text width=3.2cm] (cj) at (0.6,0) {CronJob {\ttfamily horloge}\\{\ttfamily "* * * * *"}, Europe/Paris\\historique : 2 réussis};
+  \node[obj, draw=QBleu, fill=QBleuBg, text width=2.7cm, dashed] (j1) at (5,1.1) {Job {\ttfamily horloge-29840436}\\supprimé (historique)};
+  \node[obj, draw=QBleu, fill=QBleuBg, text width=2.7cm] (j2) at (5,0) {Job {\ttfamily horloge-29840437}\\12 h 37 UTC};
+  \node[obj, draw=QBleu, fill=QBleuBg, text width=2.7cm] (j3) at (5,-1.1) {Job {\ttfamily horloge-29840438}\\12 h 38 UTC};
+  \node[obj, draw=QGris, fill=QGrisBg, text width=2.3cm] (p2) at (8.9,0) {Pod, Completed};
+  \node[obj, draw=QGris, fill=QGrisBg, text width=2.3cm] (p3) at (8.9,-1.1) {Pod, Completed};
+  \draw[qarr, dashed, draw=QSarcelle] (cj.east) -- (j1.west);
+  \draw[qarr, draw=QSarcelle] (cj.east) -- node[lien, above, pos=0.55] {chaque minute} (j2.west);
+  \draw[qarr, draw=QSarcelle] (cj.east) -- (j3.west);
+  \draw[qarr] (j2) -- (p2); \draw[qarr] (j3) -- (p3);
+  \node[qlbl, font=\scriptsize, align=left, anchor=north west] at (-1.2,-1.9) {le numéro du Job : l'heure prévue, en minutes depuis le 1\textsuperscript{er} janvier 1970 ;\\un Job réessaie ses Pods (backoffLimit), puis passe Complete ou Failed};
+  % --- DaemonSet
+  \node[font=\titrefig\normalsize, anchor=west] at (-1.2,-3.3) {un Pod par nœud};
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg, text width=3.2cm] (ds) at (0.6,-4.7) {DaemonSet {\ttfamily veilleur}\\{\ttfamily hostPath /var/log/pods}};
+  \foreach \n/\x/\c/\k in {deux-noeuds/4.2/QVert/a, deux-noeuds-m02/7.6/QVert/b, deux-noeuds-m03/11.0/QMuted/c} {
+    \node[qcadre, draw=\c, minimum width=3.1cm, minimum height=1.9cm] (N\k) at (\x,-4.9) {};
+    \node[qlbl, font=\ttfamily\scriptsize, anchor=north] at (\x,-3.95) {\n};
+    \node[obj, draw=QGris, fill=QGrisBg, text width=2.4cm] (P\k) at (\x,-5.15) {Pod {\ttfamily veilleur}};
+  }
+  \node[qlbl, font=\scriptsize, anchor=north, align=center] at (11.0,-5.95) {ajouté : Pod en 36 s\\retiré : Pod supprimé 52 s après};
+  \draw[qarr, draw=QSarcelle] (ds.east) -- (Pa.west);
+  \draw[qarr, draw=QSarcelle] (ds.south) to[out=-30,in=-150] (Pb.south west);
+  \draw[qarr, draw=QSarcelle, dashed] (ds.south) to[out=-40,in=-150] (Pc.south west);
+\end{tikzpicture}
+\end{document}

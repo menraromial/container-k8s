@@ -78,6 +78,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'partie-4/stockage',
         'partie-4/statefulset',
+        'partie-4/taches',
       ],
     },
   ],

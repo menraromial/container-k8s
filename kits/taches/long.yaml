@@ -1,0 +1,18 @@
+# Un CronJob dont chaque exécution dure plus longtemps que l'intervalle entre deux exécutions.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: long
+spec:
+  schedule: "* * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          terminationGracePeriodSeconds: 2
+          containers:
+          - name: long
+            image: busybox:1.37
+            command: ["sh", "-c", "echo \"début à $(date -u +%T)\"; sleep 150; echo fin"]

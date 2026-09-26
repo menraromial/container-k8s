@@ -1,0 +1,50 @@
+# Exercice 2 du chapitre 27 : une sauvegarde nocturne de la base de Colis.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sauvegardes
+  namespace: colis
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: sauvegarde
+  namespace: colis
+spec:
+  schedule: "0 2 * * *"
+  timeZone: Europe/Paris
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 7200
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: pg-dump
+            image: postgres:18-alpine
+            env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: colis-db
+                  key: POSTGRES_PASSWORD
+            command: ["sh", "-c"]
+            args:
+            - |
+              f=/sauvegardes/colis-$(date -u +%Y%m%d-%H%M).dump
+              pg_dump -h postgres -U colis -d colis -Fc -f "$f" && ls -l "$f"
+              ls -1t /sauvegardes/colis-*.dump | tail -n +8 | xargs -r rm -v
+            volumeMounts:
+            - name: sauvegardes
+              mountPath: /sauvegardes
+          volumes:
+          - name: sauvegardes
+            persistentVolumeClaim:
+              claimName: sauvegardes

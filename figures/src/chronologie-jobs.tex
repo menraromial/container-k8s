@@ -1,0 +1,33 @@
+% Figure 27.1 : chronologie mesurée de deux Jobs du chapitre 27 (rejeu du cluster du cours).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=0.2cm,y=1cm,
+    barre/.style={draw=#1, fill=#1Bg, line width=0.6pt, rounded corners=1pt},
+    lbl/.style={qlbl, font=\scriptsize}]
+  % ---- (a) Job echec
+  \node[font=\titrefig\normalsize, anchor=west] at (-12,2.1) {Job {\ttfamily echec} : backoffLimit 3};
+  \draw[QMuted, line width=0.4pt] (0,0) -- (80,0);
+  \foreach \t in {0,10,20,...,80} { \draw[QMuted] (\t,0.08) -- (\t,-0.08); \node[lbl, below] at (\t,-0.08) {\t\,s}; }
+  \foreach \t/\n in {0/1, 10/2, 30/3, 70/4} {
+    \draw[barre=QBrique] (\t,0.2) rectangle ++(1.6,0.45);
+    \node[lbl, above] at (\t+0.8,0.65) {essai \n};
+  }
+  \draw[qarr, draw=QMuted] (2,0.9) to[bend left=20] node[lbl, above] {+10 s} (9.5,0.9);
+  \draw[qarr, draw=QMuted] (12,0.9) to[bend left=20] node[lbl, above] {+20 s} (29.5,0.9);
+  \draw[qarr, draw=QMuted] (32,0.9) to[bend left=20] node[lbl, above] {+40 s} (69.5,0.9);
+  \draw[QBrique, line width=1pt] (74,0.05) -- (74,1.0);
+  \node[lbl, anchor=west, text=QBrique] at (74.5,0.45) {Failed (74 s)};
+  % ---- (b) Job tranches
+  \node[font=\titrefig\normalsize, anchor=west] at (-12,-1.6) {Job {\ttfamily tranches} : 8 complétions, parallelism 4};
+  \foreach \i/\d/\f in {0/0/8, 1/0/13, 2/0/16, 3/0/19, 4/10/31, 5/15/38, 6/19/43, 7/22/47} {
+    \draw[barre=QVert] (\d,-2.3-0.42*\i) rectangle (\f,-2.3-0.42*\i-0.3);
+    \node[lbl, anchor=east] at (-0.5,-2.3-0.42*\i-0.15) {tranche \i};
+  }
+  \draw[QMuted, line width=0.4pt] (0,-5.8) -- (80,-5.8);
+  \foreach \t in {0,10,20,...,80} { \draw[QMuted] (\t,-5.72) -- (\t,-5.88); \node[lbl, below] at (\t,-5.88) {\t\,s}; }
+  \draw[QVert, line width=1pt] (50,-2.2) -- (50,-5.7);
+  \node[lbl, anchor=west, text=QVert, align=left] at (50.5,-3.2) {Complete (50 s)\\parallelism 1 : 172 s\\parallelism 8 : 29 s};
+  \node[lbl, anchor=west, align=left] at (50.5,-4.7) {une tranche démarre dès qu'une autre finit :\\jamais plus de 4 Pods à la fois};
+\end{tikzpicture}
+\end{document}
