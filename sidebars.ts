@@ -69,6 +69,16 @@ const sidebars: SidebarsConfig = {
         'partie-3/defi',
       ],
     },
+    {
+      type: 'category',
+      label: 'IV · Kubernetes au quotidien',
+      className: 'partie-4',
+      collapsed: false,
+      link: {type: 'doc', id: 'partie-4/index'},
+      items: [
+        'partie-4/stockage',
+      ],
+    },
   ],
 };
 

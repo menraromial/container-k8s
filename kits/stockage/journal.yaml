@@ -1,0 +1,30 @@
+# Une demande de 100 Mio dans la classe csi-attente, et un Pod qui l'utilise.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: journal
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+  storageClassName: csi-attente
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: journal
+spec:
+  terminationGracePeriodSeconds: 2   # busybox en PID 1 ignore SIGTERM (chapitre 22)
+  containers:
+  - name: journal
+    image: busybox:1.37
+    command: ["sh", "-c", "echo \"$(date -u +%T) première ligne\" >> /journal/journal.txt; sleep 3600"]
+    volumeMounts:
+    - name: journal
+      mountPath: /journal
+  volumes:
+  - name: journal
+    persistentVolumeClaim:
+      claimName: journal

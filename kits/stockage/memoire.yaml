@@ -1,0 +1,21 @@
+# Un emptyDir en mémoire (tmpfs) : ce qu'on y écrit compte dans la limite mémoire du conteneur.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: memoire
+spec:
+  terminationGracePeriodSeconds: 2   # busybox en PID 1 ignore SIGTERM (chapitre 22)
+  containers:
+  - name: ecrivain
+    image: busybox:1.37
+    command: ["sh", "-c", "sleep 3600"]
+    resources:
+      limits:
+        memory: 64Mi
+    volumeMounts:
+    - name: rapide
+      mountPath: /rapide
+  volumes:
+  - name: rapide
+    emptyDir:
+      medium: Memory

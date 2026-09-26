@@ -1,0 +1,48 @@
+# ReadWriteOncePod : un seul Pod à la fois, même sur un seul nœud. Deux Pods la demandent.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unique
+spec:
+  accessModes:
+  - ReadWriteOncePod
+  resources:
+    requests:
+      storage: 50Mi
+  storageClassName: csi-attente
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: premier
+spec:
+  terminationGracePeriodSeconds: 2   # busybox en PID 1 ignore SIGTERM (chapitre 22)
+  containers:
+  - name: c
+    image: busybox:1.37
+    command: ["sh", "-c", "sleep 3600"]
+    volumeMounts:
+    - name: v
+      mountPath: /v
+  volumes:
+  - name: v
+    persistentVolumeClaim:
+      claimName: unique
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: second
+spec:
+  terminationGracePeriodSeconds: 2   # busybox en PID 1 ignore SIGTERM (chapitre 22)
+  containers:
+  - name: c
+    image: busybox:1.37
+    command: ["sh", "-c", "sleep 3600"]
+    volumeMounts:
+    - name: v
+      mountPath: /v
+  volumes:
+  - name: v
+    persistentVolumeClaim:
+      claimName: unique

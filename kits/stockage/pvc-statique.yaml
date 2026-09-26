@@ -1,0 +1,13 @@
+# Une demande de stockage : 500 Mio, en lecture-écriture par un seul nœud,
+# sans StorageClass (storageClassName vide) pour ne se lier qu'à un PV existant.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: donnees
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+  storageClassName: ""

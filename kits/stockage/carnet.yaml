@@ -1,0 +1,18 @@
+# Un Pod qui ajoute une ligne à un carnet, dans le volume de la demande « donnees ».
+apiVersion: v1
+kind: Pod
+metadata:
+  name: carnet
+spec:
+  terminationGracePeriodSeconds: 2   # busybox en PID 1 ignore SIGTERM (chapitre 22)
+  containers:
+  - name: carnet
+    image: busybox:1.37
+    command: ["sh", "-c", "echo \"$(date -u +%T) $(hostname)\" >> /donnees/carnet.txt; cat /donnees/carnet.txt; sleep 3600"]
+    volumeMounts:
+    - name: donnees
+      mountPath: /donnees
+  volumes:
+  - name: donnees
+    persistentVolumeClaim:
+      claimName: donnees

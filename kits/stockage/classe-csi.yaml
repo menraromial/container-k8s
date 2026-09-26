@@ -1,0 +1,10 @@
+# Une StorageClass servie par le pilote CSI hostpath : volume créé seulement quand un Pod
+# en a besoin (WaitForFirstConsumer), et agrandissable.
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: csi-attente
+provisioner: hostpath.csi.k8s.io
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true

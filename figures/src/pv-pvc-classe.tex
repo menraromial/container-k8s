@@ -1,0 +1,38 @@
+% Figure 25.1 : provisionnement statique et dynamique (objets réels du chapitre 25).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    obj/.style={qbox, font=\scriptsize, text width=3.1cm, align=center, inner sep=3pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  % namespace ch25
+  \node[qcadre, dashed, draw=QMuted, minimum width=16.2cm, minimum height=3.3cm] at (7.4,-0.75) {};
+  \node[qlbl, font=\scriptsize, anchor=north west] at (-0.6,0.8) {namespace ch25};
+  \node[qlbl, font=\scriptsize, anchor=north west] at (-0.6,-2.55) {à l'échelle du cluster};
+  % titres
+  \node[font=\titrefig\normalsize, anchor=south] at (2.2,1.05) {statique};
+  \node[font=\titrefig\normalsize, anchor=south] at (11.2,1.05) {dynamique};
+  \draw[QMuted, line width=0.4pt] (6.3,1.3) -- (6.3,-6.3);
+  % statique
+  \node[obj, draw=QGris, fill=QGrisBg] (p1) at (2.2,0) {Pod {\ttfamily carnet}};
+  \node[obj, draw=QBleu, fill=QBleuBg] (c1) at (2.2,-1.6) {PVC {\ttfamily donnees}\\500Mi, RWO, classe {\ttfamily ""}};
+  \node[obj, draw=QOcre, fill=QOcreBg] (v1) at (2.2,-3.6) {PV {\ttfamily disque-1}\\1Gi, RWO, Retain};
+  \node[obj, draw=QVert, fill=QVertBg] (d1) at (2.2,-5.5) {dossier du nœud\\{\ttfamily /data/disque-1}};
+  \node[qbox, font=\scriptsize, draw=QGris, fill=QGrisBg, align=center] (adm) at (-0.9,-4.6) {admin};
+  \draw[qarr] (p1) -- node[lien, right] {persistentVolumeClaim} (c1);
+  \draw[qbiarr, draw=QBleu] (c1) -- node[lien, right, text width=2.6cm, align=left] {lié par le contrôleur\\des volumes} (v1);
+  \draw[qarr] (v1) -- node[lien, right] {hostPath} (d1);
+  \draw[qarr, draw=QGris] (adm) |- node[lien, above, pos=0.75] {crée} (v1.west);
+  % dynamique
+  \node[obj, draw=QGris, fill=QGrisBg] (p2) at (9.2,0) {Pod {\ttfamily remplisseur}};
+  \node[obj, draw=QBleu, fill=QBleuBg] (c2) at (9.2,-1.6) {PVC {\ttfamily petit}\\10Mi, RWO, classe standard};
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg, text width=3.7cm] (sc) at (13.9,-3.6) {StorageClass {\ttfamily standard}\\provisioner\\{\ttfamily k8s.io/minikube-hostpath}};
+  \node[obj, draw=QOcre, fill=QOcreBg] (v2) at (9.2,-3.6) {PV {\ttfamily pvc-7a75f93a-...}\\10Mi, RWO, Delete};
+  \node[obj, draw=QVert, fill=QVertBg] (d2) at (9.2,-5.5) {dossier du nœud\\{\ttfamily /tmp/hostpath-provisioner/}\\{\ttfamily ch25/petit}};
+  \draw[qarr] (p2) -- node[lien, right] {persistentVolumeClaim} (c2);
+  \draw[qarr, draw=QSarcelle] (c2.east) -| node[lien, above, pos=0.25] {1. nomme la classe} (sc.north);
+  \draw[qarr, draw=QSarcelle] (sc.west) -- node[lien, above] {2. crée} (v2.east);
+  \draw[qbiarr, draw=QBleu] (c2) -- node[lien, left] {3. lie} (v2);
+  \draw[qarr] (v2) -- node[lien, right] {hostPath} (d2);
+\end{tikzpicture}
+\end{document}

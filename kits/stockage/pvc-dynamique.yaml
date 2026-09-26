@@ -1,0 +1,12 @@
+# Une demande qui nomme une StorageClass : le volume est créé à la demande.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: petit
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+  storageClassName: standard

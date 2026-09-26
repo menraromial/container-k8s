@@ -1,0 +1,12 @@
+# Une demande qui nomme une StorageClass qui n'existe pas.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rapide
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+  storageClassName: rapide

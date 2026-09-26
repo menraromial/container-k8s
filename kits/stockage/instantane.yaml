@@ -1,0 +1,9 @@
+# Un instantané du volume « journal », puis une nouvelle demande créée à partir de lui.
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: journal-1
+spec:
+  volumeSnapshotClassName: csi-hostpath-snapclass
+  source:
+    persistentVolumeClaimName: journal

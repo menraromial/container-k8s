@@ -1,0 +1,18 @@
+# Un Pod qui écrit 100 Mio dans un volume de 10 Mio.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: remplisseur
+spec:
+  terminationGracePeriodSeconds: 2   # busybox en PID 1 ignore SIGTERM (chapitre 22)
+  containers:
+  - name: remplisseur
+    image: busybox:1.37
+    command: ["sh", "-c", "dd if=/dev/zero of=/volume/gros bs=1M count=100 && ls -l /volume && sleep 3600"]
+    volumeMounts:
+    - name: volume
+      mountPath: /volume
+  volumes:
+  - name: volume
+    persistentVolumeClaim:
+      claimName: petit

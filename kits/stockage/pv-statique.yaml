@@ -1,0 +1,16 @@
+# Un PersistentVolume créé à la main par l'administrateur : un dossier du nœud minikube.
+# /data fait partie des dossiers que minikube conserve d'un redémarrage à l'autre.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: disque-1
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  hostPath:
+    path: /data/disque-1
+    type: DirectoryOrCreate
