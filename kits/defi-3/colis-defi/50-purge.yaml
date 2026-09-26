@@ -1,0 +1,27 @@
+# Purge lancée à la main, une fois. Le chapitre 27 en fera un CronJob.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: purge
+  namespace: colis-defi
+  labels:
+    app.kubernetes.io/name: purge
+    app.kubernetes.io/part-of: colis
+spec:
+  restartPolicy: Never
+  containers:
+  - name: purge
+    image: host.minikube.internal:5001/colis/api:2.0
+    imagePullPolicy: IfNotPresent
+    command: ["python", "-m", "colis.purge"]
+    envFrom:
+    - configMapRef:
+        name: colis-config
+    env:
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: colis-db
+          key: POSTGRES_PASSWORD
+    - name: COLIS_DB
+      value: postgresql://colis:$(POSTGRES_PASSWORD)@postgres:5432/colis

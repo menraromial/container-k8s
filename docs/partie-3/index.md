@@ -22,6 +22,6 @@ Cette partie apprend à se servir de Kubernetes au quotidien, sur le cluster min
 | [22. La santé des Pods](sante.md) | probes, arrêt propre, preStop |
 | [23. Les ressources](ressources.md) | requests et limits, classes QoS, éviction, quotas |
 | [24. TP : Colis sur minikube](colis-minikube.md) | l'application complète, depuis le registre local |
-| Défi III | réparer un déploiement cassé de Colis |
+| [Défi III](defi.md) | réparer un déploiement cassé de Colis |
 
 Il vous faut le cluster minikube du chapitre 0.2, kubectl, et pour le chapitre 24, le registre local du chapitre 14 avec l'image `colis/api:2.0` du défi II.

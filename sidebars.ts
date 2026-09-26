@@ -66,6 +66,7 @@ const sidebars: SidebarsConfig = {
         'partie-3/sante',
         'partie-3/ressources',
         'partie-3/colis-minikube',
+        'partie-3/defi',
       ],
     },
   ],

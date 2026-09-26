@@ -643,7 +643,7 @@ Le même registre a donc deux noms, selon d'où on le regarde : `localhost:5001`
 
 ## Accéder à Colis et nettoyer
 
-Colis reste en marche pour le défi III, qui partira de ce déploiement. Le site est à l'adresse [http://192.168.49.100/](http://192.168.49.100/), et l'API derrière `/api/`. Après un `minikube start`, réappliquez `metallb-plage.yaml`.
+Colis peut rester en marche : le défi III en installe une seconde copie à côté, dans son propre namespace, et a besoin du registre et du fichier `hosts.toml` mis en place ici. Le site est à l'adresse [http://192.168.49.100/](http://192.168.49.100/), et l'API derrière `/api/`. Après un `minikube start`, réappliquez `metallb-plage.yaml`.
 
 Pour tout retirer quand vous n'en aurez plus besoin :
 

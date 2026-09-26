@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: colis-defi
+  labels:
+    app.kubernetes.io/name: api
+    app.kubernetes.io/part-of: colis
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: api
+        app.kubernetes.io/part-of: colis
+    spec:
+      containers:
+      - name: api
+        image: host.minikube.internal:5001/colis/api:2.0
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: colis-config
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: colis-db
+              key: POSTGRES_PASSWORD
+        - name: COLIS_DB
+          value: postgresql://colis:$(POSTGRES_PASSWORD)@postgres:5432/colis
+        ports:
+        - name: http
+          containerPort: 8000
+        startupProbe:
+          httpGet:
+            path: /sante
+            port: http
+          periodSeconds: 2
+          failureThreshold: 15
+        livenessProbe:
+          httpGet:
+            path: /sante
+            port: http
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /pret
+            port: http
+          periodSeconds: 5
+        lifecycle:
+          preStop:
+            sleep:
+              seconds: 3
+        resources:
+          requests:
+            cpu: 100m
+            memory: 192Mi
+          limits:
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+  namespace: colis-defi
+  labels:
+    app.kubernetes.io/part-of: colis
+spec:
+  selector:
+    app.kubernetes.io/name: api
+  ports:
+  - name: http
+    port: 8000
+    targetPort: http

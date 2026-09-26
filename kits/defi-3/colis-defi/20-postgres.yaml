@@ -1,0 +1,70 @@
+# PostgreSQL, provisoirement dans un Deployment avec un volume emptyDir :
+# les données disparaissent avec le Pod. Les chapitres 25 et 26 les rendront durables.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: colis-defi
+  labels:
+    app.kubernetes.io/name: postgres
+    app.kubernetes.io/part-of: colis
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgres
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: postgres
+        app.kubernetes.io/part-of: colis
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:18-alpine
+        env:
+        - name: POSTGRES_USER
+          value: colis
+        - name: POSTGRES_DB
+          value: colis
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: colis-db
+              key: POSTGRES_PASSWORD
+        ports:
+        - name: postgres
+          containerPort: 5432
+        readinessProbe:
+          exec:
+            command: ["pg_isready", "-U", "colis", "-d", "colis"]
+          periodSeconds: 5
+        resources:
+          requests:
+            cpu: 100
+            memory: 128Mi
+          limits:
+            memory: 256Mi
+        volumeMounts:
+        - name: donnees
+          mountPath: /var/lib/postgresql
+      volumes:
+      - name: donnees
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: colis-defi
+  labels:
+    app.kubernetes.io/part-of: colis
+spec:
+  selector:
+    app.kubernetes.io/name: postgres
+  ports:
+  - name: postgres
+    port: 5432
+    targetPort: postgres
