@@ -73,8 +73,12 @@ def main(entree, sortie):
         svg = re.sub(rf'\bid=([\'"]){re.escape(i)}\1', f'id="{neuf}"', svg)
         svg = re.sub(rf'#{re.escape(i)}\b', f"#{neuf}", svg)
 
-    # deux décimales suffisent largement à l'écran et divisent la taille par deux
-    svg = re.sub(r"(\d+\.\d{2})\d+", r"\1", svg)
+    # deux décimales suffisent largement à l'écran et divisent la taille par deux,
+    # sauf dans les matrices de transformation : tronquer leur échelle (0.999026
+    # devenu 0.99) décalait les pointes de flèche par rapport à leurs traits
+    morceaux = re.split(r'(transform="[^"]*")', svg)
+    svg = "".join(m if m.startswith('transform="') else re.sub(r"(\d+\.\d{2})\d+", r"\1", m)
+                  for m in morceaux)
 
     svg = re.sub(r'<svg([^>]*?)\s+width=[\'"][^\'"]*[\'"]', r"<svg\1", svg, count=1)
     svg = re.sub(r'<svg([^>]*?)\s+height=[\'"][^\'"]*[\'"]', r"<svg\1", svg, count=1)

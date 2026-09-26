@@ -420,7 +420,7 @@
 <g style="fill:var(--fig-orange)" fill-opacity="1">
 <use xlink:href="#image-nom-vers-couches-glyph-1-1" x="245.82" y="30.61"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-orange-bg);stroke:var(--fig-orange)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 199.08 151.31 L 61.71 151.31 C 60.88 151.31 60.21 150.64 60.21 149.81 L 60.21 116.64 C 60.21 115.81 60.88 115.15 61.71 115.15 L 199.08 115.15 C 199.90 115.15 200.57 115.81 200.57 116.64 L 200.57 149.81 C 200.57 150.64 199.90 151.31 199.08 151.31 Z M 199.08 151.31 " transform="matrix(0.99, 0, 0, -0.99, 20.90, 214.30)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-orange-bg);stroke:var(--fig-orange)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 199.08 151.31 L 61.71 151.31 C 60.88 151.31 60.21 150.64 60.21 149.81 L 60.21 116.64 C 60.21 115.81 60.88 115.15 61.71 115.15 L 199.08 115.15 C 199.90 115.15 200.57 115.81 200.57 116.64 L 200.57 149.81 C 200.57 150.64 199.90 151.31 199.08 151.31 Z M 199.08 151.31 " transform="matrix(0.997745, 0, 0, -0.997745, 20.903326, 214.305612)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#image-nom-vers-couches-glyph-2-0" x="85.95" y="74.27"/>
 <use xlink:href="#image-nom-vers-couches-glyph-2-1" x="88.33" y="74.27"/>
@@ -559,8 +559,8 @@
 <use xlink:href="#image-nom-vers-couches-glyph-1-16" x="187.88" y="93.15"/>
 <use xlink:href="#image-nom-vers-couches-glyph-1-4" x="192.25" y="93.15"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 214.00 197.30 L 214.00 133.23 L 205.23 133.23 " transform="matrix(0.99, 0, 0, -0.99, 20.90, 214.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(-0.99, 0, 0, 0.99, 228.21, 81.37)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 214.00 197.30 L 214.00 133.23 L 205.23 133.23 " transform="matrix(0.997745, 0, 0, -0.997745, 20.903326, 214.305612)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(-0.997745, 0, 0, 0.997745, 228.211125, 81.376168)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#image-nom-vers-couches-glyph-1-13" x="238.12" y="51.49"/>
 </g>
@@ -622,7 +622,7 @@
 </g>
 <path fill-rule="nonzero" style="fill:var(--fig-gris-bg)" fill-opacity="1" d="M 86.60 135.98 L 6.10 135.98 C 5.28 135.98 4.62 136.64 4.62 137.47 L 4.62 161.03 C 4.62 161.85 5.28 162.52 6.10 162.52 L 86.60 162.52 C 87.42 162.52 88.09 161.85 88.09 161.03 L 88.09 137.47 C 88.09 136.64 87.42 135.98 86.60 135.98 Z M 86.60 135.98 "/>
 <g clip-path="url(#image-nom-vers-couches-clip-0)">
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-gris)" stroke-opacity="1" stroke-miterlimit="10" d="M 65.85 78.50 L -14.82 78.50 C -15.64 78.50 -16.31 77.83 -16.31 77.00 L -16.31 53.38 C -16.31 52.56 -15.64 51.89 -14.82 51.89 L 65.85 51.89 C 66.67 51.89 67.34 52.56 67.34 53.38 L 67.34 77.00 C 67.34 77.83 66.67 78.50 65.85 78.50 Z M 65.85 78.50 " transform="matrix(0.99, 0, 0, -0.99, 20.90, 214.30)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-gris)" stroke-opacity="1" stroke-miterlimit="10" d="M 65.85 78.50 L -14.82 78.50 C -15.64 78.50 -16.31 77.83 -16.31 77.00 L -16.31 53.38 C -16.31 52.56 -15.64 51.89 -14.82 51.89 L 65.85 51.89 C 66.67 51.89 67.34 52.56 67.34 53.38 L 67.34 77.00 C 67.34 77.83 66.67 78.50 65.85 78.50 Z M 65.85 78.50 " transform="matrix(0.997745, 0, 0, -0.997745, 20.903326, 214.305612)"/>
 </g>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#image-nom-vers-couches-glyph-1-20" x="9.58" y="146.66"/>
@@ -657,7 +657,7 @@
 <use xlink:href="#image-nom-vers-couches-glyph-3-22" x="59.68" y="156.10"/>
 <use xlink:href="#image-nom-vers-couches-glyph-3-8" x="63.86" y="156.10"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-bleu-bg);stroke:var(--fig-bleu)" fill-opacity="1" stroke-width="1.09" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 223.17 77.93 L 94.30 77.93 C 93.48 77.93 92.81 77.26 92.81 76.44 L 92.81 53.95 C 92.81 53.12 93.48 52.45 94.30 52.45 L 223.17 52.45 C 224.00 52.45 224.66 53.12 224.66 53.95 L 224.66 76.44 C 224.66 77.26 224.00 77.93 223.17 77.93 Z M 223.17 77.93 " transform="matrix(0.99, 0, 0, -0.99, 20.90, 214.30)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-bleu-bg);stroke:var(--fig-bleu)" fill-opacity="1" stroke-width="1.09" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 223.17 77.93 L 94.30 77.93 C 93.48 77.93 92.81 77.26 92.81 76.44 L 92.81 53.95 C 92.81 53.12 93.48 52.45 94.30 52.45 L 223.17 52.45 C 224.00 52.45 224.66 53.12 224.66 53.95 L 224.66 76.44 C 224.66 77.26 224.00 77.93 223.17 77.93 Z M 223.17 77.93 " transform="matrix(0.997745, 0, 0, -0.997745, 20.903326, 214.305612)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#image-nom-vers-couches-glyph-2-5" x="118.47" y="147.47"/>
 <use xlink:href="#image-nom-vers-couches-glyph-2-6" x="125.49" y="147.47"/>
@@ -714,7 +714,7 @@
 </g>
 <path fill-rule="nonzero" style="fill:var(--fig-gris-bg)" fill-opacity="1" d="M 338.32 136.21 L 269.14 136.21 C 268.32 136.21 267.65 136.88 267.65 137.70 L 267.65 160.80 C 267.65 161.62 268.32 162.29 269.14 162.29 L 338.32 162.29 C 339.14 162.29 339.81 161.62 339.81 160.80 L 339.81 137.70 C 339.81 136.88 339.14 136.21 338.32 136.21 Z M 338.32 136.21 "/>
 <g clip-path="url(#image-nom-vers-couches-clip-1)">
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-gris)" stroke-opacity="1" stroke-miterlimit="10" d="M 318.13 78.26 L 248.79 78.26 C 247.97 78.26 247.30 77.59 247.30 76.77 L 247.30 53.62 C 247.30 52.79 247.97 52.13 248.79 52.13 L 318.13 52.13 C 318.96 52.13 319.62 52.79 319.62 53.62 L 319.62 76.77 C 319.62 77.59 318.96 78.26 318.13 78.26 Z M 318.13 78.26 " transform="matrix(0.99, 0, 0, -0.99, 20.90, 214.30)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-gris)" stroke-opacity="1" stroke-miterlimit="10" d="M 318.13 78.26 L 248.79 78.26 C 247.97 78.26 247.30 77.59 247.30 76.77 L 247.30 53.62 C 247.30 52.79 247.97 52.13 248.79 52.13 L 318.13 52.13 C 318.96 52.13 319.62 52.79 319.62 53.62 L 319.62 76.77 C 319.62 77.59 318.96 78.26 318.13 78.26 Z M 318.13 78.26 " transform="matrix(0.997745, 0, 0, -0.997745, 20.903326, 214.305612)"/>
 </g>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#image-nom-vers-couches-glyph-1-22" x="272.61" y="146.59"/>
@@ -756,10 +756,10 @@
 <use xlink:href="#image-nom-vers-couches-glyph-1-1" x="306.38" y="156.03"/>
 <use xlink:href="#image-nom-vers-couches-glyph-1-4" x="310.66" y="156.03"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-muted)" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 130.39 114.75 L 29.54 80.27 " transform="matrix(0.99, 0, 0, -0.99, 20.90, 214.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-muted);stroke:var(--fig-muted)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(-0.94, 0.32, 0.32, 0.94, 52.78, 133.38)"/>
-<path fill="none" stroke-width="0.99" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-bleu)" stroke-opacity="1" stroke-miterlimit="10" d="M 130.39 114.75 L 156.16 81.78 " transform="matrix(0.99, 0, 0, -0.99, 20.90, 214.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-bleu);stroke:var(--fig-bleu)" fill-opacity="1" stroke-width="0.99" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.38 -0.00 L 1.60 1.43 L 2.87 -0.00 L 1.60 -1.43 Z M 5.38 -0.00 " transform="matrix(0.61, 0.78, 0.78, -0.61, 175.10, 130.64)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-muted)" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 130.39 114.75 L 29.54 80.27 " transform="matrix(0.997745, 0, 0, -0.997745, 20.903326, 214.305612)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-muted);stroke:var(--fig-muted)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(-0.944096, 0.322701, 0.322701, 0.944096, 52.780605, 133.388167)"/>
+<path fill="none" stroke-width="0.99" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-bleu)" stroke-opacity="1" stroke-miterlimit="10" d="M 130.39 114.75 L 156.16 81.78 " transform="matrix(0.997745, 0, 0, -0.997745, 20.903326, 214.305612)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-bleu);stroke:var(--fig-bleu)" fill-opacity="1" stroke-width="0.99" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.38 -0.00 L 1.60 1.43 L 2.87 -0.00 L 1.60 -1.43 Z M 5.38 -0.00 " transform="matrix(0.614441, 0.786063, 0.786063, -0.614441, 175.107453, 130.64826)"/>
 <g style="fill:var(--fig-bleu)" fill-opacity="1">
 <use xlink:href="#image-nom-vers-couches-glyph-1-23" x="81.14" y="132.24"/>
 </g>
@@ -803,9 +803,9 @@
 <use xlink:href="#image-nom-vers-couches-glyph-1-16" x="151.56" y="132.24"/>
 <use xlink:href="#image-nom-vers-couches-glyph-1-1" x="155.93" y="132.24"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-muted)" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 130.39 114.75 L 279.31 79.64 " transform="matrix(0.99, 0, 0, -0.99, 20.90, 214.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-muted);stroke:var(--fig-muted)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.97, 0.22, 0.22, -0.97, 297.12, 134.26)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 128.21 8.04 L 7.85 8.04 C 7.02 8.04 6.35 7.37 6.35 6.54 L 6.35 -34.89 C 6.35 -35.72 7.02 -36.38 7.85 -36.38 L 128.21 -36.38 C 129.04 -36.38 129.70 -35.72 129.70 -34.89 L 129.70 6.54 C 129.70 7.37 129.04 8.04 128.21 8.04 Z M 128.21 8.04 " transform="matrix(0.99, 0, 0, -0.99, 20.90, 214.30)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-muted)" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 130.39 114.75 L 279.31 79.64 " transform="matrix(0.997745, 0, 0, -0.997745, 20.903326, 214.305612)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-muted);stroke:var(--fig-muted)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.971075, 0.228913, 0.228913, -0.971075, 297.125729, 134.260276)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 128.21 8.04 L 7.85 8.04 C 7.02 8.04 6.35 7.37 6.35 6.54 L 6.35 -34.89 C 6.35 -35.72 7.02 -36.38 7.85 -36.38 L 128.21 -36.38 C 129.04 -36.38 129.70 -35.72 129.70 -34.89 L 129.70 6.54 C 129.70 7.37 129.04 8.04 128.21 8.04 Z M 128.21 8.04 " transform="matrix(0.997745, 0, 0, -0.997745, 20.903326, 214.305612)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#image-nom-vers-couches-glyph-2-10" x="32.21" y="217.21"/>
 </g>
@@ -1015,7 +1015,7 @@
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#image-nom-vers-couches-glyph-1-28" x="127.26" y="272.65"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 297.56 17.00 L 190.00 17.00 C 189.17 17.00 188.50 16.33 188.50 15.51 L 188.50 4.33 C 188.50 3.50 189.17 2.83 190.00 2.83 L 297.56 2.83 C 298.39 2.83 299.06 3.50 299.06 4.33 L 299.06 15.51 C 299.06 16.33 298.39 17.00 297.56 17.00 Z M 297.56 17.00 " transform="matrix(0.99, 0, 0, -0.99, 20.90, 214.30)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 297.56 17.00 L 190.00 17.00 C 189.17 17.00 188.50 16.33 188.50 15.51 L 188.50 4.33 C 188.50 3.50 189.17 2.83 190.00 2.83 L 297.56 2.83 C 298.39 2.83 299.06 3.50 299.06 4.33 L 299.06 15.51 C 299.06 16.33 298.39 17.00 297.56 17.00 Z M 297.56 17.00 " transform="matrix(0.997745, 0, 0, -0.997745, 20.903326, 214.305612)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#image-nom-vers-couches-glyph-3-24" x="224.47" y="206.42"/>
 <use xlink:href="#image-nom-vers-couches-glyph-3-3" x="228.64" y="206.42"/>
@@ -1039,7 +1039,7 @@
 <use xlink:href="#image-nom-vers-couches-glyph-3-29" x="295.44" y="206.42"/>
 <use xlink:href="#image-nom-vers-couches-glyph-3-30" x="299.61" y="206.42"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 297.56 1.41 L 190.00 1.41 C 189.17 1.41 188.50 0.74 188.50 -0.07 L 188.50 -11.26 C 188.50 -12.08 189.17 -12.75 190.00 -12.75 L 297.56 -12.75 C 298.39 -12.75 299.06 -12.08 299.06 -11.26 L 299.06 -0.07 C 299.06 0.74 298.39 1.41 297.56 1.41 Z M 297.56 1.41 " transform="matrix(0.99, 0, 0, -0.99, 20.90, 214.30)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 297.56 1.41 L 190.00 1.41 C 189.17 1.41 188.50 0.74 188.50 -0.07 L 188.50 -11.26 C 188.50 -12.08 189.17 -12.75 190.00 -12.75 L 297.56 -12.75 C 298.39 -12.75 299.06 -12.08 299.06 -11.26 L 299.06 -0.07 C 299.06 0.74 298.39 1.41 297.56 1.41 Z M 297.56 1.41 " transform="matrix(0.997745, 0, 0, -0.997745, 20.903326, 214.305612)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#image-nom-vers-couches-glyph-3-24" x="224.47" y="221.97"/>
 <use xlink:href="#image-nom-vers-couches-glyph-3-11" x="228.64" y="221.97"/>
@@ -1063,7 +1063,7 @@
 <use xlink:href="#image-nom-vers-couches-glyph-3-29" x="295.44" y="221.97"/>
 <use xlink:href="#image-nom-vers-couches-glyph-3-30" x="299.61" y="221.97"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 297.56 -14.17 L 190.00 -14.17 C 189.17 -14.17 188.50 -14.84 188.50 -15.66 L 188.50 -26.85 C 188.50 -27.67 189.17 -28.34 190.00 -28.34 L 297.56 -28.34 C 298.39 -28.34 299.06 -27.67 299.06 -26.85 L 299.06 -15.66 C 299.06 -14.84 298.39 -14.17 297.56 -14.17 Z M 297.56 -14.17 " transform="matrix(0.99, 0, 0, -0.99, 20.90, 214.30)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 297.56 -14.17 L 190.00 -14.17 C 189.17 -14.17 188.50 -14.84 188.50 -15.66 L 188.50 -26.85 C 188.50 -27.67 189.17 -28.34 190.00 -28.34 L 297.56 -28.34 C 298.39 -28.34 299.06 -27.67 299.06 -26.85 L 299.06 -15.66 C 299.06 -14.84 298.39 -14.17 297.56 -14.17 Z M 297.56 -14.17 " transform="matrix(0.997745, 0, 0, -0.997745, 20.903326, 214.305612)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#image-nom-vers-couches-glyph-3-11" x="226.55" y="238.04"/>
 <use xlink:href="#image-nom-vers-couches-glyph-3-23" x="230.73" y="238.04"/>
@@ -1086,7 +1086,7 @@
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#image-nom-vers-couches-glyph-3-30" x="297.52" y="238.04"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 297.56 -29.76 L 190.00 -29.76 C 189.17 -29.76 188.50 -30.43 188.50 -31.25 L 188.50 -42.44 C 188.50 -43.26 189.17 -43.93 190.00 -43.93 L 297.56 -43.93 C 298.39 -43.93 299.06 -43.26 299.06 -42.44 L 299.06 -31.25 C 299.06 -30.43 298.39 -29.76 297.56 -29.76 Z M 297.56 -29.76 " transform="matrix(0.99, 0, 0, -0.99, 20.90, 214.30)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 297.56 -29.76 L 190.00 -29.76 C 189.17 -29.76 188.50 -30.43 188.50 -31.25 L 188.50 -42.44 C 188.50 -43.26 189.17 -43.93 190.00 -43.93 L 297.56 -43.93 C 298.39 -43.93 299.06 -43.26 299.06 -42.44 L 299.06 -31.25 C 299.06 -30.43 298.39 -29.76 297.56 -29.76 Z M 297.56 -29.76 " transform="matrix(0.997745, 0, 0, -0.997745, 20.903326, 214.305612)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#image-nom-vers-couches-glyph-3-12" x="236.99" y="252.90"/>
 <use xlink:href="#image-nom-vers-couches-glyph-3-12" x="241.17" y="252.90"/>
@@ -1189,8 +1189,8 @@
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#image-nom-vers-couches-glyph-1-1" x="310.43" y="280.11"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 158.74 51.90 L 71.87 10.28 " transform="matrix(0.99, 0, 0, -0.99, 20.90, 214.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.74 -0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(-0.89, 0.43, 0.43, 0.89, 94.90, 202.95)"/>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 158.74 51.90 L 239.83 19.00 " transform="matrix(0.99, 0, 0, -0.99, 20.90, 214.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0.92, 0.37, 0.37, -0.92, 257.84, 194.38)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 158.74 51.90 L 71.87 10.28 " transform="matrix(0.997745, 0, 0, -0.997745, 20.903326, 214.305612)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.74 -0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(-0.899716, 0.431136, 0.431136, 0.899716, 94.903017, 202.951455)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 158.74 51.90 L 239.83 19.00 " transform="matrix(0.997745, 0, 0, -0.997745, 20.903326, 214.305612)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0.92451, 0.375082, 0.375082, -0.92451, 257.84659, 194.386354)"/>
 </svg>

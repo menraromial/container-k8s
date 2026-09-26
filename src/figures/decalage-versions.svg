@@ -251,7 +251,7 @@
 <use xlink:href="#decalage-versions-glyph-1-3" x="71.72" y="36.66"/>
 <use xlink:href="#decalage-versions-glyph-1-9" x="77.09" y="36.66"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-bleu-bg);stroke:var(--fig-bleu)" fill-opacity="1" stroke-width="1.19" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 155.90 57.82 L 195.59 57.82 L 195.59 78.23 L 155.90 78.23 Z M 155.90 57.82 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-bleu-bg);stroke:var(--fig-bleu)" fill-opacity="1" stroke-width="1.19" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 155.90 57.82 L 195.59 57.82 L 195.59 78.23 L 155.90 78.23 Z M 155.90 57.82 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-2-0" x="278.13" y="37.08"/>
 <use xlink:href="#decalage-versions-glyph-2-1" x="282.90" y="37.08"/>
@@ -267,56 +267,56 @@
 <use xlink:href="#decalage-versions-glyph-1-12" x="71.72" y="71.50"/>
 <use xlink:href="#decalage-versions-glyph-1-13" x="77.08" y="71.50"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.49" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M -19.84 23.81 L 19.84 23.81 L 19.84 44.22 L -19.84 44.22 Z M -19.84 23.81 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.49" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M -19.84 23.81 L 19.84 23.81 L 19.84 44.22 L -19.84 44.22 Z M -19.84 23.81 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-2-0" x="102.73" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-1" x="107.50" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="112.28" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="117.05" y="71.03"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.49" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 24.09 23.81 L 63.77 23.81 L 63.77 44.22 L 24.09 44.22 Z M 24.09 23.81 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.49" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 24.09 23.81 L 63.77 23.81 L 63.77 44.22 L 24.09 44.22 Z M 24.09 23.81 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-2-0" x="146.58" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-1" x="151.35" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="156.13" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-4" x="160.90" y="71.03"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.49" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 68.03 23.81 L 107.71 23.81 L 107.71 44.22 L 68.03 44.22 Z M 68.03 23.81 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.49" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 68.03 23.81 L 107.71 23.81 L 107.71 44.22 L 68.03 44.22 Z M 68.03 23.81 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-2-0" x="190.43" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-1" x="195.20" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="199.98" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-5" x="204.75" y="71.03"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.49" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 243.78 23.81 L 283.46 23.81 L 283.46 44.22 L 243.78 44.22 Z M 243.78 23.81 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.49" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 243.78 23.81 L 283.46 23.81 L 283.46 44.22 L 243.78 44.22 Z M 243.78 23.81 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-2-0" x="365.83" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-1" x="370.60" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="375.38" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-6" x="380.15" y="71.03"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 111.97 23.81 L 151.65 23.81 L 151.65 44.22 L 111.97 44.22 Z M 111.97 23.81 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 111.97 23.81 L 151.65 23.81 L 151.65 44.22 L 111.97 44.22 Z M 111.97 23.81 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-2-0" x="234.28" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-1" x="239.05" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="243.83" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-7" x="248.60" y="71.03"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 155.90 23.81 L 195.59 23.81 L 195.59 44.22 L 155.90 44.22 Z M 155.90 23.81 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 155.90 23.81 L 195.59 23.81 L 195.59 44.22 L 155.90 44.22 Z M 155.90 23.81 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-2-0" x="278.13" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-1" x="282.90" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="287.68" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-3" x="292.45" y="71.03"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 199.84 23.81 L 239.52 23.81 L 239.52 44.22 L 199.84 44.22 Z M 199.84 23.81 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 199.84 23.81 L 239.52 23.81 L 239.52 44.22 L 199.84 44.22 Z M 199.84 23.81 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-2-0" x="321.98" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-1" x="326.75" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="331.53" y="71.03"/>
 <use xlink:href="#decalage-versions-glyph-2-8" x="336.30" y="71.03"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-vert)" stroke-opacity="1" stroke-miterlimit="10" d="M 112.04 20.41 C 112.63 19.21 114.03 18.41 116.02 18.41 L 171.76 18.41 C 173.75 18.41 175.15 17.62 175.75 16.42 C 176.34 17.62 177.74 18.41 179.73 18.41 L 235.47 18.41 C 237.46 18.41 238.86 19.21 239.45 20.41 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-vert)" stroke-opacity="1" stroke-miterlimit="10" d="M 112.04 20.41 C 112.63 19.21 114.03 18.41 116.02 18.41 L 171.76 18.41 C 173.75 18.41 175.15 17.62 175.75 16.42 C 176.34 17.62 177.74 18.41 179.73 18.41 L 235.47 18.41 C 237.46 18.41 238.86 19.21 239.45 20.41 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-vert)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-0-17" x="220.71" y="96.19"/>
 <use xlink:href="#decalage-versions-glyph-0-15" x="225.00" y="96.19"/>
@@ -386,56 +386,56 @@
 <use xlink:href="#decalage-versions-glyph-1-3" x="71.72" y="122.42"/>
 <use xlink:href="#decalage-versions-glyph-1-12" x="77.08" y="122.42"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.49" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M -19.84 -27.21 L 19.84 -27.21 L 19.84 -6.80 L -19.84 -6.80 Z M -19.84 -27.21 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.49" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M -19.84 -27.21 L 19.84 -27.21 L 19.84 -6.80 L -19.84 -6.80 Z M -19.84 -27.21 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-2-0" x="102.73" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-1" x="107.50" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="112.28" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="117.05" y="121.95"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.49" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 199.84 -27.21 L 239.52 -27.21 L 239.52 -6.80 L 199.84 -6.80 Z M 199.84 -27.21 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.49" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 199.84 -27.21 L 239.52 -27.21 L 239.52 -6.80 L 199.84 -6.80 Z M 199.84 -27.21 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-2-0" x="321.98" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-1" x="326.75" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="331.53" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-8" x="336.30" y="121.95"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.49" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 243.78 -27.21 L 283.46 -27.21 L 283.46 -6.80 L 243.78 -6.80 Z M 243.78 -27.21 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.49" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 243.78 -27.21 L 283.46 -27.21 L 283.46 -6.80 L 243.78 -6.80 Z M 243.78 -27.21 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-2-0" x="365.83" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-1" x="370.60" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="375.38" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-6" x="380.15" y="121.95"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 24.09 -27.21 L 63.77 -27.21 L 63.77 -6.80 L 24.09 -6.80 Z M 24.09 -27.21 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 24.09 -27.21 L 63.77 -27.21 L 63.77 -6.80 L 24.09 -6.80 Z M 24.09 -27.21 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-2-0" x="146.58" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-1" x="151.35" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="156.13" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-4" x="160.90" y="121.95"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 68.03 -27.21 L 107.71 -27.21 L 107.71 -6.80 L 68.03 -6.80 Z M 68.03 -27.21 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 68.03 -27.21 L 107.71 -27.21 L 107.71 -6.80 L 68.03 -6.80 Z M 68.03 -27.21 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-2-0" x="190.43" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-1" x="195.20" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="199.98" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-5" x="204.75" y="121.95"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 111.97 -27.21 L 151.65 -27.21 L 151.65 -6.80 L 111.97 -6.80 Z M 111.97 -27.21 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 111.97 -27.21 L 151.65 -27.21 L 151.65 -6.80 L 111.97 -6.80 Z M 111.97 -27.21 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-2-0" x="234.28" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-1" x="239.05" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="243.83" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-7" x="248.60" y="121.95"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 155.90 -27.21 L 195.59 -27.21 L 195.59 -6.80 L 155.90 -6.80 Z M 155.90 -27.21 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 155.90 -27.21 L 195.59 -27.21 L 195.59 -6.80 L 155.90 -6.80 Z M 155.90 -27.21 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-2-0" x="278.13" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-1" x="282.90" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-2" x="287.68" y="121.95"/>
 <use xlink:href="#decalage-versions-glyph-2-3" x="292.45" y="121.95"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-vert)" stroke-opacity="1" stroke-miterlimit="10" d="M 24.16 -30.61 C 24.76 -31.80 26.15 -32.60 28.14 -32.60 L 105.85 -32.60 C 107.85 -32.60 109.24 -33.40 109.84 -34.60 C 110.44 -33.40 111.83 -32.60 113.83 -32.60 L 191.53 -32.60 C 193.52 -32.60 194.92 -31.80 195.52 -30.61 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-vert)" stroke-opacity="1" stroke-miterlimit="10" d="M 24.16 -30.61 C 24.76 -31.80 26.15 -32.60 28.14 -32.60 L 105.85 -32.60 C 107.85 -32.60 109.24 -33.40 109.84 -34.60 C 110.44 -33.40 111.83 -32.60 113.83 -32.60 L 191.53 -32.60 C 193.52 -32.60 194.92 -31.80 195.52 -30.61 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 <g style="fill:var(--fig-vert)" fill-opacity="1">
 <use xlink:href="#decalage-versions-glyph-0-23" x="164.18" y="147.11"/>
 <use xlink:href="#decalage-versions-glyph-0-17" x="166.13" y="147.11"/>
@@ -546,6 +546,6 @@
 <use xlink:href="#decalage-versions-glyph-0-10" x="374.11" y="152.92"/>
 <use xlink:href="#decalage-versions-glyph-0-11" x="378.39" y="152.92"/>
 </g>
-<path fill="none" stroke-width="0.59" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-bleu)" stroke-opacity="1" stroke-dasharray="0.59 1.99" stroke-miterlimit="10" d="M 175.75 57.26 L 175.75 44.78 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
-<path fill="none" stroke-width="0.59" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-bleu)" stroke-opacity="1" stroke-dasharray="0.59 1.99" stroke-miterlimit="10" d="M 175.75 23.24 L 175.75 -6.23 " transform="matrix(0.99, 0, 0, -0.99, 112.28, 102.19)"/>
+<path fill="none" stroke-width="0.59" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-bleu)" stroke-opacity="1" stroke-dasharray="0.59 1.99" stroke-miterlimit="10" d="M 175.75 57.26 L 175.75 44.78 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
+<path fill="none" stroke-width="0.59" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-bleu)" stroke-opacity="1" stroke-dasharray="0.59 1.99" stroke-miterlimit="10" d="M 175.75 23.24 L 175.75 -6.23 " transform="matrix(0.998015, 0, 0, -0.998015, 112.281673, 102.198671)"/>
 </svg>

@@ -136,19 +136,19 @@
 <path clip-rule="nonzero" d="M 361 50 L 382.06 50 L 382.06 77 L 361 77 Z M 361 50 "/>
 </clipPath>
 </defs>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 0.00 -0.00 L 363.06 -0.00 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 0.00 -0.00 L 363.06 -0.00 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-line)" fill-opacity="1" d="M 376.58 63.59 L 372.23 61.94 L 373.67 63.59 L 372.23 65.24 Z M 376.58 63.59 "/>
 <g clip-path="url(#recul-crash-clip-0)">
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.99, 0, 0, -0.99, 370.95, 63.59)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.993855, 0, 0, -0.993855, 370.954265, 63.596808)"/>
 </g>
-<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 0.00 -2.26 L 0.00 2.26 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
+<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 0.00 -2.26 L 0.00 2.26 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-0" x="8.18" y="74.63"/>
 </g>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-1" x="13.83" y="74.63"/>
 </g>
-<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 61.22 -2.26 L 61.22 2.26 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
+<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 61.22 -2.26 L 61.22 2.26 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-2" x="66.96" y="74.63"/>
 <use xlink:href="#recul-crash-glyph-0-0" x="71.10" y="74.63"/>
@@ -156,7 +156,7 @@
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-1" x="76.74" y="74.63"/>
 </g>
-<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 122.44 -2.26 L 122.44 2.26 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
+<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 122.44 -2.26 L 122.44 2.26 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-3" x="126.56" y="74.63"/>
 <use xlink:href="#recul-crash-glyph-0-4" x="129.38" y="74.63"/>
@@ -165,7 +165,7 @@
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-1" x="138.82" y="74.63"/>
 </g>
-<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 183.66 -2.26 L 183.66 2.26 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
+<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 183.66 -2.26 L 183.66 2.26 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-3" x="187.18" y="74.63"/>
 <use xlink:href="#recul-crash-glyph-0-5" x="190.00" y="74.63"/>
@@ -174,7 +174,7 @@
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-1" x="199.90" y="74.63"/>
 </g>
-<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 244.88 -2.26 L 244.88 2.26 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
+<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 244.88 -2.26 L 244.88 2.26 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-4" x="247.64" y="74.63"/>
 </g>
@@ -185,7 +185,7 @@
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-1" x="261.13" y="74.63"/>
 </g>
-<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 306.10 -2.26 L 306.10 2.26 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
+<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 306.10 -2.26 L 306.10 2.26 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-7" x="308.16" y="74.63"/>
 <use xlink:href="#recul-crash-glyph-0-0" x="312.16" y="74.63"/>
@@ -194,32 +194,32 @@
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-1" x="322.29" y="74.63"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 3.06 9.92 L 3.06 24.09 L 16.32 24.09 L 16.32 9.92 Z M 3.06 9.92 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 16.32 9.92 L 16.32 24.09 L 39.79 24.09 L 39.79 9.92 Z M 16.32 9.92 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 39.79 9.92 L 39.79 24.09 L 93.87 24.09 L 93.87 9.92 Z M 39.79 9.92 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 93.87 9.92 L 93.87 24.09 L 175.50 24.09 L 175.50 9.92 Z M 93.87 9.92 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 175.50 9.92 L 175.50 24.09 L 339.77 24.09 L 339.77 9.92 Z M 175.50 9.92 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
-<path fill="none" stroke-width="0.89" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ink)" stroke-opacity="1" stroke-miterlimit="10" d="M 3.06 5.67 L 3.06 28.34 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 3.06 9.92 L 3.06 24.09 L 16.32 24.09 L 16.32 9.92 Z M 3.06 9.92 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 16.32 9.92 L 16.32 24.09 L 39.79 24.09 L 39.79 9.92 Z M 16.32 9.92 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 39.79 9.92 L 39.79 24.09 L 93.87 24.09 L 93.87 9.92 Z M 39.79 9.92 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 93.87 9.92 L 93.87 24.09 L 175.50 24.09 L 175.50 9.92 Z M 93.87 9.92 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 175.50 9.92 L 175.50 24.09 L 339.77 24.09 L 339.77 9.92 Z M 175.50 9.92 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
+<path fill="none" stroke-width="0.89" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ink)" stroke-opacity="1" stroke-miterlimit="10" d="M 3.06 5.67 L 3.06 28.34 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-3" x="14.27" y="31.92"/>
 </g>
-<path fill="none" stroke-width="0.89" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ink)" stroke-opacity="1" stroke-miterlimit="10" d="M 16.32 5.67 L 16.32 28.34 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
+<path fill="none" stroke-width="0.89" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ink)" stroke-opacity="1" stroke-miterlimit="10" d="M 16.32 5.67 L 16.32 28.34 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-4" x="26.96" y="31.92"/>
 </g>
-<path fill="none" stroke-width="0.89" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ink)" stroke-opacity="1" stroke-miterlimit="10" d="M 39.79 5.67 L 39.79 28.34 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
+<path fill="none" stroke-width="0.89" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ink)" stroke-opacity="1" stroke-miterlimit="10" d="M 39.79 5.67 L 39.79 28.34 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-7" x="50.19" y="31.84"/>
 </g>
-<path fill="none" stroke-width="0.89" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ink)" stroke-opacity="1" stroke-miterlimit="10" d="M 93.87 5.67 L 93.87 28.34 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
+<path fill="none" stroke-width="0.89" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ink)" stroke-opacity="1" stroke-miterlimit="10" d="M 93.87 5.67 L 93.87 28.34 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-6" x="103.81" y="31.92"/>
 </g>
-<path fill="none" stroke-width="0.89" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ink)" stroke-opacity="1" stroke-miterlimit="10" d="M 175.50 5.67 L 175.50 28.34 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
+<path fill="none" stroke-width="0.89" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ink)" stroke-opacity="1" stroke-miterlimit="10" d="M 175.50 5.67 L 175.50 28.34 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-8" x="185.02" y="31.84"/>
 </g>
-<path fill="none" stroke-width="0.89" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ink)" stroke-opacity="1" stroke-miterlimit="10" d="M 339.77 5.67 L 339.77 28.34 " transform="matrix(0.99, 0, 0, -0.99, 12.64, 63.59)"/>
+<path fill="none" stroke-width="0.89" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ink)" stroke-opacity="1" stroke-miterlimit="10" d="M 339.77 5.67 L 339.77 28.34 " transform="matrix(0.993855, 0, 0, -0.993855, 12.644321, 63.596808)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#recul-crash-glyph-0-2" x="348.25" y="31.84"/>
 </g>

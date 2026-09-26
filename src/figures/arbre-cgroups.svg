@@ -234,7 +234,7 @@
 </defs>
 <path fill-rule="nonzero" style="fill:var(--fig-gris-bg)" fill-opacity="1" d="M 294.06 4.52 L 130.63 4.52 C 129.81 4.52 129.14 5.19 129.14 6.01 L 129.14 25.39 C 129.14 26.21 129.81 26.88 130.63 26.88 L 294.06 26.88 C 294.88 26.88 295.55 26.21 295.55 25.39 L 295.55 6.01 C 295.55 5.19 294.88 4.52 294.06 4.52 Z M 294.06 4.52 "/>
 <g clip-path="url(#arbre-cgroups-clip-0)">
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ink)" stroke-opacity="1" stroke-miterlimit="10" d="M 285.95 186.94 L 122.23 186.94 C 121.40 186.94 120.73 186.27 120.73 185.45 L 120.73 166.04 C 120.73 165.22 121.40 164.55 122.23 164.55 L 285.95 164.55 C 286.78 164.55 287.45 165.22 287.45 166.04 L 287.45 185.45 C 287.45 186.27 286.78 186.94 285.95 186.94 Z M 285.95 186.94 " transform="matrix(0.99, 0, 0, -0.99, 8.62, 191.13)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ink)" stroke-opacity="1" stroke-miterlimit="10" d="M 285.95 186.94 L 122.23 186.94 C 121.40 186.94 120.73 186.27 120.73 185.45 L 120.73 166.04 C 120.73 165.22 121.40 164.55 122.23 164.55 L 285.95 164.55 C 286.78 164.55 287.45 165.22 287.45 166.04 L 287.45 185.45 C 287.45 186.27 286.78 186.94 285.95 186.94 Z M 285.95 186.94 " transform="matrix(0.998184, 0, 0, -0.998184, 8.624309, 191.136045)"/>
 </g>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#arbre-cgroups-glyph-0-0" x="133.12" y="13.66"/>
@@ -326,7 +326,7 @@
 <use xlink:href="#arbre-cgroups-glyph-1-17" x="282.62" y="21.61"/>
 <use xlink:href="#arbre-cgroups-glyph-1-17" x="284.29" y="21.61"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 53.78 133.04 L -2.76 133.04 C -3.58 133.04 -4.25 132.37 -4.25 131.55 L -4.25 112.23 C -4.25 111.40 -3.58 110.73 -2.76 110.73 L 53.78 110.73 C 54.61 110.73 55.28 111.40 55.28 112.23 L 55.28 131.55 C 55.28 132.37 54.61 133.04 53.78 133.04 Z M 53.78 133.04 " transform="matrix(0.99, 0, 0, -0.99, 8.62, 191.13)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 53.78 133.04 L -2.76 133.04 C -3.58 133.04 -4.25 132.37 -4.25 131.55 L -4.25 112.23 C -4.25 111.40 -3.58 110.73 -2.76 110.73 L 53.78 110.73 C 54.61 110.73 55.28 111.40 55.28 112.23 L 55.28 131.55 C 55.28 132.37 54.61 133.04 53.78 133.04 Z M 53.78 133.04 " transform="matrix(0.998184, 0, 0, -0.998184, 8.624309, 191.136045)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#arbre-cgroups-glyph-0-10" x="8.35" y="67.37"/>
 <use xlink:href="#arbre-cgroups-glyph-0-11" x="12.53" y="67.37"/>
@@ -365,7 +365,7 @@
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#arbre-cgroups-glyph-1-21" x="56.58" y="75.33"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 146.36 132.44 L 97.42 132.44 C 96.59 132.44 95.92 131.77 95.92 130.95 L 95.92 112.82 C 95.92 112.00 96.59 111.33 97.42 111.33 L 146.36 111.33 C 147.18 111.33 147.85 112.00 147.85 112.82 L 147.85 130.95 C 147.85 131.77 147.18 132.44 146.36 132.44 Z M 146.36 132.44 " transform="matrix(0.99, 0, 0, -0.99, 8.62, 191.13)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 146.36 132.44 L 97.42 132.44 C 96.59 132.44 95.92 131.77 95.92 130.95 L 95.92 112.82 C 95.92 112.00 96.59 111.33 97.42 111.33 L 146.36 111.33 C 147.18 111.33 147.85 112.00 147.85 112.82 L 147.85 130.95 C 147.85 131.77 147.18 132.44 146.36 132.44 Z M 146.36 132.44 " transform="matrix(0.998184, 0, 0, -0.998184, 8.624309, 191.136045)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#arbre-cgroups-glyph-0-8" x="108.35" y="67.97"/>
 <use xlink:href="#arbre-cgroups-glyph-0-1" x="112.53" y="67.97"/>
@@ -399,7 +399,7 @@
 <use xlink:href="#arbre-cgroups-glyph-1-2" x="144.11" y="75.93"/>
 <use xlink:href="#arbre-cgroups-glyph-1-9" x="148.49" y="75.93"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-orange-bg);stroke:var(--fig-orange)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 299.72 132.44 L 244.53 132.44 C 243.70 132.44 243.03 131.77 243.03 130.95 L 243.03 112.82 C 243.03 112.00 243.70 111.33 244.53 111.33 L 299.72 111.33 C 300.55 111.33 301.21 112.00 301.21 112.82 L 301.21 130.95 C 301.21 131.77 300.55 132.44 299.72 132.44 Z M 299.72 132.44 " transform="matrix(0.99, 0, 0, -0.99, 8.62, 191.13)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-orange-bg);stroke:var(--fig-orange)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 299.72 132.44 L 244.53 132.44 C 243.70 132.44 243.03 131.77 243.03 130.95 L 243.03 112.82 C 243.03 112.00 243.70 111.33 244.53 111.33 L 299.72 111.33 C 300.55 111.33 301.21 112.00 301.21 112.82 L 301.21 130.95 C 301.21 131.77 300.55 132.44 299.72 132.44 Z M 299.72 132.44 " transform="matrix(0.998184, 0, 0, -0.998184, 8.624309, 191.136045)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#arbre-cgroups-glyph-0-1" x="255.19" y="67.97"/>
 <use xlink:href="#arbre-cgroups-glyph-0-2" x="259.37" y="67.97"/>
@@ -439,7 +439,7 @@
 <use xlink:href="#arbre-cgroups-glyph-1-7" x="288.06" y="75.93"/>
 <use xlink:href="#arbre-cgroups-glyph-1-9" x="292.34" y="75.93"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 416.34 132.47 L 343.34 132.47 C 342.52 132.47 341.85 131.80 341.85 130.98 L 341.85 112.79 C 341.85 111.97 342.52 111.30 343.34 111.30 L 416.34 111.30 C 417.17 111.30 417.84 111.97 417.84 112.79 L 417.84 130.98 C 417.84 131.80 417.17 132.47 416.34 132.47 Z M 416.34 132.47 " transform="matrix(0.99, 0, 0, -0.99, 8.62, 191.13)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 416.34 132.47 L 343.34 132.47 C 342.52 132.47 341.85 131.80 341.85 130.98 L 341.85 112.79 C 341.85 111.97 342.52 111.30 343.34 111.30 L 416.34 111.30 C 417.17 111.30 417.84 111.97 417.84 112.79 L 417.84 130.98 C 417.84 131.80 417.17 132.47 416.34 132.47 Z M 416.34 132.47 " transform="matrix(0.998184, 0, 0, -0.998184, 8.624309, 191.136045)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#arbre-cgroups-glyph-0-16" x="353.83" y="68.00"/>
 <use xlink:href="#arbre-cgroups-glyph-0-17" x="358.00" y="68.00"/>
@@ -489,11 +489,11 @@
 <use xlink:href="#arbre-cgroups-glyph-1-7" x="413.69" y="75.96"/>
 <use xlink:href="#arbre-cgroups-glyph-1-9" x="417.97" y="75.96"/>
 </g>
-<path fill="none" stroke-width="0.69" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 204.09 164.15 L 25.51 133.44 " transform="matrix(0.99, 0, 0, -0.99, 8.62, 191.13)"/>
-<path fill="none" stroke-width="0.69" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 204.09 164.15 L 121.89 132.84 " transform="matrix(0.99, 0, 0, -0.99, 8.62, 191.13)"/>
-<path fill="none" stroke-width="0.69" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 204.09 164.15 L 272.12 132.84 " transform="matrix(0.99, 0, 0, -0.99, 8.62, 191.13)"/>
-<path fill="none" stroke-width="0.69" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 204.09 164.15 L 379.84 132.87 " transform="matrix(0.99, 0, 0, -0.99, 8.62, 191.13)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 190.52 72.95 L 126.96 72.95 C 126.13 72.95 125.46 72.28 125.46 71.45 L 125.46 53.26 C 125.46 52.44 126.13 51.77 126.96 51.77 L 190.52 51.77 C 191.34 51.77 192.01 52.44 192.01 53.26 L 192.01 71.45 C 192.01 72.28 191.34 72.95 190.52 72.95 Z M 190.52 72.95 " transform="matrix(0.99, 0, 0, -0.99, 8.62, 191.13)"/>
+<path fill="none" stroke-width="0.69" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 204.09 164.15 L 25.51 133.44 " transform="matrix(0.998184, 0, 0, -0.998184, 8.624309, 191.136045)"/>
+<path fill="none" stroke-width="0.69" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 204.09 164.15 L 121.89 132.84 " transform="matrix(0.998184, 0, 0, -0.998184, 8.624309, 191.136045)"/>
+<path fill="none" stroke-width="0.69" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 204.09 164.15 L 272.12 132.84 " transform="matrix(0.998184, 0, 0, -0.998184, 8.624309, 191.136045)"/>
+<path fill="none" stroke-width="0.69" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 204.09 164.15 L 379.84 132.87 " transform="matrix(0.998184, 0, 0, -0.998184, 8.624309, 191.136045)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 190.52 72.95 L 126.96 72.95 C 126.13 72.95 125.46 72.28 125.46 71.45 L 125.46 53.26 C 125.46 52.44 126.13 51.77 126.96 51.77 L 190.52 51.77 C 191.34 51.77 192.01 52.44 192.01 53.26 L 192.01 71.45 C 192.01 72.28 191.34 72.95 190.52 72.95 Z M 190.52 72.95 " transform="matrix(0.998184, 0, 0, -0.998184, 8.624309, 191.136045)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#arbre-cgroups-glyph-0-19" x="137.83" y="127.42"/>
 <use xlink:href="#arbre-cgroups-glyph-0-7" x="142.01" y="127.42"/>
@@ -527,7 +527,7 @@
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#arbre-cgroups-glyph-1-16" x="161.43" y="135.38"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-bleu-bg);stroke:var(--fig-bleu)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 317.13 77.09 L 210.10 77.09 C 209.28 77.09 208.61 76.42 208.61 75.59 L 208.61 32.12 C 208.61 31.29 209.28 30.62 210.10 30.62 L 317.13 30.62 C 317.96 30.62 318.63 31.29 318.63 32.12 L 318.63 75.59 C 318.63 76.42 317.96 77.09 317.13 77.09 Z M 317.13 77.09 " transform="matrix(0.99, 0, 0, -0.99, 8.62, 191.13)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-bleu-bg);stroke:var(--fig-bleu)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 317.13 77.09 L 210.10 77.09 C 209.28 77.09 208.61 76.42 208.61 75.59 L 208.61 32.12 C 208.61 31.29 209.28 30.62 210.10 30.62 L 317.13 30.62 C 317.96 30.62 318.63 31.29 318.63 32.12 L 318.63 75.59 C 318.63 76.42 317.96 77.09 317.13 77.09 Z M 317.13 77.09 " transform="matrix(0.998184, 0, 0, -0.998184, 8.624309, 191.136045)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#arbre-cgroups-glyph-0-19" x="220.83" y="123.31"/>
 <use xlink:href="#arbre-cgroups-glyph-0-7" x="225.01" y="123.31"/>
@@ -637,7 +637,7 @@
 </g>
 <path fill-rule="nonzero" style="fill:var(--fig-brique-bg)" fill-opacity="1" d="M 438.37 114.19 L 331.53 114.19 C 330.71 114.19 330.04 114.85 330.04 115.68 L 330.04 159.06 C 330.04 159.89 330.71 160.55 331.53 160.55 L 438.37 160.55 C 439.19 160.55 439.86 159.89 439.86 159.06 L 439.86 115.68 C 439.86 114.85 439.19 114.19 438.37 114.19 Z M 438.37 114.19 "/>
 <g clip-path="url(#arbre-cgroups-clip-1)">
-<path fill="none" stroke-width="1.09" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-brique)" stroke-opacity="1" stroke-miterlimit="10" d="M 430.52 77.08 L 323.49 77.08 C 322.67 77.08 322.00 76.41 322.00 75.58 L 322.00 32.12 C 322.00 31.30 322.67 30.63 323.49 30.63 L 430.52 30.63 C 431.35 30.63 432.02 31.30 432.02 32.12 L 432.02 75.58 C 432.02 76.41 431.35 77.08 430.52 77.08 Z M 430.52 77.08 " transform="matrix(0.99, 0, 0, -0.99, 8.62, 191.13)"/>
+<path fill="none" stroke-width="1.09" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-brique)" stroke-opacity="1" stroke-miterlimit="10" d="M 430.52 77.08 L 323.49 77.08 C 322.67 77.08 322.00 76.41 322.00 75.58 L 322.00 32.12 C 322.00 31.30 322.67 30.63 323.49 30.63 L 430.52 30.63 C 431.35 30.63 432.02 31.30 432.02 32.12 L 432.02 75.58 C 432.02 76.41 431.35 77.08 430.52 77.08 Z M 430.52 77.08 " transform="matrix(0.998184, 0, 0, -0.998184, 8.624309, 191.136045)"/>
 </g>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#arbre-cgroups-glyph-0-19" x="334.01" y="123.30"/>
@@ -751,9 +751,9 @@
 <use xlink:href="#arbre-cgroups-glyph-0-29" x="369.74" y="155.12"/>
 <use xlink:href="#arbre-cgroups-glyph-0-23" x="373.92" y="155.12"/>
 </g>
-<path fill="none" stroke-width="0.69" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 272.12 110.93 L 158.74 73.34 " transform="matrix(0.99, 0, 0, -0.99, 8.62, 191.13)"/>
-<path fill="none" stroke-width="0.69" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 272.12 110.93 L 263.62 77.49 " transform="matrix(0.99, 0, 0, -0.99, 8.62, 191.13)"/>
-<path fill="none" stroke-width="0.69" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 272.12 110.93 L 377.01 77.63 " transform="matrix(0.99, 0, 0, -0.99, 8.62, 191.13)"/>
+<path fill="none" stroke-width="0.69" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 272.12 110.93 L 158.74 73.34 " transform="matrix(0.998184, 0, 0, -0.998184, 8.624309, 191.136045)"/>
+<path fill="none" stroke-width="0.69" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 272.12 110.93 L 263.62 77.49 " transform="matrix(0.998184, 0, 0, -0.998184, 8.624309, 191.136045)"/>
+<path fill="none" stroke-width="0.69" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 272.12 110.93 L 377.01 77.63 " transform="matrix(0.998184, 0, 0, -0.998184, 8.624309, 191.136045)"/>
 <g style="fill:var(--fig-brique)" fill-opacity="1">
 <use xlink:href="#arbre-cgroups-glyph-0-33" x="336.91" y="184.03"/>
 <use xlink:href="#arbre-cgroups-glyph-0-33" x="341.09" y="184.03"/>

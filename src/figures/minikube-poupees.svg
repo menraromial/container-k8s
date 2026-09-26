@@ -303,7 +303,7 @@
 </defs>
 <path fill-rule="nonzero" style="fill:var(--fig-gris-bg)" fill-opacity="1" d="M 4.75 212.19 L 4.75 5.86 C 4.75 5.03 5.41 4.37 6.24 4.37 L 501.09 4.37 C 501.91 4.37 502.58 5.03 502.58 5.86 L 502.58 212.19 C 502.58 213.01 501.91 213.68 501.09 213.68 L 6.24 213.68 C 5.41 213.68 4.75 213.01 4.75 212.19 Z M 4.75 212.19 "/>
 <g clip-path="url(#minikube-poupees-clip-0)">
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M -0.00 1.49 L -0.00 208.27 C -0.00 209.09 0.66 209.76 1.49 209.76 L 497.40 209.76 C 498.23 209.76 498.90 209.09 498.90 208.27 L 498.90 1.49 C 498.90 0.67 498.23 0.00 497.40 0.00 L 1.49 0.00 C 0.66 0.00 -0.00 0.67 -0.00 1.49 Z M -0.00 1.49 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M -0.00 1.49 L -0.00 208.27 C -0.00 209.09 0.66 209.76 1.49 209.76 L 497.40 209.76 C 498.23 209.76 498.90 209.09 498.90 208.27 L 498.90 1.49 C 498.90 0.67 498.23 0.00 497.40 0.00 L 1.49 0.00 C 0.66 0.00 -0.00 0.67 -0.00 1.49 Z M -0.00 1.49 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
 </g>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-0-0" x="13.43" y="20.26"/>
@@ -330,7 +330,7 @@
 <use xlink:href="#minikube-poupees-glyph-0-10" x="76.91" y="20.26"/>
 <use xlink:href="#minikube-poupees-glyph-0-11" x="82.13" y="20.26"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 130.39 12.83 L 130.39 188.42 C 130.39 189.25 131.06 189.92 131.89 189.92 L 486.07 189.92 C 486.89 189.92 487.56 189.25 487.56 188.42 L 487.56 12.83 C 487.56 12.00 486.89 11.33 486.07 11.33 L 131.89 11.33 C 131.06 11.33 130.39 12.00 130.39 12.83 Z M 130.39 12.83 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 130.39 12.83 L 130.39 188.42 C 130.39 189.25 131.06 189.92 131.89 189.92 L 486.07 189.92 C 486.89 189.92 487.56 189.25 487.56 188.42 L 487.56 12.83 C 487.56 12.00 486.89 11.33 486.07 11.33 L 131.89 11.33 C 131.06 11.33 130.39 12.00 130.39 12.83 Z M 130.39 12.83 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-1-0" x="142.13" y="37.21"/>
 <use xlink:href="#minikube-poupees-glyph-1-1" x="146.82" y="37.21"/>
@@ -351,7 +351,7 @@
 <use xlink:href="#minikube-poupees-glyph-1-7" x="183.92" y="37.21"/>
 <use xlink:href="#minikube-poupees-glyph-1-4" x="188.29" y="37.21"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-orange-bg);stroke:var(--fig-orange)" fill-opacity="1" stroke-width="1.09" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 141.73 24.17 L 141.73 168.58 C 141.73 169.41 142.40 170.07 143.22 170.07 L 474.73 170.07 C 475.55 170.07 476.22 169.41 476.22 168.58 L 476.22 24.17 C 476.22 23.34 475.55 22.67 474.73 22.67 L 143.22 22.67 C 142.40 22.67 141.73 23.34 141.73 24.17 Z M 141.73 24.17 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-orange-bg);stroke:var(--fig-orange)" fill-opacity="1" stroke-width="1.09" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 141.73 24.17 L 141.73 168.58 C 141.73 169.41 142.40 170.07 143.22 170.07 L 474.73 170.07 C 475.55 170.07 476.22 169.41 476.22 168.58 L 476.22 24.17 C 476.22 23.34 475.55 22.67 474.73 22.67 L 143.22 22.67 C 142.40 22.67 141.73 23.34 141.73 24.17 Z M 141.73 24.17 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
 <g style="fill:var(--fig-orange)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-0-12" x="153.44" y="58.45"/>
 <use xlink:href="#minikube-poupees-glyph-0-1" x="158.48" y="58.45"/>
@@ -406,7 +406,7 @@
 <use xlink:href="#minikube-poupees-glyph-2-3" x="461.23" y="59.36"/>
 <use xlink:href="#minikube-poupees-glyph-2-2" x="466.00" y="59.36"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 153.07 35.51 L 153.07 138.82 C 153.07 139.64 153.74 140.31 154.56 140.31 L 463.39 140.31 C 464.21 140.31 464.88 139.64 464.88 138.82 L 464.88 35.51 C 464.88 34.68 464.21 34.01 463.39 34.01 L 154.56 34.01 C 153.74 34.01 153.07 34.68 153.07 35.51 Z M 153.07 35.51 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 153.07 35.51 L 153.07 138.82 C 153.07 139.64 153.74 140.31 154.56 140.31 L 463.39 140.31 C 464.21 140.31 464.88 139.64 464.88 138.82 L 464.88 35.51 C 464.88 34.68 464.21 34.01 463.39 34.01 L 154.56 34.01 C 153.74 34.01 153.07 34.68 153.07 35.51 Z M 153.07 35.51 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-3-0" x="166.66" y="87.10"/>
 </g>
@@ -488,7 +488,7 @@
 <use xlink:href="#minikube-poupees-glyph-3-14" x="339.22" y="87.10"/>
 <use xlink:href="#minikube-poupees-glyph-3-8" x="343.52" y="87.10"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 232.20 116.22 L 164.65 116.22 C 163.83 116.22 163.16 115.55 163.16 114.72 L 163.16 97.87 C 163.16 97.04 163.83 96.37 164.65 96.37 L 232.20 96.37 C 233.02 96.37 233.69 97.04 233.69 97.87 L 233.69 114.72 C 233.69 115.55 233.02 116.22 232.20 116.22 Z M 232.20 116.22 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 232.20 116.22 L 164.65 116.22 C 163.83 116.22 163.16 115.55 163.16 114.72 L 163.16 97.87 C 163.16 97.04 163.83 96.37 164.65 96.37 L 232.20 96.37 C 233.02 96.37 233.69 97.04 233.69 97.87 L 233.69 114.72 C 233.69 115.55 233.02 116.22 232.20 116.22 Z M 232.20 116.22 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-4-0" x="173.52" y="109.45"/>
 <use xlink:href="#minikube-poupees-glyph-4-1" x="177.69" y="109.45"/>
@@ -505,14 +505,14 @@
 <use xlink:href="#minikube-poupees-glyph-4-3" x="223.62" y="109.45"/>
 <use xlink:href="#minikube-poupees-glyph-4-9" x="227.80" y="109.45"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 266.55 116.22 L 240.85 116.22 C 240.02 116.22 239.35 115.55 239.35 114.72 L 239.35 97.87 C 239.35 97.04 240.02 96.37 240.85 96.37 L 266.55 96.37 C 267.38 96.37 268.04 97.04 268.04 97.87 L 268.04 114.72 C 268.04 115.55 267.38 116.22 266.55 116.22 Z M 266.55 116.22 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 266.55 116.22 L 240.85 116.22 C 240.02 116.22 239.35 115.55 239.35 114.72 L 239.35 97.87 C 239.35 97.04 240.02 96.37 240.85 96.37 L 266.55 96.37 C 267.38 96.37 268.04 97.04 268.04 97.87 L 268.04 114.72 C 268.04 115.55 267.38 116.22 266.55 116.22 Z M 266.55 116.22 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-4-3" x="249.55" y="110.14"/>
 <use xlink:href="#minikube-poupees-glyph-4-11" x="253.73" y="110.14"/>
 <use xlink:href="#minikube-poupees-glyph-4-12" x="257.90" y="110.14"/>
 <use xlink:href="#minikube-poupees-glyph-4-13" x="262.08" y="110.14"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 345.59 116.22 L 278.03 116.22 C 277.21 116.22 276.54 115.55 276.54 114.72 L 276.54 97.87 C 276.54 97.04 277.21 96.37 278.03 96.37 L 345.59 96.37 C 346.41 96.37 347.08 97.04 347.08 97.87 L 347.08 114.72 C 347.08 115.55 346.41 116.22 345.59 116.22 Z M 345.59 116.22 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 345.59 116.22 L 278.03 116.22 C 277.21 116.22 276.54 115.55 276.54 114.72 L 276.54 97.87 C 276.54 97.04 277.21 96.37 278.03 96.37 L 345.59 96.37 C 346.41 96.37 347.08 97.04 347.08 97.87 L 347.08 114.72 C 347.08 115.55 346.41 116.22 345.59 116.22 Z M 345.59 116.22 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-4-0" x="286.66" y="110.14"/>
 <use xlink:href="#minikube-poupees-glyph-4-1" x="290.84" y="110.14"/>
@@ -529,7 +529,7 @@
 <use xlink:href="#minikube-poupees-glyph-4-3" x="336.77" y="110.14"/>
 <use xlink:href="#minikube-poupees-glyph-4-9" x="340.94" y="110.14"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 459.38 116.22 L 354.17 116.22 C 353.34 116.22 352.67 115.55 352.67 114.72 L 352.67 97.87 C 352.67 97.04 353.34 96.37 354.17 96.37 L 459.38 96.37 C 460.20 96.37 460.87 97.04 460.87 97.87 L 460.87 114.72 C 460.87 115.55 460.20 116.22 459.38 116.22 Z M 459.38 116.22 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 459.38 116.22 L 354.17 116.22 C 353.34 116.22 352.67 115.55 352.67 114.72 L 352.67 97.87 C 352.67 97.04 353.34 96.37 354.17 96.37 L 459.38 96.37 C 460.20 96.37 460.87 97.04 460.87 97.87 L 460.87 114.72 C 460.87 115.55 460.20 116.22 459.38 116.22 Z M 459.38 116.22 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-4-0" x="362.63" y="109.41"/>
 <use xlink:href="#minikube-poupees-glyph-4-1" x="366.81" y="109.41"/>
@@ -555,7 +555,7 @@
 <use xlink:href="#minikube-poupees-glyph-4-3" x="450.31" y="109.41"/>
 <use xlink:href="#minikube-poupees-glyph-4-9" x="454.49" y="109.41"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-gris-bg);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 288.42 68.03 L 250.16 68.03 C 249.34 68.03 248.67 67.36 248.67 66.53 L 248.67 49.68 C 248.67 48.85 249.34 48.19 250.16 48.19 L 288.42 48.19 C 289.24 48.19 289.91 48.85 289.91 49.68 L 289.91 66.53 C 289.91 67.36 289.24 68.03 288.42 68.03 Z M 288.42 68.03 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-gris-bg);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 288.42 68.03 L 250.16 68.03 C 249.34 68.03 248.67 67.36 248.67 66.53 L 248.67 49.68 C 248.67 48.85 249.34 48.19 250.16 48.19 L 288.42 48.19 C 289.24 48.19 289.91 48.85 289.91 49.68 L 289.91 66.53 C 289.91 67.36 289.24 68.03 288.42 68.03 Z M 288.42 68.03 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-4-12" x="258.85" y="158.23"/>
 <use xlink:href="#minikube-poupees-glyph-4-16" x="263.02" y="158.23"/>
@@ -565,7 +565,7 @@
 <use xlink:href="#minikube-poupees-glyph-4-17" x="279.72" y="158.23"/>
 <use xlink:href="#minikube-poupees-glyph-4-8" x="283.90" y="158.23"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-gris-bg);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 351.39 68.03 L 300.58 68.03 C 299.75 68.03 299.08 67.36 299.08 66.53 L 299.08 49.68 C 299.08 48.85 299.75 48.19 300.58 48.19 L 351.39 48.19 C 352.21 48.19 352.88 48.85 352.88 49.68 L 352.88 66.53 C 352.88 67.36 352.21 68.03 351.39 68.03 Z M 351.39 68.03 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-gris-bg);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 351.39 68.03 L 300.58 68.03 C 299.75 68.03 299.08 67.36 299.08 66.53 L 299.08 49.68 C 299.08 48.85 299.75 48.19 300.58 48.19 L 351.39 48.19 C 352.21 48.19 352.88 48.85 352.88 49.68 L 352.88 66.53 C 352.88 67.36 352.21 68.03 351.39 68.03 Z M 351.39 68.03 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-4-0" x="309.15" y="157.50"/>
 <use xlink:href="#minikube-poupees-glyph-4-1" x="313.33" y="157.50"/>
@@ -578,7 +578,7 @@
 <use xlink:href="#minikube-poupees-glyph-4-20" x="342.56" y="157.50"/>
 <use xlink:href="#minikube-poupees-glyph-4-21" x="346.73" y="157.50"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-gris-bg);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 401.80 68.03 L 363.55 68.03 C 362.72 68.03 362.05 67.36 362.05 66.53 L 362.05 49.68 C 362.05 48.85 362.72 48.19 363.55 48.19 L 401.80 48.19 C 402.63 48.19 403.30 48.85 403.30 49.68 L 403.30 66.53 C 403.30 67.36 402.63 68.03 401.80 68.03 Z M 401.80 68.03 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-gris-bg);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 401.80 68.03 L 363.55 68.03 C 362.72 68.03 362.05 67.36 362.05 66.53 L 362.05 49.68 C 362.05 48.85 362.72 48.19 363.55 48.19 L 401.80 48.19 C 402.63 48.19 403.30 48.85 403.30 49.68 L 403.30 66.53 C 403.30 67.36 402.63 68.03 401.80 68.03 Z M 401.80 68.03 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-4-0" x="371.99" y="158.23"/>
 <use xlink:href="#minikube-poupees-glyph-4-7" x="376.16" y="158.23"/>
@@ -588,7 +588,7 @@
 <use xlink:href="#minikube-poupees-glyph-4-3" x="392.87" y="158.23"/>
 <use xlink:href="#minikube-poupees-glyph-4-11" x="397.04" y="158.23"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-bleu-bg);stroke:var(--fig-bleu)" fill-opacity="1" stroke-width="1.09" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 225.92 68.03 L 170.93 68.03 C 170.10 68.03 169.43 67.36 169.43 66.53 L 169.43 49.68 C 169.43 48.85 170.10 48.19 170.93 48.19 L 225.92 48.19 C 226.75 48.19 227.41 48.85 227.41 49.68 L 227.41 66.53 C 227.41 67.36 226.75 68.03 225.92 68.03 Z M 225.92 68.03 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-bleu-bg);stroke:var(--fig-bleu)" fill-opacity="1" stroke-width="1.09" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 225.92 68.03 L 170.93 68.03 C 170.10 68.03 169.43 67.36 169.43 66.53 L 169.43 49.68 C 169.43 48.85 170.10 48.19 170.93 48.19 L 225.92 48.19 C 226.75 48.19 227.41 48.85 227.41 49.68 L 227.41 66.53 C 227.41 67.36 226.75 68.03 225.92 68.03 Z M 225.92 68.03 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-4-22" x="179.78" y="157.50"/>
 <use xlink:href="#minikube-poupees-glyph-4-16" x="183.96" y="157.50"/>
@@ -603,7 +603,7 @@
 <use xlink:href="#minikube-poupees-glyph-4-1" x="217.36" y="157.50"/>
 <use xlink:href="#minikube-poupees-glyph-4-9" x="221.53" y="157.50"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 69.37 115.25 L 18.50 115.25 C 17.67 115.25 17.00 114.58 17.00 113.76 L 17.00 98.84 C 17.00 98.01 17.67 97.34 18.50 97.34 L 69.37 97.34 C 70.19 97.34 70.86 98.01 70.86 98.84 L 70.86 113.76 C 70.86 114.58 70.19 115.25 69.37 115.25 Z M 69.37 115.25 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 69.37 115.25 L 18.50 115.25 C 17.67 115.25 17.00 114.58 17.00 113.76 L 17.00 98.84 C 17.00 98.01 17.67 97.34 18.50 97.34 L 69.37 97.34 C 70.19 97.34 70.86 98.01 70.86 98.84 L 70.86 113.76 C 70.86 114.58 70.19 115.25 69.37 115.25 Z M 69.37 115.25 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-2-7" x="31.89" y="110.50"/>
 <use xlink:href="#minikube-poupees-glyph-2-8" x="36.66" y="110.50"/>
@@ -613,15 +613,15 @@
 <use xlink:href="#minikube-poupees-glyph-2-12" x="55.75" y="110.50"/>
 <use xlink:href="#minikube-poupees-glyph-2-13" x="60.52" y="110.50"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 69.37 67.02 L 18.50 67.02 C 17.67 67.02 17.00 66.35 17.00 65.53 L 17.00 50.69 C 17.00 49.86 17.67 49.19 18.50 49.19 L 69.37 49.19 C 70.19 49.19 70.86 49.86 70.86 50.69 L 70.86 65.53 C 70.86 66.35 70.19 67.02 69.37 67.02 Z M 69.37 67.02 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-paper);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 69.37 67.02 L 18.50 67.02 C 17.67 67.02 17.00 66.35 17.00 65.53 L 17.00 50.69 C 17.00 49.86 17.67 49.19 18.50 49.19 L 69.37 49.19 C 70.19 49.19 70.86 49.86 70.86 50.69 L 70.86 65.53 C 70.86 66.35 70.19 67.02 69.37 67.02 Z M 69.37 67.02 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-2-11" x="39.04" y="158.55"/>
 <use xlink:href="#minikube-poupees-glyph-2-8" x="43.82" y="158.55"/>
 <use xlink:href="#minikube-poupees-glyph-2-14" x="48.59" y="158.55"/>
 <use xlink:href="#minikube-poupees-glyph-2-13" x="53.36" y="158.55"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 71.26 106.29 L 158.49 106.29 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.99, 0, 0, -0.99, 160.37, 107.61)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 71.26 106.29 L 158.49 106.29 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.997858, 0, 0, -0.997858, 160.374834, 107.615521)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-4-24" x="95.55" y="95.87"/>
 <use xlink:href="#minikube-poupees-glyph-4-25" x="99.72" y="95.87"/>
@@ -636,8 +636,8 @@
 <use xlink:href="#minikube-poupees-glyph-4-29" x="108.07" y="103.83"/>
 <use xlink:href="#minikube-poupees-glyph-4-30" x="112.25" y="103.83"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-bleu)" stroke-opacity="1" stroke-miterlimit="10" d="M 71.26 58.10 L 164.62 58.10 " transform="matrix(0.99, 0, 0, -0.99, 4.75, 213.68)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-bleu);stroke:var(--fig-bleu)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.99, 0, 0, -0.99, 166.48, 155.70)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-bleu)" stroke-opacity="1" stroke-miterlimit="10" d="M 71.26 58.10 L 164.62 58.10 " transform="matrix(0.997858, 0, 0, -0.997858, 4.751066, 213.688393)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-bleu);stroke:var(--fig-bleu)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.997858, 0, 0, -0.997858, 166.488803, 155.701821)"/>
 <g style="fill:var(--fig-bleu)" fill-opacity="1">
 <use xlink:href="#minikube-poupees-glyph-4-31" x="87.40" y="164.54"/>
 <use xlink:href="#minikube-poupees-glyph-4-16" x="91.58" y="164.54"/>

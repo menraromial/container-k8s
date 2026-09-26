@@ -378,7 +378,7 @@
 </defs>
 <path fill-rule="nonzero" style="fill:var(--fig-ocre-bg)" fill-opacity="1" d="M 124.60 4.45 L 24.34 4.45 C 23.52 4.45 22.85 5.11 22.85 5.94 L 22.85 51.02 C 22.85 51.84 23.52 52.51 24.34 52.51 L 124.60 52.51 C 125.42 52.51 126.08 51.84 126.08 51.02 L 126.08 5.94 C 126.08 5.11 125.42 4.45 124.60 4.45 Z M 124.60 4.45 "/>
 <g clip-path="url(#trois-sondes-clip-0)">
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ocre)" stroke-opacity="1" stroke-miterlimit="10" d="M 50.26 86.45 L -50.25 86.45 C -51.08 86.45 -51.75 85.79 -51.75 84.96 L -51.75 39.76 C -51.75 38.93 -51.08 38.26 -50.25 38.26 L 50.26 38.26 C 51.08 38.26 51.75 38.93 51.75 39.76 L 51.75 84.96 C 51.75 85.79 51.08 86.45 50.26 86.45 Z M 50.26 86.45 " transform="matrix(0.99, 0, 0, -0.99, 74.47, 90.68)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ocre)" stroke-opacity="1" stroke-miterlimit="10" d="M 50.26 86.45 L -50.25 86.45 C -51.08 86.45 -51.75 85.79 -51.75 84.96 L -51.75 39.76 C -51.75 38.93 -51.08 38.26 -50.25 38.26 L 50.26 38.26 C 51.08 38.26 51.75 38.93 51.75 39.76 L 51.75 84.96 C 51.75 85.79 51.08 86.45 50.26 86.45 Z M 50.26 86.45 " transform="matrix(0.997355, 0, 0, -0.997355, 74.473475, 90.680423)"/>
 </g>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#trois-sondes-glyph-0-0" x="50.22" y="21.81"/>
@@ -449,7 +449,7 @@
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#trois-sondes-glyph-1-14" x="93.49" y="40.68"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 50.26 24.09 L -50.25 24.09 C -51.08 24.09 -51.75 23.42 -51.75 22.59 L -51.75 -22.60 C -51.75 -23.42 -51.08 -24.09 -50.25 -24.09 L 50.26 -24.09 C 51.08 -24.09 51.75 -23.42 51.75 -22.60 L 51.75 22.59 C 51.75 23.42 51.08 24.09 50.26 24.09 Z M 50.26 24.09 " transform="matrix(0.99, 0, 0, -0.99, 74.47, 90.68)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 50.26 24.09 L -50.25 24.09 C -51.08 24.09 -51.75 23.42 -51.75 22.59 L -51.75 -22.60 C -51.75 -23.42 -51.08 -24.09 -50.25 -24.09 L 50.26 -24.09 C 51.08 -24.09 51.75 -23.42 51.75 -22.60 L 51.75 22.59 C 51.75 23.42 51.08 24.09 50.26 24.09 Z M 50.26 24.09 " transform="matrix(0.997355, 0, 0, -0.997355, 74.473475, 90.680423)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#trois-sondes-glyph-0-10" x="48.44" y="88.89"/>
 </g>
@@ -522,7 +522,7 @@
 </g>
 <path fill-rule="nonzero" style="fill:var(--fig-bleu-bg)" fill-opacity="1" d="M 124.60 128.84 L 24.34 128.84 C 23.52 128.84 22.85 129.51 22.85 130.33 L 22.85 175.41 C 22.85 176.24 23.52 176.91 24.34 176.91 L 124.60 176.91 C 125.42 176.91 126.08 176.24 126.08 175.41 L 126.08 130.33 C 126.08 129.51 125.42 128.84 124.60 128.84 Z M 124.60 128.84 "/>
 <g clip-path="url(#trois-sondes-clip-1)">
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-bleu)" stroke-opacity="1" stroke-miterlimit="10" d="M 50.26 -38.26 L -50.25 -38.26 C -51.08 -38.26 -51.75 -38.93 -51.75 -39.76 L -51.75 -84.96 C -51.75 -85.78 -51.08 -86.45 -50.25 -86.45 L 50.26 -86.45 C 51.08 -86.45 51.75 -85.78 51.75 -84.96 L 51.75 -39.76 C 51.75 -38.93 51.08 -38.26 50.26 -38.26 Z M 50.26 -38.26 " transform="matrix(0.99, 0, 0, -0.99, 74.47, 90.68)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-bleu)" stroke-opacity="1" stroke-miterlimit="10" d="M 50.26 -38.26 L -50.25 -38.26 C -51.08 -38.26 -51.75 -38.93 -51.75 -39.76 L -51.75 -84.96 C -51.75 -85.78 -51.08 -86.45 -50.25 -86.45 L 50.26 -86.45 C 51.08 -86.45 51.75 -85.78 51.75 -84.96 L 51.75 -39.76 C 51.75 -38.93 51.08 -38.26 50.26 -38.26 Z M 50.26 -38.26 " transform="matrix(0.997355, 0, 0, -0.997355, 74.473475, 90.680423)"/>
 </g>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#trois-sondes-glyph-0-3" x="45.68" y="146.37"/>
@@ -610,7 +610,7 @@
 </g>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 288.57 4.45 L 165.70 4.45 C 164.88 4.45 164.21 5.11 164.21 5.94 L 164.21 51.02 C 164.21 51.84 164.88 52.51 165.70 52.51 L 288.57 52.51 C 289.39 52.51 290.06 51.84 290.06 51.02 L 290.06 5.94 C 290.06 5.11 289.39 4.45 288.57 4.45 Z M 288.57 4.45 "/>
 <g clip-path="url(#trois-sondes-clip-2)">
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ocre)" stroke-opacity="1" stroke-miterlimit="10" d="M 214.67 86.45 L 91.47 86.45 C 90.64 86.45 89.97 85.79 89.97 84.96 L 89.97 39.76 C 89.97 38.93 90.64 38.26 91.47 38.26 L 214.67 38.26 C 215.49 38.26 216.16 38.93 216.16 39.76 L 216.16 84.96 C 216.16 85.79 215.49 86.45 214.67 86.45 Z M 214.67 86.45 " transform="matrix(0.99, 0, 0, -0.99, 74.47, 90.68)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ocre)" stroke-opacity="1" stroke-miterlimit="10" d="M 214.67 86.45 L 91.47 86.45 C 90.64 86.45 89.97 85.79 89.97 84.96 L 89.97 39.76 C 89.97 38.93 90.64 38.26 91.47 38.26 L 214.67 38.26 C 215.49 38.26 216.16 38.93 216.16 39.76 L 216.16 84.96 C 216.16 85.79 215.49 86.45 214.67 86.45 Z M 214.67 86.45 " transform="matrix(0.997355, 0, 0, -0.997355, 74.473475, 90.680423)"/>
 </g>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#trois-sondes-glyph-2-0" x="169.18" y="14.48"/>
@@ -853,7 +853,7 @@
 </g>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 288.57 66.64 L 165.70 66.64 C 164.88 66.64 164.21 67.31 164.21 68.14 L 164.21 113.22 C 164.21 114.04 164.88 114.71 165.70 114.71 L 288.57 114.71 C 289.39 114.71 290.06 114.04 290.06 113.22 L 290.06 68.14 C 290.06 67.31 289.39 66.64 288.57 66.64 Z M 288.57 66.64 "/>
 <g clip-path="url(#trois-sondes-clip-3)">
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-brique)" stroke-opacity="1" stroke-miterlimit="10" d="M 214.67 24.09 L 91.47 24.09 C 90.64 24.09 89.97 23.42 89.97 22.59 L 89.97 -22.60 C 89.97 -23.42 90.64 -24.09 91.47 -24.09 L 214.67 -24.09 C 215.49 -24.09 216.16 -23.42 216.16 -22.60 L 216.16 22.59 C 216.16 23.42 215.49 24.09 214.67 24.09 Z M 214.67 24.09 " transform="matrix(0.99, 0, 0, -0.99, 74.47, 90.68)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-brique)" stroke-opacity="1" stroke-miterlimit="10" d="M 214.67 24.09 L 91.47 24.09 C 90.64 24.09 89.97 23.42 89.97 22.59 L 89.97 -22.60 C 89.97 -23.42 90.64 -24.09 91.47 -24.09 L 214.67 -24.09 C 215.49 -24.09 216.16 -23.42 216.16 -22.60 L 216.16 22.59 C 216.16 23.42 215.49 24.09 214.67 24.09 Z M 214.67 24.09 " transform="matrix(0.997355, 0, 0, -0.997355, 74.473475, 90.680423)"/>
 </g>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#trois-sondes-glyph-2-7" x="169.18" y="84.73"/>
@@ -1019,7 +1019,7 @@
 </g>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 288.57 128.84 L 165.70 128.84 C 164.88 128.84 164.21 129.51 164.21 130.33 L 164.21 175.41 C 164.21 176.24 164.88 176.91 165.70 176.91 L 288.57 176.91 C 289.39 176.91 290.06 176.24 290.06 175.41 L 290.06 130.33 C 290.06 129.51 289.39 128.84 288.57 128.84 Z M 288.57 128.84 "/>
 <g clip-path="url(#trois-sondes-clip-4)">
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-bleu)" stroke-opacity="1" stroke-miterlimit="10" d="M 214.67 -38.26 L 91.47 -38.26 C 90.64 -38.26 89.97 -38.93 89.97 -39.76 L 89.97 -84.96 C 89.97 -85.78 90.64 -86.45 91.47 -86.45 L 214.67 -86.45 C 215.49 -86.45 216.16 -85.78 216.16 -84.96 L 216.16 -39.76 C 216.16 -38.93 215.49 -38.26 214.67 -38.26 Z M 214.67 -38.26 " transform="matrix(0.99, 0, 0, -0.99, 74.47, 90.68)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-bleu)" stroke-opacity="1" stroke-miterlimit="10" d="M 214.67 -38.26 L 91.47 -38.26 C 90.64 -38.26 89.97 -38.93 89.97 -39.76 L 89.97 -84.96 C 89.97 -85.78 90.64 -86.45 91.47 -86.45 L 214.67 -86.45 C 215.49 -86.45 216.16 -85.78 216.16 -84.96 L 216.16 -39.76 C 216.16 -38.93 215.49 -38.26 214.67 -38.26 Z M 214.67 -38.26 " transform="matrix(0.997355, 0, 0, -0.997355, 74.473475, 90.680423)"/>
 </g>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#trois-sondes-glyph-2-7" x="169.18" y="139.42"/>
@@ -1232,8 +1232,8 @@
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#trois-sondes-glyph-4-18" x="177.14" y="171.21"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 52.15 62.36 L 85.31 62.36 " transform="matrix(0.99, 0, 0, -0.99, 74.47, 90.68)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.99, 0, 0, -0.99, 157.03, 28.48)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 52.15 62.36 L 85.31 62.36 " transform="matrix(0.997355, 0, 0, -0.997355, 74.473475, 90.680423)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.997355, 0, 0, -0.997355, 157.032914, 28.48251)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 132.96 28.08 L 157.33 28.08 L 157.33 21.08 L 132.96 21.08 Z M 132.96 28.08 "/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#trois-sondes-glyph-2-8" x="133.95" y="27.00"/>
@@ -1245,8 +1245,8 @@
 <use xlink:href="#trois-sondes-glyph-2-4" x="148.84" y="27.00"/>
 <use xlink:href="#trois-sondes-glyph-2-6" x="152.60" y="27.00"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 52.15 0.00 L 85.31 0.00 " transform="matrix(0.99, 0, 0, -0.99, 74.47, 90.68)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0.99, 0, 0, -0.99, 157.03, 90.68)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 52.15 0.00 L 85.31 0.00 " transform="matrix(0.997355, 0, 0, -0.997355, 74.473475, 90.680423)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0.997355, 0, 0, -0.997355, 157.032914, 90.680423)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 132.96 90.28 L 157.33 90.28 L 157.33 83.28 L 132.96 83.28 Z M 132.96 90.28 "/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#trois-sondes-glyph-2-8" x="133.95" y="89.20"/>
@@ -1258,8 +1258,8 @@
 <use xlink:href="#trois-sondes-glyph-2-4" x="148.84" y="89.20"/>
 <use xlink:href="#trois-sondes-glyph-2-6" x="152.60" y="89.20"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 52.15 -62.36 L 85.31 -62.36 " transform="matrix(0.99, 0, 0, -0.99, 74.47, 90.68)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.99, 0, 0, -0.99, 157.03, 152.87)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 52.15 -62.36 L 85.31 -62.36 " transform="matrix(0.997355, 0, 0, -0.997355, 74.473475, 90.680423)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.997355, 0, 0, -0.997355, 157.032914, 152.878337)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 132.96 152.48 L 157.33 152.48 L 157.33 145.48 L 132.96 145.48 Z M 132.96 152.48 "/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#trois-sondes-glyph-2-8" x="133.95" y="151.40"/>
@@ -1271,8 +1271,8 @@
 <use xlink:href="#trois-sondes-glyph-2-4" x="148.84" y="151.40"/>
 <use xlink:href="#trois-sondes-glyph-2-6" x="152.60" y="151.40"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ocre)" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M -52.15 37.87 C -56.67 35.26 -56.67 27.09 -55.84 26.62 " transform="matrix(0.99, 0, 0, -0.99, 74.47, 90.68)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-ocre);stroke:var(--fig-ocre)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.67 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.67 -0.00 " transform="matrix(0.86, 0.49, 0.49, -0.86, 16.58, 62.85)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-ocre)" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M -52.15 37.87 C -56.67 35.26 -56.67 27.09 -55.84 26.62 " transform="matrix(0.997355, 0, 0, -0.997355, 74.473475, 90.680423)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-ocre);stroke:var(--fig-ocre)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.67 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.67 -0.00 " transform="matrix(0.863719, 0.498657, 0.498657, -0.863719, 16.583177, 62.859472)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 3.97 63.62 L 18.68 63.62 L 18.68 55.54 L 3.97 55.54 Z M 3.97 63.62 "/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#trois-sondes-glyph-2-17" x="4.96" y="61.50"/>

@@ -247,8 +247,8 @@
 </g>
 </g>
 </defs>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-muted)" stroke-opacity="1" stroke-miterlimit="10" d="M -0.00 -5.67 L 381.25 -5.67 " transform="matrix(0.99, 0, 0, -0.99, 13.41, 98.27)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-muted);stroke:var(--fig-muted)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.99, 0, 0, -0.99, 390.33, 103.92)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-muted)" stroke-opacity="1" stroke-miterlimit="10" d="M -0.00 -5.67 L 381.25 -5.67 " transform="matrix(0.995264, 0, 0, -0.995264, 13.418972, 98.278339)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-muted);stroke:var(--fig-muted)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.995264, 0, 0, -0.995264, 390.338934, 103.920759)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#docker-stop-signaux-glyph-0-0" x="400.80" y="105.73"/>
 </g>
@@ -260,14 +260,14 @@
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#docker-stop-signaux-glyph-0-4" x="418.70" y="105.73"/>
 </g>
-<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-muted)" stroke-opacity="1" stroke-miterlimit="10" d="M -0.00 -8.50 L -0.00 -2.83 " transform="matrix(0.99, 0, 0, -0.99, 13.41, 98.27)"/>
+<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-muted)" stroke-opacity="1" stroke-miterlimit="10" d="M -0.00 -8.50 L -0.00 -2.83 " transform="matrix(0.995264, 0, 0, -0.995264, 13.418972, 98.278339)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#docker-stop-signaux-glyph-0-5" x="7.87" y="116.45"/>
 </g>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#docker-stop-signaux-glyph-0-4" x="15.22" y="116.45"/>
 </g>
-<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-muted)" stroke-opacity="1" stroke-miterlimit="10" d="M 325.98 -8.50 L 325.98 -2.83 " transform="matrix(0.99, 0, 0, -0.99, 13.41, 98.27)"/>
+<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-muted)" stroke-opacity="1" stroke-miterlimit="10" d="M 325.98 -8.50 L 325.98 -2.83 " transform="matrix(0.995264, 0, 0, -0.995264, 13.418972, 98.278339)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#docker-stop-signaux-glyph-0-6" x="330.69" y="116.45"/>
 <use xlink:href="#docker-stop-signaux-glyph-0-5" x="333.92" y="116.45"/>
@@ -331,7 +331,7 @@
 <use xlink:href="#docker-stop-signaux-glyph-1-10" x="154.80" y="11.13"/>
 <use xlink:href="#docker-stop-signaux-glyph-1-1" x="159.10" y="11.13"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-orange-bg);stroke:var(--fig-orange)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 46.57 73.89 L 10.11 73.89 C 9.28 73.89 8.62 73.23 8.62 72.40 L 8.62 63.66 C 8.62 62.83 9.28 62.16 10.11 62.16 L 46.57 62.16 C 47.40 62.16 48.07 62.83 48.07 63.66 L 48.07 72.40 C 48.07 73.23 47.40 73.89 46.57 73.89 Z M 46.57 73.89 " transform="matrix(0.99, 0, 0, -0.99, 13.41, 98.27)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-orange-bg);stroke:var(--fig-orange)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 46.57 73.89 L 10.11 73.89 C 9.28 73.89 8.62 73.23 8.62 72.40 L 8.62 63.66 C 8.62 62.83 9.28 62.16 10.11 62.16 L 46.57 62.16 C 47.40 62.16 48.07 62.83 48.07 63.66 L 48.07 72.40 C 48.07 73.23 47.40 73.89 46.57 73.89 Z M 46.57 73.89 " transform="matrix(0.995264, 0, 0, -0.995264, 13.418972, 98.278339)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#docker-stop-signaux-glyph-2-0" x="24.97" y="33.34"/>
 <use xlink:href="#docker-stop-signaux-glyph-2-1" x="29.73" y="33.34"/>
@@ -341,7 +341,7 @@
 <use xlink:href="#docker-stop-signaux-glyph-2-5" x="48.77" y="33.34"/>
 <use xlink:href="#docker-stop-signaux-glyph-2-6" x="53.52" y="33.34"/>
 </g>
-<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-muted)" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 59.52 68.03 L 293.38 68.03 " transform="matrix(0.99, 0, 0, -0.99, 13.41, 98.27)"/>
+<path fill="none" stroke-width="0.39" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-muted)" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 59.52 68.03 L 293.38 68.03 " transform="matrix(0.995264, 0, 0, -0.995264, 13.418972, 98.278339)"/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#docker-stop-signaux-glyph-0-7" x="68.80" y="25.54"/>
 <use xlink:href="#docker-stop-signaux-glyph-0-8" x="70.80" y="25.54"/>
@@ -456,7 +456,7 @@
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#docker-stop-signaux-glyph-0-4" x="305.54" y="25.54"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 344.21 73.89 L 307.75 73.89 C 306.92 73.89 306.26 73.23 306.26 72.40 L 306.26 63.66 C 306.26 62.83 306.92 62.16 307.75 62.16 L 344.21 62.16 C 345.04 62.16 345.71 62.83 345.71 63.66 L 345.71 72.40 C 345.71 73.23 345.04 73.89 344.21 73.89 Z M 344.21 73.89 " transform="matrix(0.99, 0, 0, -0.99, 13.41, 98.27)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 344.21 73.89 L 307.75 73.89 C 306.92 73.89 306.26 73.23 306.26 72.40 L 306.26 63.66 C 306.26 62.83 306.92 62.16 307.75 62.16 L 344.21 62.16 C 345.04 62.16 345.71 62.83 345.71 63.66 L 345.71 72.40 C 345.71 73.23 345.04 73.89 344.21 73.89 Z M 344.21 73.89 " transform="matrix(0.995264, 0, 0, -0.995264, 13.418972, 98.278339)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#docker-stop-signaux-glyph-2-0" x="321.20" y="33.34"/>
 <use xlink:href="#docker-stop-signaux-glyph-2-1" x="325.96" y="33.34"/>
@@ -466,7 +466,7 @@
 <use xlink:href="#docker-stop-signaux-glyph-2-8" x="344.99" y="33.34"/>
 <use xlink:href="#docker-stop-signaux-glyph-2-8" x="349.75" y="33.34"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 389.46 79.51 L 353.39 79.51 C 352.56 79.51 351.89 78.84 351.89 78.01 L 351.89 58.04 C 351.89 57.21 352.56 56.55 353.39 56.55 L 389.46 56.55 C 390.29 56.55 390.95 57.21 390.95 58.04 L 390.95 78.01 C 390.95 78.84 390.29 79.51 389.46 79.51 Z M 389.46 79.51 " transform="matrix(0.99, 0, 0, -0.99, 13.41, 98.27)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-brique-bg);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 389.46 79.51 L 353.39 79.51 C 352.56 79.51 351.89 78.84 351.89 78.01 L 351.89 58.04 C 351.89 57.21 352.56 56.55 353.39 56.55 L 389.46 56.55 C 390.29 56.55 390.95 57.21 390.95 58.04 L 390.95 78.01 C 390.95 78.84 390.29 79.51 389.46 79.51 Z M 389.46 79.51 " transform="matrix(0.995264, 0, 0, -0.995264, 13.418972, 98.278339)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#docker-stop-signaux-glyph-0-6" x="370.59" y="28.51"/>
 <use xlink:href="#docker-stop-signaux-glyph-0-5" x="373.82" y="28.51"/>
@@ -529,7 +529,7 @@
 <use xlink:href="#docker-stop-signaux-glyph-3-1" x="117.45" y="67.60"/>
 <use xlink:href="#docker-stop-signaux-glyph-3-3" x="123.40" y="67.60"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-orange-bg);stroke:var(--fig-orange)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 46.57 21.45 L 10.11 21.45 C 9.28 21.45 8.62 20.78 8.62 19.96 L 8.62 11.21 C 8.62 10.39 9.28 9.72 10.11 9.72 L 46.57 9.72 C 47.40 9.72 48.07 10.39 48.07 11.21 L 48.07 19.96 C 48.07 20.78 47.40 21.45 46.57 21.45 Z M 46.57 21.45 " transform="matrix(0.99, 0, 0, -0.99, 13.41, 98.27)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-orange-bg);stroke:var(--fig-orange)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 46.57 21.45 L 10.11 21.45 C 9.28 21.45 8.62 20.78 8.62 19.96 L 8.62 11.21 C 8.62 10.39 9.28 9.72 10.11 9.72 L 46.57 9.72 C 47.40 9.72 48.07 10.39 48.07 11.21 L 48.07 19.96 C 48.07 20.78 47.40 21.45 46.57 21.45 Z M 46.57 21.45 " transform="matrix(0.995264, 0, 0, -0.995264, 13.418972, 98.278339)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#docker-stop-signaux-glyph-2-0" x="24.97" y="85.53"/>
 <use xlink:href="#docker-stop-signaux-glyph-2-1" x="29.73" y="85.53"/>
@@ -539,7 +539,7 @@
 <use xlink:href="#docker-stop-signaux-glyph-2-5" x="48.77" y="85.53"/>
 <use xlink:href="#docker-stop-signaux-glyph-2-6" x="53.52" y="85.53"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 101.15 27.07 L 64.25 27.07 C 63.43 27.07 62.76 26.40 62.76 25.57 L 62.76 5.60 C 62.76 4.77 63.43 4.10 64.25 4.10 L 101.15 4.10 C 101.98 4.10 102.65 4.77 102.65 5.60 L 102.65 25.57 C 102.65 26.40 101.98 27.07 101.15 27.07 Z M 101.15 27.07 " transform="matrix(0.99, 0, 0, -0.99, 13.41, 98.27)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 101.15 27.07 L 64.25 27.07 C 63.43 27.07 62.76 26.40 62.76 25.57 L 62.76 5.60 C 62.76 4.77 63.43 4.10 64.25 4.10 L 101.15 4.10 C 101.98 4.10 102.65 4.77 102.65 5.60 L 102.65 25.57 C 102.65 26.40 101.98 27.07 101.15 27.07 Z M 101.15 27.07 " transform="matrix(0.995264, 0, 0, -0.995264, 13.418972, 98.278339)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#docker-stop-signaux-glyph-0-5" x="85.49" y="80.70"/>
 <use xlink:href="#docker-stop-signaux-glyph-0-32" x="90.63" y="80.70"/>

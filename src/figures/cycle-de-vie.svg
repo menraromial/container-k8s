@@ -175,7 +175,7 @@
 <path clip-rule="nonzero" d="M 362 131 L 462.63 131 L 462.63 190 L 362 190 Z M 362 131 "/>
 </clipPath>
 </defs>
-<path fill-rule="nonzero" style="fill:var(--fig-gris-bg);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.99" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 39.60 14.88 L -39.60 14.88 C -40.43 14.88 -41.10 14.21 -41.10 13.38 L -41.10 -13.38 C -41.10 -14.21 -40.43 -14.88 -39.60 -14.88 L 39.60 -14.88 C 40.43 -14.88 41.10 -14.21 41.10 -13.38 L 41.10 13.38 C 41.10 14.21 40.43 14.88 39.60 14.88 Z M 39.60 14.88 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-gris-bg);stroke:var(--fig-gris)" fill-opacity="1" stroke-width="0.99" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 39.60 14.88 L -39.60 14.88 C -40.43 14.88 -41.10 14.21 -41.10 13.38 L -41.10 -13.38 C -41.10 -14.21 -40.43 -14.88 -39.60 -14.88 L 39.60 -14.88 C 40.43 -14.88 41.10 -14.21 41.10 -13.38 L 41.10 13.38 C 41.10 14.21 40.43 14.88 39.60 14.88 Z M 39.60 14.88 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-0-0" x="90.66" y="79.43"/>
 <use xlink:href="#cycle-de-vie-glyph-0-1" x="95.70" y="79.43"/>
@@ -184,7 +184,7 @@
 <use xlink:href="#cycle-de-vie-glyph-0-2" x="99.36" y="79.43"/>
 <use xlink:href="#cycle-de-vie-glyph-0-2" x="104.45" y="79.43"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.99" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 198.35 14.88 L 119.13 14.88 C 118.30 14.88 117.63 14.21 117.63 13.38 L 117.63 -13.38 C 117.63 -14.21 118.30 -14.88 119.13 -14.88 L 198.35 -14.88 C 199.17 -14.88 199.84 -14.21 199.84 -13.38 L 199.84 13.38 C 199.84 14.21 199.17 14.88 198.35 14.88 Z M 198.35 14.88 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-vert-bg);stroke:var(--fig-vert)" fill-opacity="1" stroke-width="0.99" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 198.35 14.88 L 119.13 14.88 C 118.30 14.88 117.63 14.21 117.63 13.38 L 117.63 -13.38 C 117.63 -14.21 118.30 -14.88 119.13 -14.88 L 198.35 -14.88 C 199.17 -14.88 199.84 -14.21 199.84 -13.38 L 199.84 13.38 C 199.84 14.21 199.17 14.88 198.35 14.88 Z M 198.35 14.88 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-0-3" x="236.17" y="79.43"/>
 <use xlink:href="#cycle-de-vie-glyph-0-4" x="241.26" y="79.43"/>
@@ -199,7 +199,7 @@
 <use xlink:href="#cycle-de-vie-glyph-0-7" x="270.71" y="79.43"/>
 <use xlink:href="#cycle-de-vie-glyph-0-3" x="275.95" y="79.43"/>
 </g>
-<path fill-rule="nonzero" style="fill:var(--fig-ocre-bg);stroke:var(--fig-ocre)" fill-opacity="1" stroke-width="0.99" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 198.35 -70.15 L 119.13 -70.15 C 118.30 -70.15 117.63 -70.82 117.63 -71.65 L 117.63 -98.42 C 117.63 -99.25 118.30 -99.92 119.13 -99.92 L 198.35 -99.92 C 199.17 -99.92 199.84 -99.25 199.84 -98.42 L 199.84 -71.65 C 199.84 -70.82 199.17 -70.15 198.35 -70.15 Z M 198.35 -70.15 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-ocre-bg);stroke:var(--fig-ocre)" fill-opacity="1" stroke-width="0.99" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 198.35 -70.15 L 119.13 -70.15 C 118.30 -70.15 117.63 -70.82 117.63 -71.65 L 117.63 -98.42 C 117.63 -99.25 118.30 -99.92 119.13 -99.92 L 198.35 -99.92 C 199.17 -99.92 199.84 -99.25 199.84 -98.42 L 199.84 -71.65 C 199.84 -70.82 199.17 -70.15 198.35 -70.15 Z M 198.35 -70.15 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-0-3" x="239.49" y="162.18"/>
 <use xlink:href="#cycle-de-vie-glyph-0-4" x="244.58" y="162.18"/>
@@ -213,7 +213,7 @@
 </g>
 <path fill-rule="nonzero" style="fill:var(--fig-brique-bg)" fill-opacity="1" d="M 456.66 60.44 L 377.56 60.44 C 376.74 60.44 376.07 61.11 376.07 61.93 L 376.07 88.67 C 376.07 89.5 376.74 90.16 377.56 90.16 L 456.66 90.16 C 457.49 90.16 458.16 89.5 458.16 88.67 L 458.16 61.93 C 458.16 61.11 457.49 60.44 456.66 60.44 Z M 456.66 60.44 "/>
 <g clip-path="url(#cycle-de-vie-clip-0)">
-<path fill="none" stroke-width="0.99" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-brique)" stroke-opacity="1" stroke-miterlimit="10" d="M 357.09 14.88 L 277.87 14.88 C 277.05 14.88 276.38 14.21 276.38 13.38 L 276.38 -13.38 C 276.38 -14.21 277.05 -14.88 277.87 -14.88 L 357.09 -14.88 C 357.91 -14.88 358.58 -14.21 358.58 -13.38 L 358.58 13.38 C 358.58 14.21 357.91 14.88 357.09 14.88 Z M 357.09 14.88 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
+<path fill="none" stroke-width="0.99" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-brique)" stroke-opacity="1" stroke-miterlimit="10" d="M 357.09 14.88 L 277.87 14.88 C 277.05 14.88 276.38 14.21 276.38 13.38 L 276.38 -13.38 C 276.38 -14.21 277.05 -14.88 277.87 -14.88 L 357.09 -14.88 C 357.91 -14.88 358.58 -14.21 358.58 -13.38 L 358.58 13.38 C 358.58 14.21 357.91 14.88 357.09 14.88 Z M 357.09 14.88 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
 </g>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-0-6" x="404.07" y="79.43"/>
@@ -229,7 +229,7 @@
 </g>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 456.66 145.35 L 377.56 145.35 C 376.74 145.35 376.07 146.02 376.07 146.85 L 376.07 173.58 C 376.07 174.41 376.74 175.08 377.56 175.08 L 456.66 175.08 C 457.49 175.08 458.16 174.41 458.16 173.58 L 458.16 146.85 C 458.16 146.02 457.49 145.35 456.66 145.35 Z M 456.66 145.35 "/>
 <g clip-path="url(#cycle-de-vie-clip-1)">
-<path fill="none" stroke-width="0.99" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-gris)" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 357.09 -70.15 L 277.87 -70.15 C 277.05 -70.15 276.38 -70.82 276.38 -71.65 L 276.38 -98.42 C 276.38 -99.25 277.05 -99.92 277.87 -99.92 L 357.09 -99.92 C 357.91 -99.92 358.58 -99.25 358.58 -98.42 L 358.58 -71.65 C 358.58 -70.82 357.91 -70.15 357.09 -70.15 Z M 357.09 -70.15 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
+<path fill="none" stroke-width="0.99" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-gris)" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 357.09 -70.15 L 277.87 -70.15 C 277.05 -70.15 276.38 -70.82 276.38 -71.65 L 276.38 -98.42 C 276.38 -99.25 277.05 -99.92 277.87 -99.92 L 357.09 -99.92 C 357.91 -99.92 358.58 -99.25 358.58 -98.42 L 358.58 -71.65 C 358.58 -70.82 357.91 -70.15 357.09 -70.15 Z M 357.09 -70.15 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
 </g>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-0-10" x="397.19" y="163.40"/>
@@ -241,8 +241,8 @@
 <use xlink:href="#cycle-de-vie-glyph-0-5" x="424.00" y="163.40"/>
 <use xlink:href="#cycle-de-vie-glyph-0-2" x="431.94" y="163.40"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M -93.54 0.00 L -45.86 0.00 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0.99, 0, 0, -0.99, 51.76, 75.30)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M -93.54 0.00 L -45.86 0.00 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0.998524, 0, 0, -0.998524, 51.768302, 75.306271)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 3.97 72.91 L 61.27 72.91 L 61.27 64.73 L 3.97 64.73 Z M 3.97 72.91 "/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-1-0" x="5.47" y="71.35"/>
@@ -260,8 +260,8 @@
 <use xlink:href="#cycle-de-vie-glyph-1-7" x="51.43" y="71.35"/>
 <use xlink:href="#cycle-de-vie-glyph-1-4" x="55.60" y="71.35"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 99.21 48.18 L 115.09 19.12 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0.47, 0.87, 0.87, -0.47, 213.81, 53.98)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 99.21 48.18 L 115.09 19.12 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0.478772, 0.876195, 0.876195, -0.478772, 213.812244, 53.987809)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 141.26 26.78 L 257.06 26.78 L 257.06 18.60 L 141.26 18.60 Z M 141.26 26.78 "/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-1-0" x="142.76" y="25.22"/>
@@ -297,8 +297,8 @@
 <use xlink:href="#cycle-de-vie-glyph-1-5" x="247.20" y="25.22"/>
 <use xlink:href="#cycle-de-vie-glyph-1-7" x="251.38" y="25.22"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 41.60 0.00 L 112.87 0.00 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0.99, 0, 0, -0.99, 210.27, 75.30)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 41.60 0.00 L 112.87 0.00 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0.998524, 0, 0, -0.998524, 210.276232, 75.306271)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 152.79 74.91 L 205.91 74.91 L 205.91 66.72 L 152.79 66.72 Z M 152.79 74.91 "/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-1-0" x="154.28" y="73.34"/>
@@ -315,8 +315,8 @@
 <use xlink:href="#cycle-de-vie-glyph-1-5" x="196.06" y="73.34"/>
 <use xlink:href="#cycle-de-vie-glyph-1-7" x="200.23" y="73.34"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 147.40 -15.38 L 147.40 -65.39 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0, 0.99, 0.99, 0, 247.28, 138.07)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 147.40 -15.38 L 147.40 -65.39 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0, 0.998524, 0.998524, 0, 247.286972, 138.070425)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 193.76 122.55 L 246.89 122.55 L 246.89 112.97 L 193.76 112.97 Z M 193.76 122.55 "/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-1-0" x="195.25" y="119.60"/>
@@ -333,8 +333,8 @@
 <use xlink:href="#cycle-de-vie-glyph-1-12" x="237.03" y="119.60"/>
 <use xlink:href="#cycle-de-vie-glyph-1-4" x="241.21" y="119.60"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 170.07 -69.65 L 170.07 -19.64 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0, -0.99, -0.99, 0, 269.93, 97.45)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 170.07 -69.65 L 170.07 -19.64 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0, -0.998524, -0.998524, 0, 269.930924, 97.456991)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 270.32 122.55 L 331.80 122.55 L 331.80 112.97 L 270.32 112.97 Z M 270.32 122.55 "/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-1-0" x="271.81" y="119.60"/>
@@ -353,8 +353,8 @@
 <use xlink:href="#cycle-de-vie-glyph-1-12" x="321.95" y="119.60"/>
 <use xlink:href="#cycle-de-vie-glyph-1-4" x="326.13" y="119.60"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 200.34 7.08 L 271.62 7.08 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.99, 0, 0, -0.99, 368.78, 68.23)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 200.34 7.08 L 271.62 7.08 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.998524, 0, 0, -0.998524, 368.783782, 68.230043)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 313.39 67.83 L 362.33 67.83 L 362.33 51.68 L 313.39 51.68 Z M 313.39 67.83 "/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-1-0" x="314.88" y="58.31"/>
@@ -384,8 +384,8 @@
 <use xlink:href="#cycle-de-vie-glyph-1-15" x="352.48" y="66.27"/>
 <use xlink:href="#cycle-de-vie-glyph-1-15" x="356.66" y="66.27"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 200.34 -7.08 L 271.62 -7.08 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.99, 0, 0, -0.99, 368.78, 82.38)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 200.34 -7.08 L 271.62 -7.08 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0.998524, 0, 0, -0.998524, 368.783782, 82.382499)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 314.50 100.94 L 361.22 100.94 L 361.22 82.78 L 314.50 82.78 Z M 314.50 100.94 "/>
 <g style="fill:var(--fig-muted)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-2-0" x="315.99" y="89.90"/>
@@ -429,8 +429,8 @@
 <use xlink:href="#cycle-de-vie-glyph-2-11" x="347.83" y="99.35"/>
 <use xlink:href="#cycle-de-vie-glyph-2-1" x="352.21" y="99.35"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 317.48 15.37 C 281.97 66.09 194.24 66.09 161.18 18.87 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(-0.57, 0.81, 0.81, 0.57, 262.50, 54.38)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 317.48 15.37 C 281.97 66.09 194.24 66.09 161.18 18.87 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(-0.572713, 0.817931, 0.817931, 0.572713, 262.505242, 54.384183)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 277.87 21.57 L 397.84 21.57 L 397.84 4.04 L 277.87 4.04 Z M 277.87 21.57 "/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-1-0" x="279.36" y="10.66"/>
@@ -491,8 +491,8 @@
 <use xlink:href="#cycle-de-vie-glyph-1-5" x="375.46" y="18.62"/>
 <use xlink:href="#cycle-de-vie-glyph-1-7" x="379.64" y="18.62"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 317.48 -15.38 L 317.48 -65.39 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0, 0.99, 0.99, 0, 417.11, 138.07)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 317.48 -15.38 L 317.48 -65.39 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0, 0.998524, 0.998524, 0, 417.116483, 138.070425)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 417.51 121.85 L 458.10 121.85 L 458.10 113.67 L 417.51 113.67 Z M 417.51 121.85 "/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-1-0" x="419.00" y="120.29"/>
@@ -506,8 +506,8 @@
 <use xlink:href="#cycle-de-vie-glyph-1-5" x="448.24" y="120.29"/>
 <use xlink:href="#cycle-de-vie-glyph-1-19" x="452.42" y="120.29"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 0.00 -15.38 L 0.00 -121.89 L 317.48 -121.89 L 317.48 -104.68 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0, -0.99, -0.99, 0, 417.11, 182.37)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-line)" stroke-opacity="1" stroke-miterlimit="10" d="M 0.00 -15.38 L 0.00 -121.89 L 317.48 -121.89 L 317.48 -104.68 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-line);stroke:var(--fig-line)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 -0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 -0.00 " transform="matrix(0, -0.998524, -0.998524, 0, 417.116483, 182.371867)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 238.31 205.60 L 278.90 205.60 L 278.90 197.41 L 238.31 197.41 Z M 238.31 205.60 "/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-1-0" x="239.80" y="204.03"/>
@@ -521,8 +521,8 @@
 <use xlink:href="#cycle-de-vie-glyph-1-5" x="269.05" y="204.03"/>
 <use xlink:href="#cycle-de-vie-glyph-1-19" x="273.23" y="204.03"/>
 </g>
-<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-brique)" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 200.34 -15.38 L 272.57 -73.85 " transform="matrix(0.99, 0, 0, -0.99, 100.10, 75.30)"/>
-<path fill-rule="nonzero" style="fill:var(--fig-brique);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0.77, 0.62, 0.62, -0.77, 370.29, 147.45)"/>
+<path fill="none" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" style="stroke:var(--fig-brique)" stroke-opacity="1" stroke-dasharray="2.98 2.98" stroke-miterlimit="10" d="M 200.34 -15.38 L 272.57 -73.85 " transform="matrix(0.998524, 0, 0, -0.998524, 100.101003, 75.306271)"/>
+<path fill-rule="nonzero" style="fill:var(--fig-brique);stroke:var(--fig-brique)" fill-opacity="1" stroke-width="0.79" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1" stroke-miterlimit="10" d="M 5.66 0.00 L 1.28 1.65 L 2.73 -0.00 L 1.28 -1.65 Z M 5.66 0.00 " transform="matrix(0.776053, 0.628281, 0.628281, -0.776053, 370.297254, 147.45534)"/>
 <path fill-rule="nonzero" style="fill:var(--fig-paper)" fill-opacity="1" d="M 363.92 131.22 L 322.63 97.79 L 317.46 104.17 L 358.75 137.60 Z M 363.92 131.22 "/>
 <g style="fill:var(--fig-ink)" fill-opacity="1">
 <use xlink:href="#cycle-de-vie-glyph-3-0" x="319.60" y="103.89"/>
