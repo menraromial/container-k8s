@@ -1,0 +1,23 @@
+% Figure 19.1 : un Deployment, ses ReplicaSets (un par version du modèle) et leurs Pods.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    dep/.style={qbox, font=\footnotesize, draw=QBleu, fill=QBleuBg, text width=5.2cm, align=center, inner sep=5pt},
+    rs/.style={qbox, font=\scriptsize, text width=3.5cm, align=center, inner sep=4pt},
+    ancien/.style={rs, draw=QGris, fill=QGrisBg},
+    actif/.style={rs, draw=QVert, fill=QVertBg},
+    pod/.style={qbox, font=\ttfamily\scriptsize, draw=QVert, fill=QVertBg, minimum width=0.95cm, minimum height=0.55cm, inner sep=1pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt}]
+
+  \node[dep] (d) at (4,3) {\textbf{Deployment} {\ttfamily vitrine}\\{\ttfamily replicas: 4}, stratégie, modèle de Pod\\{\ttfamily image: nginx:1.30-alpine}};
+  \node[ancien] (r1) at (0,1) {\textbf{ReplicaSet} {\ttfamily 7c56cd65dc}\\révision précédente\\{\ttfamily nginx:1.29-alpine}\\{\ttfamily replicas: 0}};
+  \node[actif] (r2) at (4,1) {\textbf{ReplicaSet} {\ttfamily 7dfc8c89b5}\\révision courante\\{\ttfamily nginx:1.30-alpine}\\{\ttfamily replicas: 4}};
+  \node[ancien] (r3) at (8,1) {\textbf{ReplicaSet} {\ttfamily f77b5ccc4}\\tentative ratée\\{\ttfamily nginx:9.99-alpine}\\{\ttfamily replicas: 0}};
+  \draw[qarr] (d) -- (r1.north); \draw[qarr] (d) -- (r2.north); \draw[qarr] (d) -- (r3.north);
+  \foreach \x in {2.35,3.45,4.55,5.65} { \node[pod] at (\x,-0.7) {Pod}; \draw[qarr, draw=QVert] (r2.south) -- (\x,-0.42); }
+  \node[qlbl, font=\scriptsize, align=center] at (0,-0.5) {conservé pour\\{\ttfamily rollout undo}};
+  \node[qlbl, font=\scriptsize, align=center] at (8,-0.5) {conservé, lui aussi\\({\ttfamily revisionHistoryLimit})};
+  \node[qlbl, font=\scriptsize, align=center] at (4,-1.45) {le suffixe du nom est une empreinte du modèle de Pod ({\ttfamily pod-template-hash})};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,16 @@
+% Figure 24.2 : deux façons d'amener les images de Colis dans le nœud minikube (chapitre 24).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    b/.style={qbox, font=\scriptsize, text width=3.3cm, align=center, inner sep=4pt, minimum height=1.25cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  \node[b, draw=QGris, fill=QGrisBg] (d) at (0,0) {\textbf{Docker du poste}\\{\ttfamily colis:2.0}\\{\ttfamily colis-web:1.0}};
+  \node[b, draw=QSarcelle, fill=QSarcelleBg] (r) at (4.6,-1.6) {\textbf{registre} {\ttfamily registre}\\{\ttfamily localhost:5001}};
+  \node[b, draw=QVert, fill=QVertBg, text width=4.4cm] (n) at (10.0,0) {\textbf{containerd du nœud minikube}\\images du Pod :\\{\ttfamily colis:2.0}, ou\\{\ttfamily host.minikube.internal:5001/colis/api:2.0}};
+  \draw[qarr] (d.east) -- node[lien, above] {1. {\ttfamily minikube image load} (10 s)} ([yshift=5mm]n.west);
+  \draw[qarr] (d.south) |- node[lien, below, pos=0.75] {{\ttfamily docker push}} (r.west);
+  \draw[qarr] (r.east) -| node[lien, below, pos=0.3] {2. le kubelet tire l'image (223 ms)} (n.south);
+  \node[qlbl, font=\scriptsize, align=left, anchor=north west] at (6.5,-2.7) {{\ttfamily host.minikube.internal} = le poste, vu du nœud ;\\HTTP autorisé par {\ttfamily /etc/containerd/certs.d/.../hosts.toml}};
+\end{tikzpicture}
+\end{document}

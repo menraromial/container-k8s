@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gourmand-memoire
+spec:
+  restartPolicy: Never
+  containers:
+  - name: app
+    image: busybox:1.37
+    command: ["sh", "-c", "echo 'je remplis 100 Mo de mémoire'; x=$(head -c 100000000 /dev/zero | tr '\\0' a); echo 'fini'"]
+    resources:
+      limits:
+        memory: 64Mi

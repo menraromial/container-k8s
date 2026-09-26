@@ -1,0 +1,30 @@
+% Figure 17.3 : un Pod à plusieurs conteneurs (le Pod duo et les variantes init et sidecar du chapitre 17).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    ct/.style={qbox, font=\footnotesize, text width=2.9cm, align=center, minimum height=1.2cm, inner sep=3pt},
+    main/.style={ct, draw=QBleu, fill=QBleuBg},
+    init/.style={ct, draw=QOcre, fill=QOcreBg},
+    side/.style={ct, draw=QSarcelle, fill=QSarcelleBg, text width=3.9cm},
+    vol/.style={qbox, font=\footnotesize, draw=QVert, fill=QVertBg, minimum width=7.2cm, minimum height=0.7cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt}]
+
+  \node[qcadre, minimum width=13.8cm, minimum height=7.0cm, draw=QInk] at (4.9,0.1) {};
+  \node[font=\titrefig\normalsize, anchor=north west] at (-1.75,3.5) {Pod : une adresse IP (10.244.0.12), un nom de machine, des volumes};
+
+  \node[init] (i1) at (0.1,1.7) {\textbf{init container}\\{\ttfamily preparer}\\s'exécute puis s'arrête};
+  \node[side] (s1) at (0.1,-0.45) {\textbf{sidecar natif}\\déclaré dans {\ttfamily initContainers}\\avec {\ttfamily restartPolicy: Always}\\démarre avant, s'arrête après};
+  \node[main] (m1) at (4.9,1.7) {\textbf{conteneur}\\{\ttfamily web}\\nginx, port 80};
+  \node[main] (m2) at (9.2,1.7) {\textbf{conteneur}\\{\ttfamily compteur}\\{\ttfamily wget http://localhost/}};
+  \draw[qarr] (i1) -- node[lien, above] {puis} (m1);
+  \draw[qarr, draw=QSarcelle] (s1.east) -- (m1.south west);
+  \draw[qbiarr] (m2) -- node[lien, above] {localhost} (m1);
+
+  \node[vol] (v) at (7.05,-0.35) {volume {\ttfamily emptyDir} « journaux »};
+  \draw[qarr, draw=QVert] (m1.south) -- node[lien, left] {écrit access.log} (m1.south |- v.north);
+  \draw[qarr, draw=QVert] (m2.south |- v.north) -- node[lien, right] {lit} (m2.south);
+
+  \node[qbox, font=\footnotesize, draw=QGris, fill=QGrisBg, text width=11.8cm, align=center, inner sep=4pt] at (5.6,-2.55) {conteneur {\ttfamily pause} (chapitre 11) : il garde les namespaces réseau, UTS et IPC que partagent tous les conteneurs du Pod};
+\end{tikzpicture}
+\end{document}

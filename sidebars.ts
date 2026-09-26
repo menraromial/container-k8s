@@ -49,6 +49,25 @@ const sidebars: SidebarsConfig = {
         'partie-2/defi',
       ],
     },
+    {
+      type: 'category',
+      label: 'III · Premiers pas avec Kubernetes',
+      className: 'partie-3',
+      collapsed: false,
+      link: {type: 'doc', id: 'partie-3/index'},
+      items: [
+        'partie-3/orchestrateur',
+        'partie-3/minikube-kubectl',
+        'partie-3/pod',
+        'partie-3/declaratif',
+        'partie-3/deployment',
+        'partie-3/services',
+        'partie-3/configuration',
+        'partie-3/sante',
+        'partie-3/ressources',
+        'partie-3/colis-minikube',
+      ],
+    },
   ],
 };
 

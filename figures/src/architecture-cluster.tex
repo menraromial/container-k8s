@@ -1,0 +1,43 @@
+% Figure 15.1 : les composants d'un cluster Kubernetes et qui parle à qui.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    c/.style={qbox, font=\ttfamily\footnotesize, minimum width=3.1cm, minimum height=0.9cm, inner sep=3pt, align=center},
+    api/.style={c, draw=QBleu, fill=QBleuBg, minimum width=3.6cm, minimum height=1.2cm},
+    cp/.style={c, draw=QSarcelle, fill=QSarcelleBg},
+    donnees/.style={c, draw=QOcre, fill=QOcreBg},
+    noeud/.style={c, draw=QVert, fill=QVertBg, minimum width=2.3cm},
+    pod/.style={qbox, font=\scriptsize, draw=QOrange, fill=QOrangeBg, minimum width=0.9cm, minimum height=0.55cm, inner sep=1pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1.2pt}]
+
+  % plan de contrôle
+  \node[qcadre, minimum width=13.4cm, minimum height=4.3cm, draw=QSarcelle] at (5.2,2.75) {};
+  \node[font=\titrefig\normalsize, text=QSarcelle, anchor=north west] at (-1.45,4.8) {plan de contrôle};
+  \node[api] (api) at (5.2,3.3) {kube-apiserver\\{\rmfamily\scriptsize la seule porte d'entrée}};
+  \node[donnees] (etcd) at (5.2,1.35) {etcd\\{\rmfamily\scriptsize l'état du cluster}};
+  \node[cp] (sch) at (0.55,3.3) {kube-scheduler\\{\rmfamily\scriptsize choisit un nœud}};
+  \node[cp] (cm) at (9.85,3.3) {kube-controller-manager\\{\rmfamily\scriptsize une trentaine de boucles}};
+  \draw[qbiarr] (api) -- node[lien, right] {seul à lui parler} (etcd);
+  \draw[qbiarr] (sch) -- node[lien, above] {watch} (api);
+  \draw[qbiarr] (cm) -- node[lien, above] {watch} (api);
+
+  % utilisateur
+  \node[c, draw=QGris, fill=QGrisBg] (kc) at (5.2,6.1) {kubectl};
+  \draw[qarr] (kc) -- node[lien, right] {HTTPS} (api);
+
+  % nœuds
+  \foreach \x/\n in {1.3/1, 9.1/2} {
+    \node[qcadre, minimum width=5.4cm, minimum height=3.1cm, draw=QVert] at (\x,-2.35) {};
+    \node[font=\titrefig\normalsize, text=QVert, anchor=north west] at (\x-2.6,-0.9) {nœud \n};
+    \node[noeud] (kl\n) at (\x-1.3,-1.75) {kubelet};
+    \node[noeud] (kp\n) at (\x+1.3,-1.75) {kube-proxy};
+    \node[noeud] (rt\n) at (\x-1.3,-3.1) {containerd};
+    \node[pod] at (\x+0.75,-3.1) {Pod};
+    \node[pod] at (\x+1.85,-3.1) {Pod};
+    \draw[qarr] (kl\n) -- (rt\n);
+  }
+  \draw[qbiarr] (kl1.north) -- node[lien, left, pos=0.4] {watch, status} (api.south west);
+  \draw[qbiarr] (kl2.north) -- node[lien, right, pos=0.4] {watch, status} (api.south east);
+\end{tikzpicture}
+\end{document}

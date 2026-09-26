@@ -1,0 +1,5 @@
+# Autorise containerd (dans le nœud minikube) à tirer en HTTP depuis le registre du poste (chapitre 24).
+server = "http://host.minikube.internal:5001"
+
+[host."http://host.minikube.internal:5001"]
+  capabilities = ["pull", "resolve"]

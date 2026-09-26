@@ -1,0 +1,22 @@
+% Figure 20.2 : les trois types de Service s'emboîtent (adresses réelles du chapitre 20, minikube et MetalLB).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    b/.style={qbox, font=\scriptsize, align=center, inner sep=4pt}]
+  \node[qcadre, draw=QOcre, minimum width=13.2cm, minimum height=5.2cm] at (5.2,0.2) {};
+  \node[font=\titrefig\normalsize, text=QOcre, anchor=north west] at (-1.35,2.75) {LoadBalancer : une adresse externe, 192.168.49.100 (MetalLB)};
+  \node[qcadre, draw=QSarcelle, minimum width=11.6cm, minimum height=3.7cm] at (5.9,-0.15) {};
+  \node[font=\titrefig\normalsize, text=QSarcelle, anchor=north west] at (0.15,1.6) {NodePort : un port sur chaque nœud, 192.168.49.2:30080};
+  \node[qcadre, draw=QBleu, minimum width=6.6cm, minimum height=2.3cm] at (8.2,-0.55) {};
+  \node[font=\titrefig\normalsize, text=QBleu, anchor=north west] at (5.0,0.55) {ClusterIP : 10.104.228.232:80};
+  \foreach \x in {6.4,8.2,10.0} { \node[b, draw=QVert, fill=QVertBg] at (\x,-0.95) {Pod\\:8080}; }
+
+  \node[b, draw=QGris, fill=QGrisBg] (poste) at (-4.9,0.9) {votre poste\\{\ttfamily curl}};
+  \node[b, draw=QGris, fill=QGrisBg] (cl) at (-4.9,-1.1) {un Pod\\du cluster};
+  \draw[qarr, draw=QOcre] (poste.east) -- node[lien, above, pos=0.45] {192.168.49.100:80} (-1.35,0.9);
+  \draw[qarr, draw=QSarcelle] (poste.south east) to[out=-20, in=180] node[lien, below, pos=0.35] {:30080} (0.1,-0.2);
+  \draw[qarr, draw=QBleu] (cl.east) -- node[lien, below, pos=0.55] {web:80} (4.9,-1.1);
+\end{tikzpicture}
+\end{document}

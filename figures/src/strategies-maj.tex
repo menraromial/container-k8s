@@ -1,0 +1,35 @@
+% Figure 19.2 : trois réglages de la mise à jour progressive, séquences mesurées sur minikube (4 répliques).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\newcommand{\etape}[5]{% x, y, anciens, nouveaux dispo, nouveaux en attente
+  \ifnum#3>0 \foreach \i in {1,...,#3} { \draw[QGris, fill=QGrisBg, line width=0.6pt] (#1+0.32*\i-0.32,#2) rectangle ++(0.26,0.26); } \fi
+  \ifnum#4>0 \foreach \i in {1,...,#4} { \draw[QVert, fill=QVertBg, line width=0.6pt] (#1+0.32*\i-0.32,#2-0.36) rectangle ++(0.26,0.26); } \fi
+  \ifnum#5>0 \foreach \i in {1,...,#5} { \draw[QVert, dash pattern=on 1.2pt off 1pt, line width=0.6pt] (#1+0.32*#4+0.32*\i-0.32,#2-0.36) rectangle ++(0.26,0.26); } \fi
+}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm, tit/.style={font=\titrefig\normalsize, anchor=west}, t/.style={qlbl, font=\scriptsize, anchor=north}]
+  % défaut 25 % / 25 %
+  \node[tit] at (-0.2,1.1) {maxSurge 25 \%, maxUnavailable 25 \% (défaut)};
+  \etape{0}{0.2}{4}{0}{0} \node[t] at (0.6,-0.3) {avant};
+  \etape{1.9}{0.2}{3}{0}{2} \node[t] at (2.5,-0.3) {0,1 s};
+  \etape{3.8}{0.2}{1}{2}{2} \node[t] at (4.4,-0.3) {4,9 s};
+  \etape{5.7}{0.2}{0}{4}{0} \node[t] at (6.3,-0.3) {10,1 s};
+  % 0 / 1
+  \node[tit] at (-0.2,-1.0) {maxSurge 0, maxUnavailable 1};
+  \etape{0}{-1.9}{4}{0}{0} \node[t] at (0.6,-2.4) {avant};
+  \etape{1.9}{-1.9}{3}{0}{1} \node[t] at (2.5,-2.4) {0,1 s};
+  \etape{3.8}{-1.9}{2}{1}{1} \node[t] at (4.4,-2.4) {5,7 s};
+  \etape{5.7}{-1.9}{1}{2}{1} \node[t] at (6.3,-2.4) {10,6 s};
+  \etape{7.6}{-1.9}{0}{3}{1} \node[t] at (8.2,-2.4) {15,8 s};
+  \etape{9.5}{-1.9}{0}{4}{0} \node[t] at (10.1,-2.4) {20,6 s};
+  % 100 % / 0
+  \node[tit] at (-0.2,-3.1) {maxSurge 100 \%, maxUnavailable 0};
+  \etape{0}{-4.0}{4}{0}{0} \node[t] at (0.6,-4.5) {avant};
+  \etape{1.9}{-4.0}{4}{0}{4} \node[t] at (2.5,-4.5) {0,1 s};
+  \etape{3.8}{-4.0}{0}{4}{0} \node[t] at (4.4,-4.5) {6,1 s};
+  % légende
+  \draw[QGris, fill=QGrisBg] (7.2,0.55) rectangle ++(0.26,0.26); \node[qlbl, font=\scriptsize, anchor=west] at (7.5,0.68) {ancienne version};
+  \draw[QVert, fill=QVertBg] (7.2,0.15) rectangle ++(0.26,0.26); \node[qlbl, font=\scriptsize, anchor=west] at (7.5,0.28) {nouvelle, disponible};
+  \draw[QVert, dash pattern=on 1.2pt off 1pt] (7.2,-0.25) rectangle ++(0.26,0.26); \node[qlbl, font=\scriptsize, anchor=west] at (7.5,-0.12) {nouvelle, pas encore disponible};
+\end{tikzpicture}
+\end{document}

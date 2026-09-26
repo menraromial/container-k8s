@@ -1,0 +1,24 @@
+% Figure 18.2 : cinq Pods, leurs étiquettes, et ce que retiennent trois sélecteurs (sorties réelles du chapitre 18).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    pod/.style={qbox, font=\scriptsize, text width=2.35cm, align=center, minimum height=1.35cm, inner sep=3pt, draw=QLine, fill=QPaper},
+    sel/.style={font=\ttfamily\scriptsize, anchor=east},
+    ok/.style={circle, fill=QVert, inner sep=2.2pt},
+    non/.style={circle, draw=QMuted, inner sep=2.2pt}]
+
+  \foreach \x/\n/\l in {0/web-dev/{app=web\\env=dev\\tier=front}, 2.7/web-prod/{app=web\\env=prod\\tier=front}, 5.4/api-dev/{app=api\\env=dev\\tier=back}, 8.1/api-prod/{app=api\\env=prod\\tier=back}, 10.8/outil/{app=outil}} {
+    \node[pod] at (\x,0) {\textbf{\n}\\{\ttfamily\l}};
+  }
+  \node[sel] at (-1.4,-1.3) {-l env=prod};
+  \node[sel] at (-1.4,-2.0) {-l 'env in (dev,prod),tier!=back'};
+  \node[sel] at (-1.4,-2.7) {-l '!env'};
+  % env=prod
+  \node[non] at (0,-1.3) {}; \node[ok] at (2.7,-1.3) {}; \node[non] at (5.4,-1.3) {}; \node[ok] at (8.1,-1.3) {}; \node[non] at (10.8,-1.3) {};
+  % env in (dev,prod), tier!=back
+  \node[ok] at (0,-2.0) {}; \node[ok] at (2.7,-2.0) {}; \node[non] at (5.4,-2.0) {}; \node[non] at (8.1,-2.0) {}; \node[non] at (10.8,-2.0) {};
+  % !env
+  \node[non] at (0,-2.7) {}; \node[non] at (2.7,-2.7) {}; \node[non] at (5.4,-2.7) {}; \node[non] at (8.1,-2.7) {}; \node[ok] at (10.8,-2.7) {};
+\end{tikzpicture}
+\end{document}

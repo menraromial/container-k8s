@@ -1,0 +1,30 @@
+% Figure 20.1 : une requête vers le Service web, de la résolution DNS aux règles iptables de kube-proxy (valeurs réelles du chapitre 20).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    b/.style={qbox, font=\footnotesize, text width=2.9cm, align=center, inner sep=4pt, minimum height=1.2cm},
+    pod/.style={qbox, font=\scriptsize, draw=QVert, fill=QVertBg, text width=2.7cm, align=center, inner sep=3pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[b, draw=QGris, fill=QGrisBg] (c) at (0,0) {\textbf{Pod client}\\{\ttfamily wget http://web/}};
+  \node[b, draw=QSarcelle, fill=QSarcelleBg] (dns) at (0,2.6) {\textbf{CoreDNS}\\{\ttfamily 10.96.0.10}};
+  \draw[qarr] (c.north) -- node[lien, left] {1. web ?} (dns.south);
+  \draw[qarr, draw=QSarcelle] ([xshift=6mm]dns.south) -- node[lien, right] {2. 10.104.228.232} ([xshift=6mm]c.north);
+
+  \node[b, draw=QBleu, fill=QBleuBg, text width=4.4cm] (ipt) at (5.3,0) {\textbf{règles iptables du nœud}\\écrites par kube-proxy\\{\ttfamily 10.104.228.232:80} (ClusterIP)};
+  \draw[qarr] (c) -- node[lien, above] {3. connexion} (ipt);
+
+  \node[pod] (p1) at (10.6,1.5) {Pod {\ttfamily xztf2}\\{\ttfamily 10.244.0.194:8080}};
+  \node[pod] (p2) at (10.6,0) {Pod {\ttfamily fpsd4}\\{\ttfamily 10.244.0.197:8080}};
+  \node[pod] (p3) at (10.6,-1.5) {Pod {\ttfamily xxz2r}\\{\ttfamily 10.244.0.198:8080}};
+  \draw[qarr, draw=QVert] (ipt.east) -- node[lien, above, sloped] {1/3} (p1.west);
+  \draw[qarr, draw=QVert] (ipt.east) -- node[lien, above] {1/2 du reste} (p2.west);
+  \draw[qarr, draw=QVert] (ipt.east) -- node[lien, below, sloped] {le reste} (p3.west);
+  \node[lien] at (8.1,-2.3) {4. DNAT vers un Pod tiré au hasard};
+
+  \node[b, draw=QOcre, fill=QOcreBg, text width=4.4cm] (es) at (5.3,2.8) {\textbf{EndpointSlice} {\ttfamily web-86cj4}\\Pods prêts qui portent {\ttfamily app=web}};
+  \draw[qdarr, draw=QOcre] (es) -- node[lien, right] {kube-proxy la suit} (ipt);
+  \draw[qdarr, draw=QOcre] (p1.north) |- node[lien, pos=0.75, above] {tenue à jour par un contrôleur} (es.east);
+\end{tikzpicture}
+\end{document}

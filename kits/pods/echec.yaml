@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: echec
+spec:
+  restartPolicy: Never
+  containers:
+  - name: calcul
+    image: busybox:1.37
+    command: ["sh", "-c", "echo 'fichier introuvable' >&2; exit 3"]

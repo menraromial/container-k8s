@@ -1,0 +1,38 @@
+% Figure 15.3 : chronologie réelle d'une panne de nœud (cluster minikube à deux nœuds, chapitre 15).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=0.034cm,y=1cm,
+    ev/.style={font=\scriptsize, align=center, text width=3.3cm},
+    lig/.style={font=\titrefig\normalsize, anchor=east}]
+  % axe du temps (secondes)
+  \draw[qarr] (0,0) -- (400,0);
+  \foreach \t in {0,50,100,150,200,250,300,350} { \draw[QLine] (\t,-0.08) -- (\t,0.08); \node[qlbl, font=\scriptsize, below] at (\t,-0.1) {\t\,s}; }
+
+  % lignes : nœud 2 et Pods
+  \node[lig, text=QInk] at (-8,1.3) {nœud 2};
+  \fill[QVertBg] (0,1.1) rectangle (0.1,1.5);
+  \draw[QBrique, fill=QBriqueBg] (0,1.1) rectangle (49,1.5);
+  \node[font=\scriptsize, text=QBrique] at (24.5,1.3) {encore Ready};
+  \draw[QBrique, fill=QBrique!0, fill=QBriqueBg] (49,1.1) rectangle (395,1.5);
+  \node[font=\scriptsize, text=QBrique] at (222,1.3) {NotReady, taint unreachable:NoExecute};
+
+  \node[lig, text=QInk] at (-8,2.3) {2 Pods};
+  \draw[QVert, fill=QVertBg] (0,2.1) rectangle (348,2.5);
+  \node[font=\scriptsize, text=QVert] at (174,2.3) {toujours « Running » pour l'API, mais morts en réalité};
+  \draw[QMuted, fill=QGrisBg] (348,2.1) rectangle (395,2.5);
+  \node[font=\scriptsize, text=QMuted] at (371,2.3) {Terminating};
+
+  \node[lig, text=QInk] at (-8,3.3) {remplaçants};
+  \draw[QVert, fill=QVertBg] (348,3.1) rectangle (395,3.5);
+  \node[font=\scriptsize, text=QVert, anchor=east] at (345,3.3) {créés sur le nœud 1};
+
+  % repères
+  \draw[QMuted, dashed] (0,0) -- (0,3.8);
+  \draw[QMuted, dashed] (49,0) -- (49,3.8);
+  \draw[QMuted, dashed] (348,0) -- (348,3.8);
+  \node[ev, anchor=south east, align=right, text width=2.6cm] at (-2,3.8) {{\ttfamily docker stop} :\\le nœud s'éteint};
+  \node[ev, anchor=south west, align=left] at (51,3.8) {49 s : plus de nouvelles\\du kubelet};
+  \node[ev, anchor=south] at (348,3.8) {348 s = 49 + 300 :\\fin de la tolérance};
+\end{tikzpicture}
+\end{document}

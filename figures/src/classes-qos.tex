@@ -1,0 +1,14 @@
+% Figure 23.2 : les trois classes de QoS, leur place dans les cgroups et leur ordre de sacrifice (relevés du chapitre 23).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    q/.style={qbox, font=\scriptsize, text width=4.1cm, align=left, inner sep=5pt, minimum height=2.5cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  \node[q, draw=QVert, fill=QVertBg] (g) at (0,0) {\textbf{Guaranteed}\\requests = limits, pour le CPU et la mémoire de chaque conteneur\\{\ttfamily kubepods-pod<uid>.slice}\\{\ttfamily oom\_score\_adj = -997}};
+  \node[q, draw=QOcre, fill=QOcreBg] (b) at (4.8,0) {\textbf{Burstable}\\au moins une request ou une limit, sans être Guaranteed\\{\ttfamily kubepods-burstable.slice}\\{\ttfamily oom\_score\_adj} de 2 à 999 {\itshape (998 ici)}};
+  \node[q, draw=QBrique, fill=QBriqueBg] (be) at (9.6,0) {\textbf{BestEffort}\\aucune request ni limit\\\hfill\\{\ttfamily kubepods-besteffort.slice}\\{\ttfamily oom\_score\_adj = 1000}};
+  \draw[qarr, draw=QMuted] (-2.0,-1.75) -- node[lien, below] {de plus en plus exposés quand la mémoire manque} (11.6,-1.75);
+  \draw[QMuted, line width=0.8pt, -{Stealth[length=2.4mm,width=1.8mm]}] (11.6,-1.75) -- (11.65,-1.75);
+\end{tikzpicture}
+\end{document}

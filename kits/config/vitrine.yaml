@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vitrine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vitrine
+  template:
+    metadata:
+      labels:
+        app: vitrine
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.30-alpine
+        envFrom:
+        - configMapRef:
+            name: vitrine-config
+        volumeMounts:
+        - name: site
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: site
+        configMap:
+          name: vitrine-config
+          items:
+          - key: index.html
+            path: index.html

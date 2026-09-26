@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ch18
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vitrine
+  namespace: ch18
+  labels:
+    app.kubernetes.io/name: vitrine
+    app.kubernetes.io/part-of: colis
+  annotations:
+    colis.example/responsable: "equipe-web"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vitrine
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vitrine
+        app.kubernetes.io/part-of: colis
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.30-alpine

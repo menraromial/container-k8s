@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vitrine-config
+data:
+  MESSAGE: "Bienvenue sur Colis"
+  NIVEAU_LOG: "info"
+  index.html: |
+    <!doctype html>
+    <html lang="fr"><body><h1>Colis</h1><p>Suivi de vos envois.</p></body></html>

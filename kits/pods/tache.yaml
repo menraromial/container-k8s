@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tache
+spec:
+  restartPolicy: Never
+  containers:
+  - name: calcul
+    image: busybox:1.37
+    command: ["sh", "-c", "echo 'calcul en cours'; sleep 3; echo 'terminé'"]

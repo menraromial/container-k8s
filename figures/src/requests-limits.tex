@@ -1,0 +1,20 @@
+% Figure 23.1 : qui lit requests et limits, et ce qu'ils deviennent (valeurs réelles du chapitre 23).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    b/.style={qbox, font=\footnotesize, text width=3.5cm, align=center, inner sep=5pt, minimum height=1.3cm},
+    r/.style={qbox, font=\scriptsize, text width=4.9cm, align=left, inner sep=5pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  \node[b, draw=QBleu, fill=QBleuBg] (req) at (0,1.3) {\textbf{requests}\\ce que le Pod réserve};
+  \node[b, draw=QBrique, fill=QBriqueBg] (lim) at (0,-1.3) {\textbf{limits}\\ce que le Pod ne peut dépasser};
+  \node[r, draw=QBleu] (sch) at (5.4,2.1) {\textbf{scheduler} : place le Pod si la somme des requests tient dans l'allouable du nœud\\{\itshape 22 CPU allouables : 2 Pods de 10 CPU, le 3\textsuperscript{e} Pending}};
+  \node[r, draw=QBleu] (w) at (5.4,0.5) {\textbf{cpu.weight} du cgroup : part du processeur en cas de concurrence\\{\itshape 250m $\to$ 35, 100m $\to$ 17, rien $\to$ 1}};
+  \node[r, draw=QBrique] (cpu) at (5.4,-1.0) {\textbf{cpu.max} : quota par période de 100 ms, le processus est bridé\\{\itshape 200m $\to$ 20000 100000 ; 425 périodes bridées sur 704}};
+  \node[r, draw=QBrique] (mem) at (5.4,-2.55) {\textbf{memory.max} : au-delà, le noyau tue (OOM)\\{\itshape 64Mi $\to$ OOMKilled, code 137}};
+  \draw[qarr, draw=QBleu] (req.east) -- (sch.west);
+  \draw[qarr, draw=QBleu] (req.east) -- (w.west);
+  \draw[qarr, draw=QBrique] (lim.east) -- (cpu.west);
+  \draw[qarr, draw=QBrique] (lim.east) -- (mem.west);
+\end{tikzpicture}
+\end{document}

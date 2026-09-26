@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: image-absente
+spec:
+  containers:
+  - name: web
+    image: nginx:9.99-alpine

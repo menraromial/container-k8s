@@ -1,0 +1,19 @@
+% Figure 17.2 : les redémarrages mesurés du Pod plantage (recul exponentiel du kubelet).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=0.036cm,y=1cm]
+  \draw[qarr] (0,0) -- (360,0);
+  \foreach \t in {0,60,120,180,240,300} { \draw[QLine] (\t,-0.08) -- (\t,0.08); \node[qlbl, font=\scriptsize, below] at (\t,-0.1) {\t\,s}; }
+  \foreach \a/\b/\n in {3/16/1, 16/39/2, 39/92/3, 92/172/4, 172/333/5} {
+    \fill[QBriqueBg] (\a,0.35) rectangle (\b,0.85);
+    \draw[QBrique] (\a,0.35) rectangle (\b,0.85);
+  }
+  \foreach \t/\n in {3/1, 16/2, 39/3, 92/4, 172/5, 333/6} {
+    \draw[QInk, line width=0.9pt] (\t,0.2) -- (\t,1.0);
+    \node[font=\scriptsize, above] at (\t,1.0) {\n};
+  }
+  \foreach \x/\t in {9.5/+10, 27.5/+20, 65.5/+40, 132/+80, 252.5/+160} { \node[font=\tiny, text=QBrique] at (\x,0.6) {\t}; }
+  \node[qlbl, font=\scriptsize, anchor=west, align=left] at (0,1.75) {chaque trait : un démarrage du conteneur (numéro du redémarrage) ;\\chaque bande : l'attente imposée par le kubelet, qui double à chaque échec, jusqu'à 300 s};
+\end{tikzpicture}
+\end{document}

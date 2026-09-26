@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gros
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gros
+  template:
+    metadata:
+      labels:
+        app: gros
+    spec:
+      containers:
+      - name: app
+        image: busybox:1.37
+        command: ["sleep", "3600"]
+        resources:
+          requests:
+            cpu: "10"

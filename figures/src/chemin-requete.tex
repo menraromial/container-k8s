@@ -1,0 +1,25 @@
+% Figure 16.2 : le chemin d'une requête kubectl jusqu'à etcd.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    e/.style={qbox, font=\footnotesize, text width=2.6cm, align=center, minimum height=1.55cm, inner sep=3pt},
+    cli/.style={e, draw=QGris, fill=QGrisBg},
+    api/.style={e, draw=QBleu, fill=QBleuBg},
+    st/.style={e, draw=QOcre, fill=QOcreBg},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt}]
+
+  \node[cli] (k) at (-1.3,0) {\textbf{kubectl}\\lit le\\kubeconfig};
+  \node[api] (a1) at (3.4,0) {\textbf{authentification}\\qui êtes-vous ?\\{\scriptsize CN et O du certificat}};
+  \node[api] (a2) at (6.4,0) {\textbf{autorisation}\\en avez-vous\\le droit ? (RBAC)};
+  \node[api] (a3) at (9.4,0) {\textbf{admission}\\l'objet est-il\\acceptable ?};
+  \node[st] (e) at (12.6,0) {\textbf{etcd}\\l'objet est\\enregistré};
+  \draw[qarr] (k) -- node[lien, above=6pt] {HTTPS} node[lien, below=6pt] {certificat client} (a1);
+  \draw[qarr] (a1) -- (a2); \draw[qarr] (a2) -- (a3); \draw[qarr] (a3) -- (e);
+  \draw[QBleu, line width=0.8pt, rounded corners=2pt, dashed] (1.95,-1.25) rectangle (10.85,1.35);
+  \node[font=\titrefig\normalsize, text=QBleu, anchor=south west] at (1.95,1.35) {kube-apiserver};
+  \node[qlbl, font=\scriptsize, align=center] at (3.4,-1.75) {minikube-user,\\groupe system:masters};
+  \node[qlbl, font=\scriptsize, align=center] at (6.4,-1.75) {system:masters :\\tous les droits};
+  \node[qlbl, font=\scriptsize, align=center] at (9.4,-1.75) {valeurs par défaut,\\tolérances, quotas...};
+\end{tikzpicture}
+\end{document}

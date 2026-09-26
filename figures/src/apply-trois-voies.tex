@@ -1,0 +1,21 @@
+% Figure 18.1 : comment kubectl apply (côté client) calcule sa modification, cas réels du chapitre 18.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    src/.style={qbox, font=\footnotesize, text width=4.1cm, align=left, inner sep=5pt, minimum height=2.5cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[src, draw=QBleu, fill=QBleuBg] (f) at (0,2.2) {\textbf{1. le fichier}\\{\ttfamily\scriptsize vitrine.yaml}\\ce que vous voulez maintenant\\{\ttfamily\scriptsize replicas: 3}\\{\ttfamily\scriptsize (annotation retirée)}};
+  \node[src, draw=QOcre, fill=QOcreBg] (l) at (0,-0.9) {\textbf{2. la dernière application}\\{\ttfamily\scriptsize last-applied-configuration}\\ce que vous vouliez avant\\{\ttfamily\scriptsize replicas: 3}\\{\ttfamily\scriptsize responsable: equipe-web}};
+  \node[src, draw=QSarcelle, fill=QSarcelleBg] (v) at (0,-4.0) {\textbf{3. l'objet réel}\\dans le cluster\\{\ttfamily\scriptsize replicas: 5} {\rmfamily (kubectl scale)}\\{\ttfamily\scriptsize responsable: equipe-web}\\{\ttfamily\scriptsize revision: "1"} {\rmfamily (contrôleur)}};
+
+  \node[qbox, font=\footnotesize, draw=QInk, fill=QPaper, text width=3.7cm, align=center, minimum height=1.6cm] (a) at (5.9,-0.9) {\textbf{kubectl apply}\\compare les trois\\et calcule un correctif};
+  \draw[qarr] (f.east) -- (a);
+  \draw[qarr] (l.east) -- (a);
+  \draw[qarr] (v.east) -- (a);
+
+  \node[qbox, font=\footnotesize, draw=QVert, fill=QVertBg, text width=5.0cm, align=left, inner sep=5pt] (p) at (11.1,-0.9) {\textbf{correctif envoyé}\\{\ttfamily\scriptsize replicas: 5 $\to$ 3}\\{\rmfamily\scriptsize dans le fichier, différent du réel}\\{\ttfamily\scriptsize responsable : supprimée}\\{\rmfamily\scriptsize était appliquée, n'est plus dans le fichier}\\{\ttfamily\scriptsize revision : gardée}\\{\rmfamily\scriptsize jamais appliquée par vous}};
+  \draw[qarr] (a) -- node[lien, above] {PATCH} (p);
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,35 @@
+% Figure 24.1 : Colis sur minikube, objets et chemins (état final du chapitre 24).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    svc/.style={qbox, font=\scriptsize, draw=QBleu, fill=QBleuBg, text width=2.6cm, align=center, inner sep=3pt},
+    dep/.style={qbox, font=\scriptsize, draw=QVert, fill=QVertBg, text width=2.6cm, align=center, inner sep=3pt, minimum height=1.05cm},
+    cfg/.style={qbox, font=\scriptsize, draw=QOcre, fill=QOcreBg, text width=2.6cm, align=center, inner sep=3pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt}]
+  \node[qcadre, minimum width=16.6cm, minimum height=6.3cm, draw=QInk] at (6.6,0.6) {};
+  \node[font=\titrefig\normalsize, anchor=north west] at (-1.6,3.6) {namespace colis};
+
+  \node[qbox, font=\scriptsize, draw=QGris, fill=QGrisBg, text width=2.2cm, align=center] (nav) at (-3.4,2.2) {navigateur\\{\ttfamily 192.168.49.100}};
+  \node[svc] (sweb) at (0.2,2.2) {Service {\ttfamily web}\\LoadBalancer (MetalLB)};
+  \node[dep] (web) at (3.6,2.2) {Deployment {\ttfamily web}\\2 Pods nginx};
+  \node[svc] (sapi) at (7.0,2.2) {Service {\ttfamily api}\\ClusterIP, :8000};
+  \node[dep] (api) at (10.4,2.2) {Deployment {\ttfamily api}\\2 Pods, 3 sondes};
+  \node[dep] (wk) at (10.4,0.2) {Deployment {\ttfamily worker}\\1 Pod};
+  \node[svc] (spg) at (7.0,-1.5) {Service {\ttfamily postgres}\\:5432};
+  \node[dep] (pg) at (3.6,-1.5) {Deployment {\ttfamily postgres}\\{\ttfamily emptyDir}, Recreate};
+  \node[svc] (srd) at (7.0,0.2) {Service {\ttfamily redis}\\:6379};
+  \node[dep] (rd) at (3.6,0.2) {Deployment {\ttfamily redis}\\1 Pod};
+  \node[cfg] (cm) at (13.5,-1.7) {ConfigMap\\{\ttfamily colis-config}};
+  \node[cfg] (sec) at (10.4,-1.7) {Secret {\ttfamily colis-db}\\mot de passe};
+  \node[qbox, font=\scriptsize, draw=QGris, fill=QPaper, dashed, text width=2.6cm, align=center] (pu) at (0.2,-1.5) {Pod {\ttfamily purge}\\lancé à la main};
+
+  \draw[qarr] (nav) -- (sweb); \draw[qarr] (sweb) -- (web); \draw[qarr] (web) -- node[lien, above] {/api/} (sapi); \draw[qarr] (sapi) -- (api);
+  \draw[qarr] (api) -- (srd); \draw[qarr] (api.south west) -- (spg.north east);
+  \draw[qarr] (wk) -- (srd); \draw[qarr] (wk.south west) -- (spg.east);
+  \draw[qarr] (srd) -- (rd); \draw[qarr] (spg) -- (pg);
+  \draw[qarr] (pu) -- (pg);
+  \draw[qdarr, draw=QOcre] (cm.north) |- (api.east);
+  \draw[qdarr, draw=QOcre] (sec.north) -- (wk.south);
+\end{tikzpicture}
+\end{document}

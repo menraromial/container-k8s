@@ -1,0 +1,28 @@
+% Figure 22.2 : la suppression d'un Pod, pas à pas, et trois programmes mesurés au chapitre 22.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=0.62cm,y=1cm,
+    lig/.style={font=\titrefig\normalsize, anchor=east},
+    ev/.style={font=\scriptsize, anchor=south, align=center}]
+  \draw[qarr] (0,0) -- (13,0);
+  \foreach \t in {0,2,4,6,8,10,12} { \draw[QLine] (\t,-0.08) -- (\t,0.08); \node[qlbl, font=\scriptsize, below] at (\t,-0.1) {\t\,s}; }
+  \draw[QMuted, dashed] (0,0) -- (0,4.3); \node[ev] at (0,4.3) {{\ttfamily kubectl delete}\\le Pod sort des\\EndpointSlices};
+
+  % arret-propre
+  \node[lig] at (-0.3,3.3) {arret-propre};
+  \draw[QBleu, fill=QBleuBg] (0,3.1) rectangle (1,3.5); \node[font=\tiny] at (0.5,3.3) {};
+  \draw[QVert, fill=QVertBg] (1,3.1) rectangle (5,3.5); \node[font=\scriptsize, text=QVert] at (3,3.3) {nettoyage, 4 s};
+  \node[font=\scriptsize, anchor=west] at (5.2,3.3) {sort avec 0 ; supprimé en 6,1 s};
+  % arret-sourd
+  \node[lig] at (-0.3,2.2) {arret-sourd};
+  \draw[QBrique, fill=QBriqueBg] (0,2.0) rectangle (10,2.4); \node[font=\scriptsize, text=QBrique] at (5,2.2) {SIGTERM ignoré : attente du délai de grâce (10 s)};
+  \node[font=\scriptsize, anchor=west] at (10.2,2.2) {SIGKILL ; 11,1 s};
+  % prestop
+  \node[lig] at (-0.3,1.1) {prestop};
+  \draw[QOcre, fill=QOcreBg] (0,0.9) rectangle (5,1.3); \node[font=\scriptsize, text=QOcre] at (2.5,1.1) {preStop : sleep 5};
+  \draw[QVert, fill=QVertBg] (5,0.9) rectangle (6,1.3);
+  \node[font=\scriptsize, anchor=west] at (6.2,1.1) {puis SIGTERM, sortie aussitôt ; 7 s};
+  \node[qlbl, font=\scriptsize, anchor=west, align=left] at (-4.3,-1.0) {ordre fixe : {\ttfamily preStop}, puis SIGTERM au PID 1 du conteneur, puis SIGKILL à la fin du délai de grâce\\({\ttfamily terminationGracePeriodSeconds}, qui court dès le début, {\ttfamily preStop} compris)};
+\end{tikzpicture}
+\end{document}

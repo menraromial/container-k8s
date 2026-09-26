@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lent-sans-startup
+spec:
+  containers:
+  - name: app
+    image: busybox:1.37
+    command: ["sh", "-c", "echo 'chargement...'; sleep 30; touch /tmp/vivant; echo 'prêt'; sleep 3600"]
+    livenessProbe:
+      exec:
+        command: ["cat", "/tmp/vivant"]
+      periodSeconds: 5
+      failureThreshold: 3

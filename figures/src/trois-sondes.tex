@@ -1,0 +1,18 @@
+% Figure 22.1 : ce que fait chaque sonde quand elle échoue (exemples du chapitre 22).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    s/.style={qbox, font=\footnotesize, text width=3.3cm, align=center, inner sep=5pt, minimum height=1.7cm},
+    r/.style={qbox, font=\scriptsize, text width=4.1cm, align=left, inner sep=5pt, minimum height=1.7cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt}]
+  \node[s, draw=QOcre, fill=QOcreBg] (st) at (0,2.2) {\textbf{startupProbe}\\« a-t-il fini de démarrer ? »};
+  \node[s, draw=QBrique, fill=QBriqueBg] (lv) at (0,0) {\textbf{livenessProbe}\\« est-il encore vivant ? »};
+  \node[s, draw=QBleu, fill=QBleuBg] (rd) at (0,-2.2) {\textbf{readinessProbe}\\« peut-il recevoir du trafic ? »};
+  \node[r, draw=QOcre] (st2) at (5.4,2.2) {tant qu'elle échoue, les deux autres sondes sont suspendues ; au-delà de {\ttfamily failureThreshold} échecs, le conteneur est tué\\{\itshape lent-avec-startup : prêt à 35 s}};
+  \node[r, draw=QBrique] (lv2) at (5.4,0) {le kubelet tue le conteneur et le relance ({\ttfamily RESTARTS} augmente)\\{\itshape malade : relancé à 19, 37, 55 s}};
+  \node[r, draw=QBleu] (rd2) at (5.4,-2.2) {le Pod passe {\ttfamily 0/1}, reste en vie, et sort des EndpointSlices : plus de trafic\\{\itshape pret : 20 requêtes sur 20 vers l'autre Pod}};
+  \foreach \a/\b in {st/st2, lv/lv2, rd/rd2} { \draw[qarr] (\a) -- node[lien, above] {échoue} (\b); }
+  \draw[qdarr, draw=QOcre] (st.south west) to[out=-150, in=150] node[lien, left] {puis} (lv.north west);
+\end{tikzpicture}
+\end{document}

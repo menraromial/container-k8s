@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: faute
+spec:
+  containers:
+  - name: web
+    imagee: nginx:1.30-alpine

@@ -1,0 +1,114 @@
+.cadre {
+  border: 1px solid var(--q-rule);
+  border-left: 4px solid var(--part);
+  background: var(--q-surface);
+  border-radius: 3px;
+  padding: 1rem 1.1rem;
+  margin: 1.5rem 0;
+}
+
+.reglages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.reglages label {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.85rem;
+  color: var(--q-muted);
+}
+
+.reglages input {
+  width: 7rem;
+  margin-top: 0.2rem;
+  padding: 0.25rem 0.4rem;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.95rem;
+  color: var(--q-ink);
+  background: var(--q-bg);
+  border: 1px solid var(--q-rule);
+  border-radius: 2px;
+}
+
+.bornes,
+.note {
+  font-size: 0.92rem;
+  margin: 0.4rem 0 0.7rem;
+}
+
+.erreur {
+  color: var(--fig-brique);
+  font-size: 0.92rem;
+}
+
+.rangee {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  min-height: 2rem;
+  margin: 0.3rem 0;
+}
+
+.etiquette {
+  width: 10.5rem;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  color: var(--q-muted);
+}
+
+.pod {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 3px;
+  border: 1.5px solid;
+}
+
+.ancien {
+  border-color: var(--fig-gris);
+  background: var(--fig-gris-bg);
+}
+
+.nouveau {
+  border-color: var(--fig-vert);
+  background: var(--fig-vert-bg);
+}
+
+.attente {
+  border-color: var(--fig-vert);
+  border-style: dashed;
+  background: transparent;
+}
+
+.boutons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.boutons button {
+  font-family: var(--ifm-font-family-base);
+  font-size: 0.88rem;
+  padding: 0.3rem 0.8rem;
+  color: var(--q-ink);
+  background: var(--q-bg);
+  border: 1px solid var(--q-rule);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.boutons button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+@media (max-width: 600px) {
+  .etiquette {
+    width: 100%;
+  }
+}

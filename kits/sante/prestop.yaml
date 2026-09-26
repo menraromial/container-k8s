@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: prestop
+spec:
+  terminationGracePeriodSeconds: 30
+  containers:
+  - name: app
+    image: busybox:1.37
+    command: ["sh", "-c", "trap 'echo \"$(date +%T) SIGTERM reçu\" >> /proc/1/fd/1; exit 0' TERM; echo \"$(date +%T) démarré\"; while true; do sleep 1; done"]
+    lifecycle:
+      preStop:
+        exec:
+          command: ["sh", "-c", "echo \"$(date +%T) preStop : j'attends 5 s\" >> /proc/1/fd/1; sleep 5"]

@@ -1,0 +1,24 @@
+% Figure 17.1 : phases d'un Pod et états de ses conteneurs (exemples réels du chapitre 17).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    ph/.style={qbox, font=\titrefig\normalsize, minimum width=2.6cm, minimum height=0.9cm},
+    st/.style={font=\scriptsize, align=left, anchor=north west},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[ph, draw=QOcre, fill=QOcreBg] (p) at (0,0) {Pending};
+  \node[ph, draw=QBleu, fill=QBleuBg] (r) at (5,0) {Running};
+  \node[ph, draw=QVert, fill=QVertBg] (s) at (10,1.1) {Succeeded};
+  \node[ph, draw=QBrique, fill=QBriqueBg] (f) at (10,-1.1) {Failed};
+  \draw[qarr] (p) -- node[lien, above] {nœud choisi,\\conteneurs lancés} (r);
+  \draw[qarr] (r) -- node[lien, above, sloped] {tous terminés, code 0} (s);
+  \draw[qarr] (r) -- node[lien, below, sloped] {un code non nul} (f);
+  \node[qlbl, font=\scriptsize, align=left] at (10,-2.15) {seulement si\\{\ttfamily restartPolicy} n'est\\pas {\ttfamily Always}};
+
+  \node[st, text=QOcre] at (-1.3,-0.8) {pas de nœud : {\ttfamily FailedScheduling}\\image introuvable : {\ttfamily ErrImagePull},\\\quad{\ttfamily ImagePullBackOff}\\init containers en cours : {\ttfamily Init:0/1}};
+  \node[st, text=QBleu] at (3.7,-0.8) {conteneur relancé :\\{\ttfamily CrashLoopBackOff}, {\ttfamily RESTARTS}\\la phase reste {\ttfamily Running}};
+  \node[st, text=QVert] at (11.5,1.45) {tache :\\{\ttfamily Completed}};
+  \node[st, text=QBrique] at (11.5,-0.75) {echec :\\{\ttfamily Error}, code 3};
+\end{tikzpicture}
+\end{document}

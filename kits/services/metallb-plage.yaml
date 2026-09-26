@@ -1,0 +1,14 @@
+# Plage d'adresses de MetalLB (addon minikube, MetalLB 0.9.6, configuré par cette ConfigMap).
+# À réappliquer après chaque « minikube start », qui remet la plage à vide.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+  namespace: metallb-system
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - 192.168.49.100-192.168.49.120

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Chapitre 16, exercices. Écrit un kubeconfig d'essai dans out/ch16x ; arrête et redémarre le cluster « minikube ».
+cd "$(dirname "$0")"; O=$PWD/out/ch16x; rm -rf $O; mkdir -p $O
+export PATH=~/.local/opt/cours-k8s/bin:$PATH
+H() { local n=$1; shift; echo "### $n : $*"; (cd $O && timeout 300 bash -c "$*") 2>&1 | grep -v '^W[0-9]' > $O/$n.txt; head -c 7000 $O/$n.txt; }
+H x1-kubeconfig "C=mon.conf; kubectl --kubeconfig=\$C config set-cluster labo --server=https://\$(minikube ip):8443 --certificate-authority=\$HOME/.minikube/ca.crt; kubectl --kubeconfig=\$C config set-credentials moi --client-certificate=\$HOME/.minikube/profiles/minikube/client.crt --client-key=\$HOME/.minikube/profiles/minikube/client.key; kubectl --kubeconfig=\$C config set-context labo --cluster=labo --user=moi --namespace=kube-system; kubectl --kubeconfig=\$C config use-context labo; cat \$C; KUBECONFIG=\$PWD/\$C kubectl get pods | head -3; KUBECONFIG=\$HOME/.kube/config:\$PWD/\$C kubectl config get-contexts | grep -E 'NAME|labo|minikube'"
+H x2-explain "kubectl explain pod.spec.terminationGracePeriodSeconds | sed -n '/DESCRIPTION/,\$p' | head -12"
+H x3-tri "kubectl get pods -A --sort-by='.status.containerStatuses[0].restartCount' -o custom-columns='NS:.metadata.namespace,NOM:.metadata.name,NOEUD:.spec.nodeName,REDEMARRAGES:.status.containerStatuses[0].restartCount' | tail -6"
+H x4-api "kubectl get --raw /apis/apps/v1/namespaces/default/deployments/essai | jq '{kind, name: .metadata.name, replicas: .spec.replicas, ready: .status.readyReplicas}'; (timeout 8 kubectl proxy --port=8011 > proxy.txt 2>&1 &); sleep 2; curl -s localhost:8011/api/v1/namespaces/default/pods | jq -r '.items[].metadata.name'; curl -s localhost:8011/version | jq -r .gitVersion; cat proxy.txt"
+H x5-contexte "kubectl config current-context; minikube stop 2>&1 | tail -1; kubectl config current-context; echo code=\$?; grep -E '^current-context' ~/.kube/config; minikube start 2>&1 | tail -1; kubectl config current-context"

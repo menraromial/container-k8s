@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: plafond
+spec:
+  hard:
+    requests.cpu: "1"
+    requests.memory: 512Mi
+    limits.memory: 1Gi
+    pods: "5"

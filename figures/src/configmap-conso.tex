@@ -1,0 +1,23 @@
+% Figure 21.1 : trois façons de lire une ConfigMap, et ce que voit le Pod après une modification (mesures du chapitre 21).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    cmap/.style={qbox, font=\footnotesize, draw=QOcre, fill=QOcreBg, text width=3.4cm, align=center, inner sep=5pt},
+    mode/.style={qbox, font=\scriptsize, text width=3.9cm, align=left, inner sep=4pt, minimum height=1.45cm},
+    ok/.style={mode, draw=QVert, fill=QVertBg},
+    non/.style={mode, draw=QBrique, fill=QBriqueBg},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[cmap] (c) at (0,0) {\textbf{ConfigMap}\\{\ttfamily vitrine-config}\\{\ttfamily MESSAGE:}\\« Bienvenue sur Colis »\\$\to$ « Nouvelle version »};
+
+  \node[non] (e) at (6,1.9) {\textbf{variable d'environnement}\\{\ttfamily env}, {\ttfamily envFrom}\\lue au démarrage du conteneur\\{\ttfamily \$MESSAGE} ne change jamais};
+  \node[ok] (v) at (6,0) {\textbf{volume}\\{\ttfamily /config/MESSAGE}\\lien vers {\ttfamily ..data/}, remplacé d'un coup\\à jour après 63 à 77 s};
+  \node[non] (s) at (6,-1.9) {\textbf{volume avec {\ttfamily subPath}}\\{\ttfamily /etc/message}\\copie figée au démarrage\\ne change jamais};
+  \draw[qarr] (c.east) -- (e.west); \draw[qarr] (c.east) -- (v.west); \draw[qarr] (c.east) -- (s.west);
+
+  \node[qbox, font=\scriptsize, draw=QBleu, fill=QBleuBg, text width=3.4cm, align=center, inner sep=4pt] (r) at (11.4,0) {nouveau Pod\\({\ttfamily rollout restart})\\{\bfseries tout} est à jour};
+  \draw[qdarr, draw=QBleu] (e.east) -- (r); \draw[qdarr, draw=QBleu] (s.east) -- (r);
+  \node[lien] at (11.4,-1.3) {seul remède pour\\les deux autres};
+\end{tikzpicture}
+\end{document}
