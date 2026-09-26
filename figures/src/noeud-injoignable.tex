@@ -1,0 +1,34 @@
+% Figure 38.2 : un nœud dont le kubelet s'arrête (valeurs réelles du chapitre 38).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    lbl/.style={qlbl, font=\scriptsize, align=center, inner sep=1pt},
+    bande/.style={draw=#1, fill=#1Bg, line width=0.7pt, rounded corners=1pt}]
+  % échelle : 1 cm = 6 s ; origine = arrêt du kubelet
+  \def\s{0.1667}
+  \draw[qarr] (-1.9,0) -- (12.8,0) node[lbl, right, text=QInk] {temps};
+  \foreach \t in {0,10,20,30,40,50,60} { \draw[QLine] ({\t*\s},-0.1) -- ({\t*\s},0.1); \node[lbl, below] at ({\t*\s},-0.12) {+\t{} s}; }
+  \draw[QLine] ({-4*\s},-0.1) -- ({-4*\s},0.1); \node[lbl, below] at ({-4*\s},-0.12) {-4 s};
+
+  \node[lbl, anchor=east, text=QInk] at (-2,1.2) {kubelet};
+  \draw[bande=QVert] ({-11*\s},1) rectangle (0,1.4); \node[lbl] at ({-5.5*\s},1.2) {actif};
+  \draw[bande=QBrique] (0,1) rectangle ({62*\s},1.4); \node[lbl] at ({31*\s},1.2) {arrêté ({\ttfamily systemctl stop kubelet})};
+  \draw[bande=QVert] ({62*\s},1) rectangle (12.5,1.4); \node[lbl] at ({67*\s},1.2) {relancé};
+
+  \node[lbl, anchor=east, text=QInk] at (-2,2.1) {bail du nœud};
+  \node[circle, draw=QBleu, fill=QBleuBg, inner sep=2pt] at ({-4*\s},2.1) {};
+  \node[lbl, anchor=west] at ({-3*\s},2.1) {dernier renouvellement, durée 40 s ; plus rien ensuite};
+
+  \node[lbl, anchor=east, text=QInk] at (-2,3) {état du nœud};
+  \draw[bande=QVert] ({-11*\s},2.8) rectangle ({51*\s},3.2); \node[lbl] at ({20*\s},3) {{\ttfamily Ready=True} : personne ne sait encore};
+  \draw[bande=QOcre] ({51*\s},2.8) rectangle ({62*\s},3.2); \node[lbl] at ({56.5*\s},3) {{\ttfamily Unknown}};
+  \draw[bande=QVert] ({62*\s},2.8) rectangle (12.5,3.2); \node[lbl] at ({67*\s},3) {{\ttfamily True}};
+  \node[lbl, anchor=south, text=QOcre] at ({56.5*\s},3.25) {taints {\ttfamily unreachable}\\Pod {\ttfamily Ready=False}};
+
+  \node[lbl, anchor=east, text=QInk] at (-2,0.55) {conteneur};
+  \draw[bande=QSarcelle] ({-11*\s},0.35) rectangle (12.5,0.75); \node[lbl] at ({31*\s},0.55) {tourne et répond sans interruption ({\ttfamily curl} : {\ttfamily suivi})};
+
+  \node[lbl, text width=11cm, anchor=north west] at (-1.9,-0.7) {Si le nœud était resté injoignable, les Pods, qui tolèrent {\ttfamily unreachable} pendant 300 s (chapitre 34), auraient été évincés et recréés ailleurs, alors même que leurs conteneurs tournaient encore.};
+\end{tikzpicture}
+\end{document}

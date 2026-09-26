@@ -492,7 +492,7 @@ kubectl label node deux-noeuds-m02 disque-
 kubectl config set-context --current --namespace=default
 ```
 
-Pour revenir au cluster principal :
+Le chapitre 38 se fait sur ce même cluster à deux nœuds : laissez-le tourner si vous enchaînez. Pour revenir au cluster principal :
 
 ```bash
 minikube stop -p deux-noeuds

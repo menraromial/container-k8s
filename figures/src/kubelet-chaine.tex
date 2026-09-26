@@ -1,0 +1,37 @@
+% Figure 38.1 : de l'objet Pod aux processus, sur le nœud deux-noeuds-m02 (valeurs réelles du chapitre 38).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    b/.style={qbox, font=\scriptsize, text width=3.1cm, align=center, inner sep=4pt, minimum height=1.25cm},
+    p/.style={qbox, font=\scriptsize, text width=2.5cm, align=center, inner sep=3pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    etape/.style={qnum=QBleu}]
+
+  \node[b, draw=QGris, fill=QGrisBg] (api) at (-1.7,0) {\textbf{API server}\\Pod {\ttfamily ch38/suivi}\\{\ttfamily nodeName: deux-noeuds-m02}};
+
+  \node[qcadre, draw=QViolet, minimum width=12.4cm, minimum height=7.6cm] (noeud) at (8.3,-2.1) {};
+  \node[qtitre, text=QViolet] at ([xshift=2mm,yshift=-2mm]noeud.north west) {nœud {\ttfamily deux-noeuds-m02}};
+
+  \node[b, draw=QBleu, fill=QBleuBg] (kub) at (4.3,0) {\textbf{kubelet}\\compare les Pods de son nœud\\à ce qui tourne};
+  \node[b, draw=QOcre, fill=QOcreBg] (ctd) at (8.6,0) {\textbf{containerd}\\{\ttfamily /run/containerd/}\\{\ttfamily containerd.sock}};
+  \node[b, draw=QSarcelle, fill=QSarcelleBg, text width=2.6cm] (cni) at (12.6,0) {\textbf{greffon CNI}\\adresse, interface,\\{\ttfamily netns}};
+  \node[b, draw=QOcre, fill=QOcreBg] (shim) at (8.6,-2.2) {\textbf{containerd-shim-runc-v2}\\un par Pod ;\\lance les conteneurs avec runc};
+
+  \node[qcadre, draw=QVert, minimum width=7.2cm, minimum height=2.3cm] (pod) at (8.6,-4.55) {};
+  \node[qlbl, font=\scriptsize, anchor=north west, text=QVert] at ([xshift=1mm,yshift=-1mm]pod.north west) {cgroup {\ttfamily kubepods-burstable-pod360bb2ad...slice}};
+  \node[p, draw=QVert, fill=QVertBg] (pause) at (6.9,-4.75) {{\ttfamily /pause}\\PID 41686, 732 Kio\\détient net, ipc, uts};
+  \node[p, draw=QVert, fill=QVertBg] (web) at (10.3,-4.75) {{\ttfamily /agnhost netexec}\\PID 41710\\{\ttfamily cpu.max 20000 100000}};
+
+  \draw[qarr] ([yshift=3mm]api.east) -- node[lien, above] {1. watch} ([yshift=3mm]kub.west);
+  \draw[qarr, draw=QBleu] (kub) -- node[lien, above] {CRI (gRPC)} node[etape, below=1mm] {2} (ctd);
+  \draw[qarr, draw=QOcre] (ctd) -- node[lien, above] {\ttfamily ADD} node[etape, below=1mm] {3} (cni);
+  \draw[qarr, draw=QOcre] (ctd) -- node[lien, right] {démarre} node[etape, left=1mm] {4} (shim);
+  \draw[qarr, draw=QOcre] (shim.south) -- ++(0,-0.35) -| (pause.north);
+  \draw[qarr, draw=QOcre] (shim.south) -- ++(0,-0.35) -| (web.north);
+  \draw[qdarr, draw=QSarcelle] (cni.south) |- node[lien, pos=0.3, right] {netns\\{\ttfamily cni-38bc...}} ([yshift=3mm]pod.east);
+  \draw[qarr, draw=QBleu] ([yshift=-3mm]kub.west) -- node[lien, below] {5. statut, bail} ([yshift=-3mm]api.east);
+
+  \node[qlbl, font=\scriptsize, text width=3.3cm, align=left, anchor=north west] at (2.3,-1.35) {2. {\ttfamily RunPodSandbox}, {\ttfamily PullImage},\\{\ttfamily CreateContainer},\\{\ttfamily StartContainer}};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,12 @@
+# Un Pod statique : déposé dans /etc/kubernetes/manifests d'un nœud, il est lancé par le kubelet seul.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: statique
+  namespace: ch38
+  labels: {app: statique}
+spec:
+  containers:
+  - name: web
+    image: registry.k8s.io/e2e-test-images/agnhost:2.61
+    args: [netexec, --http-port=8080]
