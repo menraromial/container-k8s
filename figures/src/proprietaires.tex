@@ -1,0 +1,25 @@
+% Figure 36.2 : la chaîne des propriétaires et les trois façons de supprimer (valeurs réelles du chapitre 36).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    o/.style={qbox, font=\scriptsize, inner sep=3pt, align=center, text width=2.6cm},
+    p/.style={qbox, font=\scriptsize, inner sep=2pt, align=center, text width=1.35cm, draw=QVert, fill=QVertBg},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    mode/.style={qbox, font=\scriptsize, text width=5.2cm, align=left, inner sep=4pt}]
+
+  \node[o, draw=QBleu, fill=QBleuBg] (d) at (0,0) {{\ttfamily Deployment}\\{\ttfamily vitrine}};
+  \node[o, draw=QViolet, fill=QVioletBg] (rs) at (0,-1.8) {{\ttfamily ReplicaSet}\\{\ttfamily vitrine-8596884b9c}};
+  \node[p] (p1) at (-1.55,-3.6) {Pod\\{\ttfamily ...-ghrtb}};
+  \node[p] (p2) at (0,-3.6) {Pod\\{\ttfamily ...-l5mbx}};
+  \node[p] (p3) at (1.55,-3.6) {Pod\\{\ttfamily ...-mqfg9}};
+  \draw[qarr] (rs) -- node[lien, right] {{\ttfamily ownerReferences}} (d);
+  \foreach \q in {p1,p2,p3} { \draw[qarr] (\q.north) -- (rs.south); }
+  \node[lien, text width=4.4cm] at (0,-4.75) {chaque dépendant désigne son propriétaire par {\ttfamily kind}, {\ttfamily name} et {\ttfamily uid}};
+
+  \node[mode, draw=QGris, fill=QGrisBg] (bg) at (6.6,0.1) {\textbf{Background} (par défaut)\\le propriétaire disparaît aussitôt ; le ramasse-miettes supprime ensuite les dépendants dont le propriétaire n'existe plus};
+  \node[mode, draw=QOcre, fill=QOcreBg] (fg) at (6.6,-2) {\textbf{Foreground}\\le propriétaire reste, avec un {\ttfamily deletionTimestamp} et le finalizer {\ttfamily foregroundDeletion}, jusqu'à la disparition des dépendants (11 s dans ce chapitre)};
+  \node[mode, draw=QSarcelle, fill=QSarcelleBg] (or) at (6.6,-4.1) {\textbf{Orphan}\\les dépendants restent, sans propriétaire ; un contrôleur dont le sélecteur les désigne peut les adopter};
+  \node[qlbl, font=\footnotesize, text=QInk, anchor=south] at (6.6,1.35) {{\ttfamily kubectl delete --cascade=...}};
+\end{tikzpicture}
+\end{document}

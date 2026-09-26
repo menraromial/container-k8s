@@ -1,0 +1,28 @@
+% Figure 36.1 : l'intérieur d'un contrôleur : list puis watch, cache, file de travail, réconciliation (chapitre 36).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    b/.style={qbox, font=\scriptsize, text width=2.9cm, align=center, inner sep=4pt, minimum height=1.5cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    etape/.style={qnum=QBleu}]
+
+  \node[b, draw=QGris, fill=QGrisBg, text width=2.2cm, minimum height=5.3cm] (api) at (0,0) {\textbf{API server}\\[3pt]objets,\\{\ttfamily resourceVersion},\\watch};
+
+  \node[qcadre, draw=QViolet, minimum width=12cm, minimum height=5.3cm] (ctrl) at (7.9,0) {};
+  \node[qtitre, text=QViolet] at ([xshift=2mm,yshift=-2mm]ctrl.north west) {un contrôleur};
+
+  \node[b, draw=QSarcelle, fill=QSarcelleBg] (inf) at (4.1,1.1) {\textbf{informer}\\list, puis watch depuis\\la {\ttfamily resourceVersion}\\de la liste};
+  \node[b, draw=QSarcelle, fill=QSarcelleBg] (cache) at (4.1,-1.5) {\textbf{cache local}\\copie des objets\\suivis, indexée};
+  \node[b, draw=QOcre, fill=QOcreBg] (file) at (8.3,1.1) {\textbf{file de travail}\\des clés {\ttfamily ns/nom} ;\\dédoublonne, réessaie\\avec un délai croissant};
+  \node[b, draw=QVert, fill=QVertBg, text width=3.1cm, minimum height=2.1cm] (rec) at (11.9,-0.9) {\textbf{réconcilier(clé)}\\lire le souhait et la réalité\\dans le cache, comparer,\\corriger l'écart};
+
+  \draw[qarr, draw=QSarcelle] ([yshift=11mm]api.east) -- node[lien, below] {événements} node[etape, above=1mm] {1} (inf.west);
+  \draw[qarr, draw=QSarcelle] (inf) -- node[lien, right] {tient à jour} node[etape, left=1mm] {2} (cache);
+  \draw[qarr, draw=QOcre] (inf) -- node[lien, below] {clé} node[etape, above=1mm] {3} (file);
+  \draw[qarr, draw=QOcre] (file.east) -| node[lien, pos=0.3, above] {une clé à la fois} node[etape, pos=0.85, right=1mm] {4} (rec.north);
+  \draw[qarr, draw=QVert] (rec.west) -- node[lien, below] {lit} (cache.east);
+  \draw[qarr, draw=QVert] (rec.south) -- ++(0,-1.25) -| node[lien, pos=0.25, below] {écrit : crée, supprime, met à jour le statut} node[etape, pos=0.02, right=1mm] {5} (api.south);
+  \draw[qdarr, draw=QBrique] ([xshift=-9mm]rec.north) |- node[lien, pos=0.75, below] {échec : remise en file} ([yshift=-5mm]file.east);
+\end{tikzpicture}
+\end{document}

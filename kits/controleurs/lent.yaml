@@ -1,0 +1,21 @@
+# Deux Pods qui mettent 8 secondes à s'arrêter (crochet preStop), pour voir la suppression au premier plan.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lent
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: lent}
+  template:
+    metadata:
+      labels: {app: lent}
+    spec:
+      terminationGracePeriodSeconds: 20
+      containers:
+      - name: c
+        image: registry.k8s.io/e2e-test-images/agnhost:2.61
+        args: [pause]
+        lifecycle:
+          preStop:
+            sleep: {seconds: 8}

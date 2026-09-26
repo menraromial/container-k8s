@@ -1,0 +1,9 @@
+# Un ConfigMap protégé par un finalizer que personne ne retire.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: garde
+  finalizers:
+  - cours.exemple/archivage
+data:
+  a: "1"

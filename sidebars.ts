@@ -97,6 +97,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'partie-5/api-server',
         'partie-5/etcd',
+        'partie-5/controleurs',
       ],
     },
   ],

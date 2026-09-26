@@ -1,0 +1,9 @@
+# Le souhait lu par mini-replicaset.py : trois Pods pour « vitrine ».
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vitrine
+  labels:
+    cours/mini-rs: "oui"
+data:
+  repliques: "3"
