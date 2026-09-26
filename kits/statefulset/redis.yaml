@@ -1,0 +1,46 @@
+# Redis dans un StatefulSet, avec la persistance AOF : la file survit au redémarrage du Pod.
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  clusterIP: None
+  selector:
+    app: redis
+  ports:
+  - name: redis
+    port: 6379
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+spec:
+  serviceName: redis
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:8.8-alpine
+        args: ["--appendonly", "yes"]
+        ports:
+        - name: redis
+          containerPort: 6379
+        volumeMounts:
+        - name: donnees
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: donnees
+    spec:
+      accessModes: [ReadWriteOnce]
+      resources:
+        requests:
+          storage: 100Mi

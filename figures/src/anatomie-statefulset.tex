@@ -1,0 +1,31 @@
+% Figure 26.1 : le StatefulSet pile, son Service headless, ses Pods et leurs volumes (chapitre 26).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    obj/.style={qbox, font=\scriptsize, align=center, inner sep=3pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg, text width=4.6cm] (sts) at (5.0,2.3) {StatefulSet {\ttfamily pile}\\{\ttfamily replicas: 3}, {\ttfamily serviceName: pile}\\modèle de volume {\ttfamily donnees} (10Mi)};
+  \node[obj, draw=QBleu, fill=QBleuBg, text width=4.2cm] (svc) at (14.9,2.3) {Service {\ttfamily pile}\\{\ttfamily clusterIP: None} (headless)};
+  \foreach \i/\x in {0/0.9, 1/5.0, 2/9.1} {
+    \node[obj, draw=QGris, fill=QGrisBg, text width=2.3cm] (p\i) at (\x,0) {Pod {\ttfamily pile-\i}};
+    \node[obj, draw=QBleu, fill=QBleuBg, text width=2.6cm] (c\i) at (\x,-1.6) {PVC\\{\ttfamily donnees-pile-\i}};
+    \node[obj, draw=QOcre, fill=QOcreBg, text width=2.6cm] (v\i) at (\x,-3.1) {PV {\ttfamily pvc-...}};
+    \draw[qarr] (p\i) -- (c\i);
+    \draw[qbiarr, draw=QBleu] (c\i) -- (v\i);
+    \draw[qarr, draw=QSarcelle] (sts.south) -- (p\i.north);
+  }
+  \draw[qarr, draw=QVert] ([yshift=1mm]p0.east) -- node[lien, above] {prêt, puis} ([yshift=1mm]p1.west);
+  \draw[qarr, draw=QVert] ([yshift=1mm]p1.east) -- node[lien, above] {prêt, puis} ([yshift=1mm]p2.west);
+  \draw[qarr, draw=QBrique] ([yshift=-1.5mm]p2.west) -- node[lien, below] {mise à jour} ([yshift=-1.5mm]p1.east);
+  \draw[qarr, draw=QBrique] ([yshift=-1.5mm]p1.west) -- node[lien, below] {mise à jour} ([yshift=-1.5mm]p0.east);
+  % DNS
+  \node[qbox, font=\scriptsize, draw=QBleu, fill=QPaper, align=left, text width=5.6cm, anchor=north] (dns) at (14.9,1.0) {\textbf{noms DNS servis par CoreDNS}\\[2pt]
+    {\ttfamily pile.ch26.svc.cluster.local}\\\hspace*{1em}$\to$ les trois adresses\\[2pt]
+    {\ttfamily pile-0.pile.ch26.svc.cluster.local}\\\hspace*{1em}$\to$ l'adresse de {\ttfamily pile-0}\\[2pt]
+    {\ttfamily pile-1.pile.ch26.svc.cluster.local}\\\hspace*{1em}$\to$ l'adresse de {\ttfamily pile-1}, même\\\hspace*{1em}après son remplacement\\[2pt]
+    {\ttfamily pile-2.pile.ch26.svc.cluster.local}\\\hspace*{1em}$\to$ l'adresse de {\ttfamily pile-2}};
+  \draw[qarr, draw=QBleu] (svc) -- (dns);
+  \node[qlbl, font=\scriptsize, align=left, anchor=north west] at (-0.6,-3.8) {chaque volume suit son Pod : {\ttfamily pile-1} recréé retrouve {\ttfamily donnees-pile-1} ;\\réduire le nombre de répliques supprime {\ttfamily pile-2} mais garde sa PVC (par défaut)};
+\end{tikzpicture}
+\end{document}

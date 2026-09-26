@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: colis-config
+  namespace: colis
+  labels:
+    app.kubernetes.io/part-of: colis
+data:
+  COLIS_REDIS: redis://redis:6379/0
+  COLIS_VERSION: "2.1.0"
+  COLIS_PURGE_JOURS: "30"

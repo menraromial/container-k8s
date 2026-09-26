@@ -1,5 +1,5 @@
 # Image de Colis : une seule image pour l'API, le worker et la purge.
-# Construite au chapitre 4 ; allégée et durcie au défi II.
+# Construite au chapitre 4. La version allégée et durcie du défi II est dans kits/defi-2/corrige.
 FROM python:3.14-slim
 
 LABEL org.opencontainers.image.title="colis" \

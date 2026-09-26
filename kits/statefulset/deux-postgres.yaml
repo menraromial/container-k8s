@@ -1,0 +1,39 @@
+# Ce qu'il ne faut pas faire : un Deployment de PostgreSQL à deux répliques, sur une seule demande de volume.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: base
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: base
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: base
+  template:
+    metadata:
+      labels:
+        app: base
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:18-alpine
+        env:
+        - name: POSTGRES_PASSWORD
+          value: essai-seulement
+        volumeMounts:
+        - name: donnees
+          mountPath: /var/lib/postgresql
+      volumes:
+      - name: donnees
+        persistentVolumeClaim:
+          claimName: base

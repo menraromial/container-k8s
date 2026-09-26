@@ -77,6 +77,7 @@ const sidebars: SidebarsConfig = {
       link: {type: 'doc', id: 'partie-4/index'},
       items: [
         'partie-4/stockage',
+        'partie-4/statefulset',
       ],
     },
   ],

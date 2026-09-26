@@ -19,7 +19,7 @@ Les manifestes sont dans [l'archive colis-k8s](pathname:///kits/colis-k8s.tar.gz
 - le registre `registre` du chapitre 14, démarré (`docker start registre`), qui contient `colis/api:2.0` depuis le défi II ;
 - les images `colis:2.0` (défi II) et `colis-web:1.0` (chapitre 6) dans le Docker de votre poste.
 
-Le ménage du défi II a supprimé `colis:2.0`. Reconstruisez-la depuis le dossier de Colis, dont le Dockerfile est celui du corrigé :
+Le ménage du défi II a supprimé `colis:2.0`. Reconstruisez-la depuis votre dossier `colis`, avec le `Dockerfile` et le `.dockerignore` du défi II (les vôtres, ou ceux du corrigé, dans `kits/defi-2/corrige` du dépôt du cours) :
 
 ```bash
 docker build -t colis:2.0 app

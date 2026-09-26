@@ -1,0 +1,58 @@
+# Un StatefulSet de trois répliques : chacune sert, en HTTP, un fichier de son propre volume.
+apiVersion: v1
+kind: Service
+metadata:
+  name: pile
+spec:
+  clusterIP: None          # headless : un nom DNS par Pod, pas d'adresse virtuelle
+  selector:
+    app: pile
+  ports:
+  - name: http
+    port: 8080
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pile
+spec:
+  serviceName: pile
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pile
+  template:
+    metadata:
+      labels:
+        app: pile
+    spec:
+      terminationGracePeriodSeconds: 2   # busybox en PID 1 ignore SIGTERM (chapitre 22)
+      containers:
+      - name: serveur
+        image: busybox:1.37
+        command: ["sh", "-c"]
+        args:
+        - |
+          echo "$(date -u +%T) démarrage de $(hostname)" >> /donnees/historique.txt
+          sleep 3                                  # un démarrage qui prend un peu de temps
+          mkdir -p /www && cp /donnees/historique.txt /www/index.html
+          exec httpd -f -p 8080 -h /www
+        ports:
+        - name: http
+          containerPort: 8080
+        readinessProbe:
+          tcpSocket:
+            port: http
+          periodSeconds: 2
+        volumeMounts:
+        - name: donnees
+          mountPath: /donnees
+  volumeClaimTemplates:
+  - metadata:
+      name: donnees
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Mi

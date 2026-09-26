@@ -1,0 +1,81 @@
+# PostgreSQL de Colis dans un StatefulSet (chapitre 26) : une identité stable (postgres-0),
+# un volume par réplique créé à partir du modèle, un Service headless.
+# Une seule réplique : la réplication et la bascule de PostgreSQL relèvent d'un opérateur (partie VIII).
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: colis
+  labels:
+    app.kubernetes.io/part-of: colis
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: postgres
+  ports:
+  - name: postgres
+    port: 5432
+    targetPort: postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: colis
+  labels:
+    app.kubernetes.io/name: postgres
+    app.kubernetes.io/part-of: colis
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgres
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: postgres
+        app.kubernetes.io/part-of: colis
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:18-alpine
+        env:
+        - name: POSTGRES_USER
+          value: colis
+        - name: POSTGRES_DB
+          value: colis
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: colis-db
+              key: POSTGRES_PASSWORD
+        ports:
+        - name: postgres
+          containerPort: 5432
+        readinessProbe:
+          exec:
+            command: ["pg_isready", "-U", "colis", "-d", "colis"]
+          periodSeconds: 5
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            memory: 256Mi
+        volumeMounts:
+        - name: donnees
+          mountPath: /var/lib/postgresql
+  volumeClaimTemplates:
+  - metadata:
+      name: donnees
+      labels:
+        app.kubernetes.io/name: postgres
+        app.kubernetes.io/part-of: colis
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: standard

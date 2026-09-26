@@ -1,0 +1,33 @@
+% Figure 26.2 : faire passer le volume de PostgreSQL de Colis d'un Deployment à un StatefulSet (chapitre 26).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    obj/.style={qbox, font=\scriptsize, align=center, inner sep=3pt, text width=3.4cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    etape/.style={qnum=QBleu}]
+  \node[font=\titrefig\normalsize] at (0,1.2) {avant (chapitre 25)};
+  \node[font=\titrefig\normalsize] at (10,1.2) {après (chapitre 26)};
+  \node[obj, draw=QGris, fill=QGrisBg, dashed] (dep) at (0,0) {Deployment {\ttfamily postgres}\\Service ClusterIP};
+  \node[obj, draw=QBleu, fill=QBleuBg, dashed] (pvc1) at (0,-1.8) {PVC {\ttfamily postgres-donnees}};
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg] (sts) at (10,0) {StatefulSet {\ttfamily postgres}\\Service headless};
+  \node[obj, draw=QBleu, fill=QBleuBg] (pvc2) at (10,-1.8) {PVC {\ttfamily donnees-postgres-0}\\{\ttfamily volumeName: pvc-...}};
+  \node[obj, draw=QOcre, fill=QOcreBg, text width=5cm] (pv) at (5,-3.7) {PV {\ttfamily pvc-...} (classe standard)\\dossier {\ttfamily /tmp/hostpath-provisioner/}\\{\ttfamily colis/postgres-donnees} : les données};
+  \draw[qarr, dashed] (dep) -- (pvc1);
+  \draw[qarr] (sts) -- node[lien, left] {le Pod {\ttfamily postgres-0}\\attend ce nom} (pvc2);
+  \draw[qbiarr, dashed, draw=QBleu] (pvc1.south) |- (pv.west);
+  \draw[qbiarr, draw=QBleu] (pvc2.south) |- (pv.east);
+  \node[etape] at ([xshift=-1mm,yshift=1mm]dep.north west) {\scriptsize 2};
+  \node[etape] at ([xshift=-1mm,yshift=1mm]pv.north west) {\scriptsize 1};
+  \node[etape] at ([xshift=1mm,yshift=1mm]pv.north east) {\scriptsize 3};
+  \node[etape] at ([xshift=1mm,yshift=1mm]pvc2.north east) {\scriptsize 4};
+  \node[etape] at ([xshift=1mm,yshift=1mm]sts.north east) {\scriptsize 5};
+  % légende
+  \node[qlbl, font=\scriptsize, align=left, anchor=north west, text=QInk] at (-1.8,-4.9) {%
+    \tikz[baseline=(n.base)]\node[etape](n){\scriptsize 1}; passer le PV en {\ttfamily Retain}, pour qu'il survive à sa demande\\[3pt]
+    \tikz[baseline=(n.base)]\node[etape](n){\scriptsize 2}; supprimer le Deployment, le Service et la PVC : le PV devient {\ttfamily Released}\\[3pt]
+    \tikz[baseline=(n.base)]\node[etape](n){\scriptsize 3}; effacer le {\ttfamily claimRef} du PV : il redevient {\ttfamily Available}\\[3pt]
+    \tikz[baseline=(n.base)]\node[etape](n){\scriptsize 4}; créer la PVC {\ttfamily donnees-postgres-0}, qui nomme ce PV\\[3pt]
+    \tikz[baseline=(n.base)]\node[etape](n){\scriptsize 5}; appliquer le StatefulSet : son Pod trouve une PVC au nom attendu et l'utilise};
+\end{tikzpicture}
+\end{document}

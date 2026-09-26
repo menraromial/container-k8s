@@ -13,7 +13,7 @@ Cette partie règle ces problèmes un par un, avec les objets et les outils qu'o
 | Chapitre | Ce que vous y apprenez |
 |---|---|
 | [25. Le stockage](stockage.md) | volumes, PersistentVolume et PersistentVolumeClaim, StorageClass, CSI, instantanés |
-| 26. Les StatefulSets | identité stable, un volume par réplique, PostgreSQL de Colis |
+| [26. Les StatefulSets](statefulset.md) | identité stable, un volume par réplique, PostgreSQL de Colis |
 | 27. DaemonSet, Job et CronJob | la purge de Colis, parallélisme, reprise sur échec |
 | 28. Exposer en HTTP | Ingress, Gateway API, TLS avec cert-manager |
 | 29. Helm | charts, templates, values, releases, le chart de Colis |
