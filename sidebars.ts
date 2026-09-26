@@ -82,6 +82,7 @@ const sidebars: SidebarsConfig = {
         'partie-4/http',
         'partie-4/helm',
         'partie-4/kustomize',
+        'partie-4/autoscaling',
       ],
     },
   ],

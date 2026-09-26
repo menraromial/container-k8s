@@ -1,0 +1,20 @@
+# KEDA pour le worker de Colis : le nombre de workers suit la longueur de la file Redis colis:a-estimer.
+# De 0 (file vide) à 5 workers, un worker pour 5 colis en attente.
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: worker
+  namespace: colis
+spec:
+  scaleTargetRef:
+    name: worker
+  minReplicaCount: 0
+  maxReplicaCount: 5
+  pollingInterval: 5          # interroger Redis toutes les 5 secondes
+  cooldownPeriod: 30          # attendre 30 s de file vide avant de passer à zéro
+  triggers:
+  - type: redis
+    metadata:
+      address: redis.colis.svc.cluster.local:6379
+      listName: colis:a-estimer
+      listLength: "5"

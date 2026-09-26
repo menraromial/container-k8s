@@ -18,7 +18,7 @@ Cette partie règle ces problèmes un par un, avec les objets et les outils qu'o
 | [28. Exposer en HTTP](http.md) | Ingress, Gateway API, TLS avec cert-manager |
 | [29. Helm](helm.md) | charts, templates, values, releases, le chart de Colis |
 | [30. Kustomize](kustomize.md) | base et overlays, patches, générateurs ; Helm ou Kustomize ? |
-| 31. L'autoscaling | HPA, VPA, KEDA sur la file Redis du worker |
+| [31. L'autoscaling](autoscaling.md) | HPA, VPA, KEDA sur la file Redis du worker |
 | 32. L'ordonnancement fin | affinités, taints et tolérations, répartition, priorités |
 | 33. La disponibilité | PodDisruptionBudget, `drain` et `cordon` |
 | Défi IV | Colis avec Helm, stockage persistant, HTTPS et autoscaling |

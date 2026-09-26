@@ -1,0 +1,18 @@
+# Un générateur de charge : fortio envoie des requêtes à l'API de Colis, 20 connexions à la fois, pendant 3 minutes.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: charge
+  namespace: ch31
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: fortio
+        image: fortio/fortio:1.75.3
+        args: ["load", "-c", "20", "-qps", "0", "-t", "180s", "-timeout", "5s", "http://api.colis:8000/colis"]
+        resources:
+          requests: {cpu: 200m, memory: 32Mi}
+          limits: {memory: 128Mi}

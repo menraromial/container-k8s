@@ -1,0 +1,38 @@
+% Figure 31.1 : les trois autoscalers du chapitre 31, ce qu'ils lisent et ce qu'ils modifient.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    obj/.style={qbox, font=\scriptsize, align=center, inner sep=3pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    titre/.style={font=\titrefig\small, anchor=west}]
+  % HPA
+  \node[titre] at (-1.4,3.3) {HPA : combien de Pods};
+  \node[obj, draw=QGris, fill=QGrisBg, text width=2.6cm] (ms) at (0,2.2) {metrics-server\\(CPU, mémoire)};
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg, text width=2.8cm] (hpa) at (4.2,2.2) {HPA {\ttfamily api}\\cible : 50 \% de la\\request de CPU};
+  \node[obj, draw=QVert, fill=QVertBg, text width=2.6cm] (dapi) at (8.4,2.2) {Deployment {\ttfamily api}\\{\ttfamily replicas} : 2 à 6};
+  \draw[qarr] (ms) -- node[lien, above] {toutes les 15 s} (hpa);
+  \draw[qarr, draw=QSarcelle] (hpa) -- node[lien, above] {modifie} (dapi);
+  % VPA
+  \node[titre] at (-1.4,0.7) {VPA : quelles ressources par Pod};
+  \node[obj, draw=QOcre, fill=QOcreBg, text width=2.6cm] (rec) at (0,-0.4) {recommender\\(historique d'usage)};
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg, text width=2.8cm] (vpa) at (4.2,-0.4) {VPA {\ttfamily worker}\\recommandation\\{\ttfamily target}, bornes};
+  \node[obj, draw=QOcre, fill=QOcreBg, text width=2.6cm] (upd) at (8.4,-0.4) {updater : redimensionne\\en place, ou évince};
+  \node[obj, draw=QVert, fill=QVertBg, text width=2.6cm] (pw) at (12.2,-0.4) {Pods {\ttfamily worker}\\{\ttfamily requests}, {\ttfamily limits}};
+  \draw[qarr] (rec) -- node[lien, above] {écrit} (vpa);
+  \draw[qarr] (vpa) -- node[lien, above] {lu par} (upd);
+  \draw[qarr, draw=QSarcelle] (upd) -- (pw);
+  \node[qlbl, font=\scriptsize, anchor=north] at (12.2,-1.2) {+ webhook d'admission :};
+  \node[qlbl, font=\scriptsize, anchor=north] at (12.2,-1.55) {les nouveaux Pods naissent ajustés};
+  % KEDA
+  \node[titre] at (-1.4,-2.6) {KEDA : de zéro à N, selon un événement extérieur};
+  \node[obj, draw=QBrique, fill=QBriqueBg, text width=2.6cm] (redis) at (0,-3.7) {Redis\\{\ttfamily LLEN colis:a-estimer}};
+  \node[obj, draw=QOcre, fill=QOcreBg, text width=2.8cm] (keda) at (4.2,-3.7) {opérateur KEDA\\{\ttfamily ScaledObject worker}\\(1 worker pour 5 colis)};
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg, text width=2.6cm] (khpa) at (8.4,-3.7) {HPA\\{\ttfamily keda-hpa-worker}\\(de 1 à 5)};
+  \node[obj, draw=QVert, fill=QVertBg, text width=2.6cm] (dw) at (12.2,-3.7) {Deployment\\{\ttfamily worker}\\{\ttfamily replicas} : 0 à 5};
+  \draw[qarr] (redis) -- node[lien, above] {toutes les 5 s} (keda);
+  \draw[qarr] (keda) -- node[lien, above] {crée, nourrit} (khpa);
+  \draw[qarr, draw=QSarcelle] (khpa) -- (dw);
+  \draw[qarr, draw=QOcre] (keda.south) to[out=-25,in=-155] node[lien, below] {0 $\leftrightarrow$ 1 lui-même} (dw.south);
+\end{tikzpicture}
+\end{document}

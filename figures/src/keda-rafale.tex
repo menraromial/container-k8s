@@ -1,0 +1,27 @@
+% Figure 31.2 : une rafale de 100 colis et les workers de KEDA, mesures du chapitre 31.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=0.2cm,y=0.042cm,
+    lbl/.style={qlbl, font=\scriptsize}]
+  % axes : temps 0-60 s ; file 0-100 (gauche) ; workers 0-5 (droite, 1 worker = 20 unités)
+  \draw[QMuted, line width=0.4pt] (0,0) -- (62,0);
+  \draw[QMuted, line width=0.4pt] (0,0) -- (0,105);
+  \draw[QMuted, line width=0.4pt] (62,0) -- (62,105);
+  \foreach \t in {0,10,...,60} { \draw[QMuted] (\t,0) -- (\t,-2); \node[lbl, below] at (\t,-2) {\t\,s}; }
+  \foreach \f in {0,25,50,75,100} { \draw[QMuted] (0,\f) -- (-0.6,\f); \node[lbl, left] at (-0.6,\f) {\f}; }
+  \foreach \w in {0,1,...,5} { \draw[QMuted] (62,\w*20) -- (62.6,\w*20); \node[lbl, right] at (62.6,\w*20) {\w}; }
+  \node[lbl, rotate=90, text=QBrique] at (-6,52) {colis dans la file};
+  \node[lbl, rotate=90, text=QVert] at (67.5,52) {workers demandés};
+  % file (mesures toutes les 5 s environ)
+  \draw[QBrique, line width=1.2pt] (0,100) -- (6,100) -- (11,92) -- (16,81) -- (22,50) -- (27,6) -- (32,0) -- (59,0);
+  \foreach \t/\f in {0/100,6/100,11/92,16/81,22/50,27/6,32/0} { \fill[QBrique] (\t,\f) circle (0.35 and 1.6); }
+  % workers demandés (en escalier)
+  \draw[QVert, line width=1.2pt] (0,0) -- (6,0) -- (6,20) -- (16,20) -- (16,80) -- (32,80) -- (32,100) -- (59,100) -- (59,0) -- (61,0);
+  % annotations
+  \node[lbl, align=left, anchor=south west] at (7,22) {réveil : 0 $\to$ 1};
+  \node[lbl, align=left, anchor=south west] at (17,82) {1 $\to$ 4};
+  \node[lbl, align=left, anchor=north west] at (33,97) {4 $\to$ 5, file déjà vide :\\métriques en retard};
+  \node[lbl, align=right, anchor=north east] at (58.5,60) {30 s sans colis\\({\ttfamily cooldownPeriod}),\\puis 5 $\to$ 0};
+\end{tikzpicture}
+\end{document}

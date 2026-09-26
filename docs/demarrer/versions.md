@@ -142,6 +142,7 @@ Les versions ci-dessous ont été relevées en septembre 2026, avant l'écriture
 | cert-manager | 1.21.2 | 28 |
 | Kustomize (intégré à kubectl) | 5.8.1 | 30 |
 | KEDA | 2.21.0 | 31 |
+| Vertical Pod Autoscaler | 1.8.0 (chart 0.13.0) | 31 |
 | Calico | 3.32.2 | 39, 41 |
 | Cilium | 1.20.2 | 39, 40, 41 |
 | Kyverno | 1.19.1 | 45, 47 |
