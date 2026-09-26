@@ -1,0 +1,21 @@
+# Un client qui interroge la vitrine dix fois par seconde et compte les échecs, seconde par seconde.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: client
+spec:
+  terminationGracePeriodSeconds: 1
+  containers:
+  - name: client
+    image: busybox:1.37
+    command: ["sh", "-c"]
+    args:
+    - |
+      while true; do
+        ok=0; ko=0
+        for i in 1 2 3 4 5 6 7 8 9 10; do
+          if wget -q -T 1 -O /dev/null http://vitrine/hostname; then ok=$((ok+1)); else ko=$((ko+1)); fi
+          sleep 0.1
+        done
+        echo "$(date -u +%T) ok=$ok echecs=$ko"
+      done

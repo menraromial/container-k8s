@@ -1,0 +1,44 @@
+# Une application web de 3 répliques qui préfèrent le nœud SSD (elles s'y retrouvent toutes),
+# et qui mettent 5 secondes à devenir prêtes.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vitrine
+spec:
+  replicas: 3
+  selector:
+    matchLabels: {app: vitrine}
+  template:
+    metadata:
+      labels: {app: vitrine}
+    spec:
+      terminationGracePeriodSeconds: 5
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - {key: disque, operator: In, values: [ssd]}
+      containers:
+      - name: web
+        image: registry.k8s.io/e2e-test-images/agnhost:2.61
+        args: ["netexec", "--http-port=8080"]
+        ports:
+        - {name: http, containerPort: 8080}
+        readinessProbe:
+          httpGet: {path: /hostname, port: http}
+          initialDelaySeconds: 5
+          periodSeconds: 1
+        lifecycle:
+          preStop:
+            sleep: {seconds: 2}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vitrine
+spec:
+  selector: {app: vitrine}
+  ports:
+  - {port: 80, targetPort: http}

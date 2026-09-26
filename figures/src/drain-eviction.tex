@@ -1,0 +1,23 @@
+% Figure 33.1 : ce que fait kubectl drain, et où le PodDisruptionBudget intervient (chapitre 33).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    obj/.style={qbox, font=\scriptsize, align=center, inner sep=4pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    etape/.style={qnum=QBleu}]
+  \node[obj, draw=QGris, fill=QGrisBg, text width=2.6cm] (dr) at (0,0) {{\ttfamily kubectl drain}\\{\ttfamily deux-noeuds-m03}};
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg, text width=3cm] (co) at (4,1.3) {nœud marqué\\{\ttfamily unschedulable}\\(= {\ttfamily cordon})};
+  \node[obj, draw=QBleu, fill=QBleuBg, text width=3.9cm] (ev) at (4.2,-1.3) {pour chaque Pod :\\{\ttfamily POST .../pods/<nom>/eviction}\\(API d'éviction)};
+  \node[obj, draw=QOcre, fill=QOcreBg, text width=3.3cm] (pdb) at (8.6,-1.3) {l'API server consulte\\le PodDisruptionBudget :\\{\ttfamily disruptionsAllowed} > 0 ?};
+  \node[obj, draw=QVert, fill=QVertBg, text width=3.1cm] (ok) at (13,-0.2) {oui : Pod supprimé\\(délai de grâce, {\ttfamily preStop}) ;\\le contrôleur en recrée un ailleurs};
+  \node[obj, draw=QBrique, fill=QBriqueBg, text width=3.1cm] (non) at (13,-2.5) {non : refusé\\{\ttfamily Cannot evict pod as it}\\{\ttfamily would violate the pod's}\\{\ttfamily disruption budget}};
+  \node[obj, draw=QGris, fill=QPaper, dashed, text width=3.2cm] (del) at (1.2,-3.9) {{\ttfamily kubectl delete pod},\\panne d'un nœud, OOM :\\le PDB n'est pas consulté};
+  \draw[qarr] (dr) -- (co); \node[etape] at (1.9,0.95) {\scriptsize 1};
+  \draw[qarr] (dr) -- (ev); \node[etape] at (1.9,-0.95) {\scriptsize 2};
+  \draw[qarr] (ev) -- (pdb);
+  \draw[qarr, draw=QVert] (pdb) -- (ok);
+  \draw[qarr, draw=QBrique] (pdb) -- (non);
+  \draw[qarr, dashed, draw=QBrique] (non.south) -- ++(0,-0.45) -| node[lien, below, pos=0.25] {drain réessaie toutes les 5 s} ([xshift=12mm]ev.south);
+\end{tikzpicture}
+\end{document}

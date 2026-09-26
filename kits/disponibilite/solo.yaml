@@ -1,0 +1,27 @@
+# Une application à une seule réplique, protégée par un PDB qui exige qu'elle reste disponible.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solo
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: solo}
+  template:
+    metadata:
+      labels: {app: solo}
+    spec:
+      nodeSelector:
+        disque: ssd
+      containers:
+      - name: pause
+        image: registry.k8s.io/pause:3.10
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: solo
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels: {app: solo}

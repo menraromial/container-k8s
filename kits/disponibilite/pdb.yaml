@@ -1,0 +1,9 @@
+# Au moins 2 répliques de la vitrine doivent rester disponibles pendant les perturbations volontaires.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: vitrine
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels: {app: vitrine}
