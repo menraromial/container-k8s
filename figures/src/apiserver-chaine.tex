@@ -1,0 +1,50 @@
+% Figure 34.2 : le trajet d'une requête d'écriture dans l'API server, et le code d'erreur de chaque étage (chapitre 34).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    etage/.style={qbox, font=\scriptsize, text width=2.75cm, minimum height=1.55cm, align=center, inner sep=3pt},
+    err/.style={qbox, font=\scriptsize, draw=QBrique, fill=QBriqueBg, text width=2.75cm, align=center, inner sep=2pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    etape/.style={qnum=QBleu}]
+
+  \node[etage, draw=QGris, fill=QGrisBg, text width=2.2cm] (cl) at (-3.4,0) {\textbf{client}\\{\ttfamily kubectl}, {\ttfamily curl},\\un contrôleur\\(HTTPS)};
+
+  \node[etage, draw=QBleu, fill=QBleuBg] (au) at (0,0) {\textbf{authentification}\\qui êtes-vous ?\\certificat client, jeton,\\sinon {\ttfamily system:anonymous}};
+  \node[etage, draw=QBleu, fill=QBleuBg] (az) at (3.4,0) {\textbf{autorisation}\\avez-vous le droit ?\\{\ttfamily Node}, {\ttfamily RBAC}\\(verbe, ressource, namespace)};
+  \node[etage, draw=QViolet, fill=QVioletBg] (de) at (6.8,0) {\textbf{décodage}\\JSON, YAML ou protobuf\\vers l'objet ;\\valeurs par défaut};
+  \node[etage, draw=QOcre, fill=QOcreBg] (mu) at (10.2,0) {\textbf{admission mutante}\\{\ttfamily ServiceAccount},\\{\ttfamily DefaultToleration-}\\{\ttfamily Seconds}, webhooks\\mutants};
+
+  \node[etage, draw=QOcre, fill=QOcreBg] (va) at (10.2,-3.3) {\textbf{validation du schéma}\\noms, types, champs\\obligatoires};
+  \node[etage, draw=QOcre, fill=QOcreBg] (av) at (6.8,-3.3) {\textbf{admission validante}\\{\ttfamily ResourceQuota},\\{\ttfamily NamespaceLifecycle},\\webhooks, politiques CEL};
+  \node[etage, draw=QVert, fill=QVertBg] (et) at (3.4,-3.3) {\textbf{écriture dans etcd}\\si la {\ttfamily resourceVersion}\\n'a pas bougé ;\\nouvelle {\ttfamily resourceVersion}};
+  \node[etage, draw=QSarcelle, fill=QSarcelleBg] (wa) at (0,-3.3) {\textbf{les watchers}\\{\ttfamily kubectl get -w},\\contrôleurs, scheduler :\\{\ttfamily MODIFIED}...};
+
+  \draw[qarr] (cl) -- (au);
+  \draw[qarr] (au) -- (az);
+  \draw[qarr] (az) -- (de);
+  \draw[qarr] (de) -- (mu);
+  \draw[qarr] (mu) -- (va);
+  \draw[qarr] (va) -- (av);
+  \draw[qarr] (av) -- (et);
+  \draw[qarr, draw=QSarcelle] (et) -- (wa);
+  \draw[qarr, dashed] ([xshift=-9mm]et.south) -- ++(0,-0.5) -| node[lien, pos=0.25, below] {réponse : l'objet tel qu'enregistré} (cl.south);
+
+  \node[etape] at ($(au.north west)+(0.05,-0.05)$) {1};
+  \node[etape] at ($(az.north west)+(0.05,-0.05)$) {2};
+  \node[etape] at ($(de.north west)+(0.05,-0.05)$) {3};
+  \node[etape] at ($(mu.north west)+(0.05,-0.05)$) {4};
+  \node[etape] at ($(va.north west)+(0.05,-0.05)$) {5};
+  \node[etape] at ($(av.north west)+(0.05,-0.05)$) {6};
+  \node[etape] at ($(et.north west)+(0.05,-0.05)$) {7};
+  \node[etape] at ($(wa.north west)+(0.05,-0.05)$) {8};
+
+  \node[err, above=2mm of au] {{\ttfamily 401 Unauthorized}};
+  \node[err, above=2mm of az] {{\ttfamily 403 Forbidden}};
+  \node[err, above=2mm of de] {{\ttfamily 400 BadRequest}};
+  \node[err, above=2mm of mu] {refus d'un webhook};
+  \node[err, below=2mm of va] {{\ttfamily 422 Invalid}};
+  \node[err, below=2mm of av] {{\ttfamily 403 Forbidden}\\(quota, namespace supprimé)};
+  \node[err, text width=2.45cm, anchor=north] at ($(et.south)+(0.55,-0.2)$) {{\ttfamily 409 Conflict}\\ou {\ttfamily AlreadyExists}};
+\end{tikzpicture}
+\end{document}

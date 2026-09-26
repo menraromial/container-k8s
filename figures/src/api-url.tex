@@ -1,0 +1,43 @@
+% Figure 34.1 : l'anatomie d'une URL de l'API Kubernetes (valeurs réelles du chapitre 34).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    seg/.style={draw=#1, fill=#1Bg, line width=0.8pt, font=\ttfamily\footnotesize, inner sep=3pt, minimum height=6.5mm, anchor=west},
+    lbl/.style={qlbl, font=\scriptsize, align=center, inner sep=1pt},
+    trait/.style={draw=QMuted, line width=0.5pt}]
+
+  % une ressource d'un groupe nommé
+  \node[seg=QGris] (a1) at (0,0) {https://192.168.49.2:8443};
+  \node[seg=QGris] (a2) at (a1.east) {/apis};
+  \node[seg=QBleu] (a3) at (a2.east) {/apps};
+  \node[seg=QViolet] (a4) at (a3.east) {/v1};
+  \node[seg=QOcre] (a5) at (a4.east) {/namespaces/ch34};
+  \node[seg=QVert] (a6) at (a5.east) {/deployments};
+  \node[seg=QSarcelle] (a7) at (a6.east) {/vitrine};
+  \node[seg=QBrique] (a8) at (a7.east) {/scale};
+
+  \draw[trait] (a1.south) -- ++(0,-0.35) node[lbl, below] {l'API server\\(le {\ttfamily server} du kubeconfig)};
+  \draw[trait] (a2.south) -- ++(0,-1.25) node[lbl, below] {groupes\\nommés};
+  \draw[trait] (a3.south) -- ++(0,-0.35) node[lbl, below] {groupe};
+  \draw[trait] (a4.south) -- ++(0,-1.25) node[lbl, below] {version};
+  \draw[trait] (a5.south) -- ++(0,-0.35) node[lbl, below] {namespace\\(absent pour un objet\\de tout le cluster)};
+  \draw[trait] (a6.south) -- ++(0,-1.6) node[lbl, below] {ressource\\(pluriel, minuscules)};
+  \draw[trait] (a7.south) -- ++(0,-0.35) node[lbl, below] {nom\\(absent pour\\une liste)};
+  \draw[trait] (a8.south) -- ++(0,-1.6) node[lbl, below] {sous-ressource\\({\ttfamily status}, {\ttfamily scale},\\{\ttfamily log}, {\ttfamily exec}...)};
+
+  % une ressource du groupe noyau, avec des paramètres
+  \node[seg=QGris] (b1) at (0,-4.3) {https://192.168.49.2:8443};
+  \node[seg=QGris] (b2) at (b1.east) {/api};
+  \node[seg=QViolet] (b4) at (b2.east) {/v1};
+  \node[seg=QOcre] (b5) at (b4.east) {/namespaces/ch34};
+  \node[seg=QVert] (b6) at (b5.east) {/configmaps};
+  \node[seg=QGris, fill=QPaper, dashed] (b7) at (b6.east) {?watch=true\&fieldSelector=...};
+
+  \draw[trait] (b2.south) -- ++(0,-0.35) node[lbl, below] {groupe noyau :\\{\ttfamily /api}, sans nom};
+  \draw[trait] (b7.south) -- ++(0,-0.35) node[lbl, below] {paramètres : {\ttfamily watch}, {\ttfamily limit}, {\ttfamily continue},\\{\ttfamily labelSelector}, {\ttfamily fieldSelector}, {\ttfamily dryRun}...};
+
+  \node[lbl, anchor=west, font=\footnotesize, text=QInk] at (0,0.75) {une ressource d'un groupe nommé : {\ttfamily apps/v1}};
+  \node[lbl, anchor=west, font=\footnotesize, text=QInk] at (0,-3.55) {une ressource du groupe noyau : {\ttfamily v1}};
+\end{tikzpicture}
+\end{document}

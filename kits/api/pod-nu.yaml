@@ -1,0 +1,9 @@
+# Un Pod réduit au strict minimum, pour voir ce que l'API server y ajoute.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nu
+spec:
+  containers:
+  - name: c
+    image: registry.k8s.io/e2e-test-images/agnhost:2.61

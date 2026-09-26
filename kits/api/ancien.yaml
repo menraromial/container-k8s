@@ -1,0 +1,13 @@
+# Un Deployment sous une API retirée en Kubernetes 1.16 : il ne passe plus.
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ancien
+spec:
+  template:
+    metadata:
+      labels: {app: ancien}
+    spec:
+      containers:
+      - name: c
+        image: nginx

@@ -88,6 +88,16 @@ const sidebars: SidebarsConfig = {
         'partie-4/defi',
       ],
     },
+    {
+      type: 'category',
+      label: 'V · Anatomie du cluster',
+      className: 'partie-5',
+      collapsed: false,
+      link: {type: 'doc', id: 'partie-5/index'},
+      items: [
+        'partie-5/api-server',
+      ],
+    },
   ],
 };
 
