@@ -1,0 +1,30 @@
+# L'environnement de production : trois API, des ressources plus larges, une image figée par son empreinte.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: colis-prod
+
+resources:
+- namespace.yaml
+- ../../base
+
+labels:
+- pairs:
+    environnement: prod
+
+secretGenerator:
+- name: colis-db
+  envs:
+  - secret.env
+
+replicas:
+- name: api
+  count: 3
+
+images:
+- name: host.minikube.internal:5001/colis/api   # le nom tel que la base l'a laissé
+  digest: sha256:ade99a611b6a907ceacc9deb10f1a7cc21a1f49f7f4395d5d5b5a145205ad3a5
+
+patches:
+- path: route.yaml
+- path: api-ressources.yaml

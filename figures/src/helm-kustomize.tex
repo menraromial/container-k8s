@@ -1,0 +1,19 @@
+% Figure 30.2 : deux façons de décliner les manifestes de Colis, Helm et Kustomize (chapitres 29 et 30).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    obj/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=3.6cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  \node[font=\titrefig\normalsize, anchor=west] at (-2,2.3) {Helm : des modèles et des valeurs};
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg] (tpl) at (0,1.2) {modèles\\{\ttfamily replicas: \{\{ .Values... \}\}}\\(pas du YAML valide)};
+  \node[obj, draw=QGris, fill=QGrisBg] (val) at (4.4,1.2) {valeurs\\{\ttfamily -f}, {\ttfamily --set}};
+  \node[obj, draw=QVert, fill=QVertBg, text width=4.3cm] (hr) at (10.4,1.2) {release : révisions, {\ttfamily rollback},\\hooks, tests, {\ttfamily lookup},\\chart versionné et publié};
+  \draw[qarr] (tpl) -- (val); \draw[qarr] (val) -- node[lien, above] {helm install} (hr);
+  \node[font=\titrefig\normalsize, anchor=west] at (-2,-0.3) {Kustomize : du YAML et des correctifs};
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg] (b) at (0,-1.4) {base\\{\ttfamily replicas: 2}\\(YAML valide, appliquable seul)};
+  \node[obj, draw=QBleu, fill=QBleuBg] (o) at (4.4,-1.4) {overlay\\correctif {\ttfamily replicas: 3}};
+  \node[obj, draw=QVert, fill=QVertBg, text width=4.3cm] (kr) at (10.4,-1.4) {objets ordinaires : pas d'historique,\\le retour arrière passe par Git ;\\intégré à {\ttfamily kubectl}};
+  \draw[qarr] (b) -- (o); \draw[qarr] (o) -- node[lien, above] {apply -k} (kr);
+\end{tikzpicture}
+\end{document}

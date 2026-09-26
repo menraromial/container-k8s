@@ -1,0 +1,40 @@
+# L'environnement de développement : un seul exemplaire de chaque composant, purge plus fréquente.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: colis-dev
+
+resources:
+- namespace.yaml
+- ../../base
+
+labels:
+- pairs:
+    environnement: dev
+
+secretGenerator:
+- name: colis-db
+  envs:
+  - secret.env              # POSTGRES_PASSWORD=..., créé à la main, jamais versionné
+
+configMapGenerator:
+- name: colis-config
+  behavior: merge
+  literals:
+  - COLIS_PURGE_JOURS=7
+
+replicas:
+- name: api
+  count: 1
+- name: web
+  count: 1
+
+patches:
+- path: route.yaml
+- target:
+    kind: CronJob
+    name: purge
+  patch: |-
+    - op: replace
+      path: /spec/schedule
+      value: "*/30 * * * *"

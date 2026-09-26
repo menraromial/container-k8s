@@ -1,0 +1,28 @@
+# Un chart Helm rendu par Kustomize, puis retouché comme n'importe quelle ressource.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ch30
+
+helmCharts:
+- name: podinfo
+  repo: oci://ghcr.io/stefanprodan/charts
+  version: 6.15.0
+  releaseName: demo
+  valuesInline:
+    replicaCount: 2
+
+labels:
+- pairs:
+    equipe: plateforme
+
+patches:
+- target:
+    kind: Deployment
+    name: demo-podinfo
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: PODINFO_UI_MESSAGE
+        value: rendu par Kustomize

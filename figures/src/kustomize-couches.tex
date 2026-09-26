@@ -1,0 +1,19 @@
+% Figure 30.1 : la base de Colis et ses deux overlays, et ce que chaque couche transforme (chapitre 30).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    obj/.style={qbox, font=\scriptsize, align=left, inner sep=4pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  \node[obj, draw=QSarcelle, fill=QSarcelleBg, text width=4.4cm] (base) at (0,0) {\textbf{base/}\\7 manifestes : StatefulSet, Deployments,\\Services, CronJob, HTTPRoute\\{\ttfamily configMapGenerator} : {\ttfamily colis-config}\\{\ttfamily images} : {\ttfamily colis-api} $\to$ registre, 2.1\\{\ttfamily labels} : {\ttfamily part-of: colis}};
+  \node[obj, draw=QBleu, fill=QBleuBg, text width=4.3cm] (dev) at (6,1.9) {\textbf{overlays/dev/}\\{\ttfamily namespace: colis-dev}\\{\ttfamily secretGenerator} ({\ttfamily secret.env})\\ConfigMap fusionnée : 7 jours\\{\ttfamily replicas} : api 1, web 1\\correctifs : hôte, planning {\ttfamily */30}};
+  \node[obj, draw=QBleu, fill=QBleuBg, text width=4.3cm] (prod) at (6,-1.9) {\textbf{overlays/prod/}\\{\ttfamily namespace: colis-prod}\\{\ttfamily secretGenerator} ({\ttfamily secret.env})\\{\ttfamily replicas} : api 3\\image figée par son empreinte\\correctifs : hôte, ressources de l'API};
+  \node[obj, draw=QVert, fill=QVertBg, text width=4.2cm] (rdev) at (12,1.9) {{\ttfamily kubectl apply -k overlays/dev}\\14 objets dans {\ttfamily colis-dev}\\{\ttfamily colis-config-8b7826m4dt}\\{\ttfamily colis-db-dbg8m2bt96}\\{\ttfamily colis-dev.local}};
+  \node[obj, draw=QVert, fill=QVertBg, text width=4.2cm] (rprod) at (12,-1.9) {{\ttfamily kubectl kustomize overlays/prod}\\14 objets pour {\ttfamily colis-prod}\\{\ttfamily colis/api@sha256:ade9...}\\{\ttfamily colis-prod.local}};
+  \draw[qarr] (base.east) -- node[lien, left, pos=0.55] {{\ttfamily resources:}\\{\ttfamily ../../base}} (dev.west);
+  \draw[qarr] (base.east) -- (prod.west);
+  \draw[qarr, draw=QVert] (dev) -- node[lien, above] {rendu} (rdev);
+  \draw[qarr, draw=QVert] (prod) -- node[lien, above] {rendu} (rprod);
+  \node[qlbl, font=\scriptsize, align=left, anchor=north west] at (-2.2,-3.6) {chaque couche est du YAML valide ; aucune ne modifie les fichiers de la couche du dessous ;\\le suffixe des générateurs est une empreinte du contenu : changer une valeur change le nom, donc les Pods qui s'y réfèrent};
+\end{tikzpicture}
+\end{document}

@@ -24,3 +24,6 @@ npm-debug.log*
 
 # Cache Python des scripts de figures
 __pycache__/
+
+# Mots de passe des overlays Kustomize (chapitre 30) : générés sur chaque poste, jamais versionnés
+kits/kustomize/**/secret.env

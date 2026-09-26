@@ -330,7 +330,7 @@ La première version de ce chart prenait par défaut l'`appVersion`, `2.1.0`, co
     Image:          host.minikube.internal:5001/colis/api:2.1.0
 ```
 
-et les Pods restaient en `ImagePullBackOff`. `appVersion` est une indication pour les humains, que Helm n'utilise pour rien ; rien ne garantit qu'une image porte ce nom. D'où la valeur `images.api.etiquette: "2.1"` explicite. Dans vos propres projets, le plus simple est de publier les images avec l'étiquette exacte de l'`appVersion`, par exemple `2.1.0`, dans la chaîne d'intégration continue (chapitre 57).
+et les Pods restaient en `ImagePullBackOff`. `appVersion` est une indication pour les humains, que Helm n'utilise pour rien ; rien ne garantit qu'une image porte ce nom. D'où la valeur `images.api.etiquette: "2.1"` explicite. Dans vos propres projets, le plus simple est de publier les images avec l'étiquette exacte de l'`appVersion`, par exemple `2.1.0`, dans la chaîne de livraison (chapitre 57).
 
 :::
 

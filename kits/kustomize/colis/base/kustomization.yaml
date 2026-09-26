@@ -1,0 +1,31 @@
+# La base de Colis : ce qui est commun à tous les environnements.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- postgres.yaml
+- redis.yaml
+- api.yaml
+- worker.yaml
+- web.yaml
+- purge.yaml
+- route.yaml
+
+labels:
+- pairs:
+    app.kubernetes.io/part-of: colis
+
+configMapGenerator:
+- name: colis-config
+  literals:
+  - COLIS_REDIS=redis://redis:6379/0
+  - COLIS_VERSION=2.1.0
+  - COLIS_PURGE_JOURS=30
+
+images:
+- name: colis-api
+  newName: host.minikube.internal:5001/colis/api
+  newTag: "2.1"
+- name: colis-web
+  newName: host.minikube.internal:5001/colis/web
+  newTag: "1.0"
