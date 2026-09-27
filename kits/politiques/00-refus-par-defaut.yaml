@@ -1,0 +1,9 @@
+# Rien n'entre dans les Pods de Colis, rien n'en sort, sauf ce qu'une autre politique autorise.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: refus-par-defaut
+  namespace: colis
+spec:
+  podSelector: {}                 # tous les Pods du namespace
+  policyTypes: [Ingress, Egress]  # aucune règle : tout est refusé, dans les deux sens

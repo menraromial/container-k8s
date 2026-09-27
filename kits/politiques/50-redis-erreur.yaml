@@ -1,0 +1,22 @@
+# ERREUR VOLONTAIRE : un tiret de trop. namespaceSelector et podSelector sont devenus deux éléments de la liste,
+# donc deux sources autorisées indépendamment (OU), au lieu d'une seule source qui doit remplir les deux conditions (ET).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redis
+  namespace: colis
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/name: redis}
+  policyTypes: [Ingress]
+  ingress:
+  - from:
+    - podSelector:
+        matchExpressions:
+        - {key: app.kubernetes.io/name, operator: In, values: [api, api-canari, worker]}
+    - namespaceSelector:
+        matchLabels: {kubernetes.io/metadata.name: keda}
+    - podSelector:
+        matchLabels: {app.kubernetes.io/name: keda-operator}
+    ports:
+    - {port: redis}

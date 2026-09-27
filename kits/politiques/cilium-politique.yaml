@@ -1,0 +1,18 @@
+# Seul app=client peut joindre le serveur, et seulement par GET sur /hostname.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: serveur-l7
+  namespace: ch41
+spec:
+  endpointSelector:
+    matchLabels: {app: serveur}
+  ingress:
+  - fromEndpoints:
+    - matchLabels: {app: client}
+    toPorts:
+    - ports:
+      - {port: "8080", protocol: TCP}
+      rules:
+        http:
+        - {method: GET, path: "/hostname"}

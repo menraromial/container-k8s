@@ -1,0 +1,38 @@
+% Figure 41.1 : les flux que les NetworkPolicies de Colis laissent passer (chapitre 41).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    c/.style={qbox, font=\scriptsize, align=center, inner sep=3pt, text width=2.2cm, minimum height=0.95cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[qcadre, draw=QViolet, minimum width=9.6cm, minimum height=6.6cm] (ns) at (4.7,-1.6) {};
+  \node[qtitre, text=QViolet] at ([xshift=2mm,yshift=-2mm]ns.north west) {namespace {\ttfamily colis} : refus par défaut};
+
+  \node[c, draw=QVert, fill=QVertBg] (web) at (1.7,0.3) {\textbf{web}\\port 80};
+  \node[c, draw=QVert, fill=QVertBg] (api) at (5,0.3) {\textbf{api}, {\ttfamily api-canari}\\port 8000};
+  \node[c, draw=QOcre, fill=QOcreBg] (pg) at (3.2,-2.6) {\textbf{postgres}\\port 5432};
+  \node[c, draw=QOcre, fill=QOcreBg] (rd) at (7.6,-2.6) {\textbf{redis}\\port 6379};
+  \node[c, draw=QSarcelle, fill=QSarcelleBg] (wk) at (5.4,-4.3) {\textbf{worker}};
+  \node[c, draw=QSarcelle, fill=QSarcelleBg] (pu) at (1.4,-4.3) {\textbf{purge}};
+
+  \node[c, draw=QGris, fill=QGrisBg] (ext) at (-1.9,1.9) {tout client\\(LoadBalancer)};
+  \node[c, draw=QGris, fill=QGrisBg] (gw) at (5,2.9) {{\ttfamily envoy}\\{\ttfamily envoy-gateway-system}};
+  \node[c, draw=QGris, fill=QGrisBg] (keda) at (12.2,-1) {{\ttfamily keda-operator}\\{\ttfamily keda}};
+  \node[c, draw=QGris, fill=QGrisBg] (dns) at (12.2,1.4) {CoreDNS\\{\ttfamily kube-system}, 53};
+  \node[c, draw=QBrique, fill=QBriqueBg] (intrus) at (-1.9,-2.6) {{\ttfamily intrus}\\{\ttfamily vitrine}};
+
+  \draw[qarr, draw=QVert] (ext) -- (web);
+  \draw[qarr, draw=QVert] (web) -- (api);
+  \draw[qarr, draw=QVert] (gw) -- (api);
+  \draw[qarr, draw=QOcre] (api) -- (pg);
+  \draw[qarr, draw=QOcre] (api) -- (rd);
+  \draw[qarr, draw=QOcre] (wk) -- (pg);
+  \draw[qarr, draw=QOcre] (wk) -- (rd);
+  \draw[qarr, draw=QOcre] (pu) -- (pg);
+  \draw[qarr, draw=QOcre] (keda) -- (rd);
+  \draw[qdarr, draw=QGris] (9.5,1.4) -- node[lien, above] {tous : DNS} (dns.west);
+  \draw[draw=QBrique, line width=0.8pt] (intrus.east) -- node[lien, above] {refusé} (-0.2,-2.6);
+  \draw[draw=QBrique, line width=1.6pt] (-0.2,-2.95) -- (-0.2,-2.25);
+\end{tikzpicture}
+\end{document}

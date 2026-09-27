@@ -21,7 +21,7 @@ Les parties I à IV vous ont appris à vous servir de Kubernetes. Celle-ci ne vo
 | [38. Le kubelet et le CRI](kubelet.md) | du Pod aux processus, crictl, conteneur pause, cgroups, Pods statiques, un nœud sans kubelet |
 | [39. Le réseau des Pods](reseau-pods.md) | le contrat, CNI, kindnet, Calico (BGP, IP dans IP) et Cilium (eBPF, VXLAN), paquets capturés |
 | [40. Les Services sous le capot](services-capot.md) | kube-proxy (iptables, nftables, IPVS), conntrack, Cilium sans kube-proxy, CoreDNS et ndots |
-| 41. Les NetworkPolicies | isolation par défaut, règles d'entrée et de sortie pour Colis |
+| [41. Les NetworkPolicies](networkpolicies.md) | refus par défaut, les flux de Colis un par un, le piège du tiret, kindnet et NFQUEUE, Cilium jusqu'aux requêtes HTTP |
 | Défi V | suivre la création d'un Deployment de bout en bout, preuves à l'appui |
 
 Il vous faut le cluster minikube principal, tel que la partie IV l'a laissé. Les chapitres sur le réseau démarrent leurs propres profils minikube, avec d'autres plugins réseau ; chacun dit ce qu'il consomme et comment le retirer.

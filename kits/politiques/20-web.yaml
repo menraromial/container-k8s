@@ -1,0 +1,19 @@
+# Le site : ouvert à tous sur son port http ; il ne parle qu'à l'API.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: web
+  namespace: colis
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/name: web}
+  policyTypes: [Ingress, Egress]
+  ingress:
+  - ports:
+    - {port: http}                # aucune clause from : n'importe quelle source
+  egress:
+  - to:
+    - podSelector:
+        matchLabels: {app.kubernetes.io/name: api}
+    ports:
+    - {port: 8000}

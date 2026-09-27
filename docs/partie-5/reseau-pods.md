@@ -363,9 +363,9 @@ Le même `ping` sous trois réseaux. Plus l'encapsulation est lourde, plus le MT
 | Livraison sur le nœud | une route par Pod | une route par Pod | programmes eBPF, table des points de terminaison |
 | Entre les nœuds | routage direct | BGP, avec ou sans tunnel IP dans IP | tunnel VXLAN, ou routage direct |
 | MTU des Pods (ici) | 1500 | 1480 | 1450 |
-| Politiques réseau | selon la version (chapitre 41) | oui, par iptables ou eBPF | oui, par identités, en eBPF |
+| Politiques réseau | oui, par nftables (versions récentes) | oui, par iptables ou eBPF | oui, par identités, en eBPF |
 
-La dernière ligne compte : tous les greffons n'appliquent pas les NetworkPolicies du chapitre 41. Une politique créée sur un cluster dont le greffon les ignore est acceptée par l'API, puis reste sans effet, sans le moindre avertissement. Le chapitre 41 vérifiera ce qu'en fait chacun de nos trois réseaux.
+La dernière ligne compte : tous les greffons n'appliquent pas les NetworkPolicies du chapitre 41. Une politique créée sur un cluster dont le greffon les ignore est acceptée par l'API, puis reste sans effet, sans le moindre avertissement. kindnet ne les a longtemps pas appliquées ; la version que minikube installe ici le fait, par une table nftables à lui (`inet kindnet-network-policies`), et le chapitre 41 le vérifiera. Sur un cluster que vous ne connaissez pas, testez toujours une politique de refus avant de compter sur les autres.
 
 :::panne[Les petites requêtes passent, les grosses restent bloquées]
 

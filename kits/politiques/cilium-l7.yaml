@@ -1,0 +1,35 @@
+# Sur le profil cilium : un serveur, un client autorisé et un autre qui ne l'est pas,
+# et une politique de Cilium qui filtre jusqu'aux requêtes HTTP.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ch41
+---
+apiVersion: v1
+kind: Pod
+metadata: {name: serveur, namespace: ch41, labels: {app: serveur}}
+spec:
+  containers:
+  - {name: c, image: registry.k8s.io/e2e-test-images/agnhost:2.61, args: [netexec, --http-port=8080]}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: serveur, namespace: ch41}
+spec:
+  selector: {app: serveur}
+  ports:
+  - {port: 80, targetPort: 8080}
+---
+apiVersion: v1
+kind: Pod
+metadata: {name: client, namespace: ch41, labels: {app: client}}
+spec:
+  containers:
+  - {name: c, image: nicolaka/netshoot:v0.14, command: [sleep, infinity]}
+---
+apiVersion: v1
+kind: Pod
+metadata: {name: autre, namespace: ch41, labels: {app: autre}}
+spec:
+  containers:
+  - {name: c, image: nicolaka/netshoot:v0.14, command: [sleep, infinity]}

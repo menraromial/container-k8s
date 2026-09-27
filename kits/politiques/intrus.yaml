@@ -1,0 +1,11 @@
+# Un Pod d'un autre namespace, sans aucun rapport avec Colis, muni d'outils réseau.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: intrus
+  namespace: vitrine
+spec:
+  containers:
+  - name: c
+    image: nicolaka/netshoot:v0.14
+    command: [sleep, infinity]

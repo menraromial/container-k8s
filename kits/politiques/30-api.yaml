@@ -1,0 +1,32 @@
+# L'API (et sa version canari) : appelée par le site et par la passerelle ; elle appelle PostgreSQL et Redis.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: api
+  namespace: colis
+spec:
+  podSelector:
+    matchExpressions:
+    - {key: app.kubernetes.io/name, operator: In, values: [api, api-canari]}
+  policyTypes: [Ingress, Egress]
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels: {app.kubernetes.io/name: web}
+    - namespaceSelector:          # le même élément de liste que podSelector : les deux conditions à la fois
+        matchLabels: {kubernetes.io/metadata.name: envoy-gateway-system}
+      podSelector:
+        matchLabels: {app.kubernetes.io/name: envoy}
+    ports:
+    - {port: http}
+  egress:
+  - to:
+    - podSelector:
+        matchLabels: {app.kubernetes.io/name: postgres}
+    ports:
+    - {port: 5432}
+  - to:
+    - podSelector:
+        matchLabels: {app.kubernetes.io/name: redis}
+    ports:
+    - {port: 6379}

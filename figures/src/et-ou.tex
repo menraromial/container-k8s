@@ -1,0 +1,17 @@
+% Figure 41.2 : un tiret de trop, et la source autorisée change de sens (valeurs réelles du chapitre 41).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    code/.style={qbox, font=\ttfamily\scriptsize, align=left, inner sep=5pt, text width=6.2cm},
+    res/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=6.2cm}]
+  \node[qlbl, font=\footnotesize, text=QInk, anchor=west] at (-3.3,1.85) {\textbf{un seul élément} : les deux conditions à la fois (ET)};
+  \node[code, draw=QVert, fill=QVertBg] (a) at (0,0.6) {from:\\- namespaceSelector:\\\ \ \ \ matchLabels: \{...: keda\}\\\ \ podSelector:\\\ \ \ \ matchLabels: \{...: keda-operator\}};
+  \node[res, draw=QVert, fill=QPaper] at (0,-0.95) {autorisé : l'opérateur de KEDA, et lui seul\\{\ttfamily curieux} (namespace {\ttfamily keda}) : pas de réponse};
+
+  \node[qlbl, font=\footnotesize, text=QInk, anchor=west] at (4.2,1.85) {\textbf{deux éléments} : l'une ou l'autre (OU)};
+  \node[code, draw=QBrique, fill=QBriqueBg] (b) at (7.5,0.6) {from:\\- namespaceSelector:\\\ \ \ \ matchLabels: \{...: keda\}\\- podSelector:\\\ \ \ \ matchLabels: \{...: keda-operator\}};
+  \node[res, draw=QBrique, fill=QPaper] at (7.5,-0.95) {autorisé : tout Pod du namespace {\ttfamily keda}, et tout Pod de {\ttfamily colis} étiqueté {\ttfamily keda-operator}\\{\ttfamily curieux} : {\ttfamily +PONG}};
+  \draw[draw=QBrique, line width=1.2pt] (4.62,0.36) circle (0.17);
+\end{tikzpicture}
+\end{document}

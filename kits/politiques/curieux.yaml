@@ -1,0 +1,11 @@
+# Un Pod quelconque dans le namespace de KEDA : il n'est pas l'opérateur.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: curieux
+  namespace: keda
+spec:
+  containers:
+  - name: c
+    image: nicolaka/netshoot:v0.14
+    command: [sleep, infinity]

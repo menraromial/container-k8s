@@ -1,0 +1,37 @@
+# Le worker et la purge ne sortent que vers PostgreSQL (et Redis pour le worker).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: worker
+  namespace: colis
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/name: worker}
+  policyTypes: [Egress]
+  egress:
+  - to:
+    - podSelector:
+        matchLabels: {app.kubernetes.io/name: postgres}
+    ports:
+    - {port: 5432}
+  - to:
+    - podSelector:
+        matchLabels: {app.kubernetes.io/name: redis}
+    ports:
+    - {port: 6379}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: purge
+  namespace: colis
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/name: purge}
+  policyTypes: [Egress]
+  egress:
+  - to:
+    - podSelector:
+        matchLabels: {app.kubernetes.io/name: postgres}
+    ports:
+    - {port: 5432}
