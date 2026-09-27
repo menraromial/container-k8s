@@ -103,6 +103,7 @@ const sidebars: SidebarsConfig = {
         'partie-5/reseau-pods',
         'partie-5/services-capot',
         'partie-5/networkpolicies',
+        'partie-5/defi',
       ],
     },
   ],
