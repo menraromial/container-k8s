@@ -1,0 +1,32 @@
+% Figure 40.2 : où l'adresse du Service est traduite, selon le mode (chapitre 40).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    b/.style={qbox, font=\scriptsize, align=center, inner sep=3pt, text width=2.5cm, minimum height=1.05cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    titre/.style={qlbl, font=\footnotesize, text=QInk, anchor=west}]
+
+  % iptables
+  \node[titre] at (-0.3,0.95) {\textbf{kube-proxy, iptables} : une chaîne de règles parcourue à la première connexion};
+  \node[b, draw=QVert, fill=QVertBg] (c1) at (1,0) {Pod client\\SYN vers la ClusterIP};
+  \node[b, draw=QBleu, fill=QBleuBg, text width=3.2cm] (k1) at (4.9,0) {{\ttfamily KUBE-SERVICES}\\une règle par Service,\\lues dans l'ordre};
+  \node[b, draw=QBleu, fill=QBleuBg] (s1) at (8.6,0) {{\ttfamily KUBE-SVC-...}\\tirages 1/3, 1/2};
+  \node[b, draw=QOcre, fill=QOcreBg] (d1) at (12,0) {{\ttfamily KUBE-SEP-...}\\DNAT vers le Pod,\\retenu par conntrack};
+  \draw[qarr] (c1) -- (k1); \draw[qarr] (k1) -- (s1); \draw[qarr] (s1) -- (d1);
+
+  % nftables
+  \node[titre] at (-0.3,-1.05) {\textbf{kube-proxy, nftables} : une recherche dans une table, quel que soit le nombre de Services};
+  \node[b, draw=QVert, fill=QVertBg] (c2) at (1,-2) {Pod client\\SYN vers la ClusterIP};
+  \node[b, draw=QBleu, fill=QBleuBg, text width=3.2cm] (k2) at (4.9,-2) {table {\ttfamily service-ips}\\adresse . proto . port\\vers une chaîne};
+  \node[b, draw=QOcre, fill=QOcreBg, text width=4.3cm] (d2) at (9.9,-2) {{\ttfamily numgen random mod 3}\\DNAT vers le Pod choisi,\\retenu par conntrack};
+  \draw[qarr] (c2) -- (k2); \draw[qarr] (k2) -- (d2);
+
+  % Cilium
+  \node[titre] at (-0.3,-3.05) {\textbf{Cilium sans kube-proxy} : la destination est réécrite avant même que le paquet existe};
+  \node[b, draw=QVert, fill=QVertBg, text width=4.4cm] (c3) at (1.95,-4) {Pod client : {\ttfamily connect()}\\vers la ClusterIP, intercepté\\par un programme eBPF};
+  \node[b, draw=QVert, fill=QVertBg, text width=3.8cm] (d3) at (7.4,-4) {SYN déjà adressé au Pod ;\\aucune traduction en route};
+  \draw[qarr, draw=QVert] (c3) -- (d3);
+
+\end{tikzpicture}
+\end{document}

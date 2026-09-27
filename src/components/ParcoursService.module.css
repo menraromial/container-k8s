@@ -1,0 +1,110 @@
+.cadre {
+  border: 1px solid var(--q-rule);
+  border-left: 4px solid var(--part);
+  background: var(--q-surface);
+  border-radius: 3px;
+  padding: 1rem 1.1rem;
+  margin: 1.5rem 0;
+}
+
+.modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  margin-bottom: 0.8rem;
+}
+
+.modes label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: var(--q-muted);
+}
+
+.modes .actif {
+  color: var(--q-ink);
+  font-weight: 600;
+}
+
+.boutons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.boutons button {
+  font-family: var(--ifm-font-family-base);
+  font-size: 0.88rem;
+  padding: 0.3rem 0.8rem;
+  color: var(--q-ink);
+  background: var(--q-bg);
+  border: 1px solid var(--q-rule);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.boutons button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.etapes {
+  margin: 0 0 0.8rem;
+  padding-left: 1.4rem;
+  font-size: 0.9rem;
+}
+
+.etapes li {
+  margin: 0.25rem 0;
+}
+
+.lieu {
+  display: inline-block;
+  min-width: 7.5rem;
+  margin-right: 0.5rem;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.78rem;
+  color: var(--q-muted);
+}
+
+.table {
+  display: table;
+  width: 100%;
+  margin: 0.4rem 0 0.4rem;
+  font-size: 0.88rem;
+}
+
+.table th {
+  font-family: var(--ifm-font-family-monospace);
+  font-weight: normal;
+  color: var(--q-muted);
+}
+
+.barre {
+  width: 35%;
+}
+
+.barre span {
+  display: block;
+  height: 0.7rem;
+  background: var(--fig-vert-bg);
+  border: 1px solid var(--fig-vert);
+  border-radius: 1px;
+  transition: width 0.2s;
+}
+
+.note {
+  font-size: 0.82rem;
+  color: var(--q-muted);
+  margin: 0.4rem 0 0;
+}
+
+@media (max-width: 600px) {
+  .lieu {
+    display: block;
+    min-width: 0;
+  }
+}

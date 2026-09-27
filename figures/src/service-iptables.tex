@@ -1,0 +1,32 @@
+% Figure 40.1 : les règles iptables que kube-proxy écrit pour le Service ch40/web (valeurs réelles du chapitre 40).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    ch/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=4.6cm},
+    pod/.style={qbox, font=\scriptsize, align=center, inner sep=3pt, text width=2.4cm, draw=QVert, fill=QVertBg},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    etape/.style={qnum=QBleu}]
+
+  \node[qbox, font=\scriptsize, draw=QVert, fill=QVertBg, text width=2.6cm, align=center] (cl) at (0,0) {Pod {\ttfamily client}\\{\ttfamily 10.244.1.9}\\SYN vers\\{\ttfamily 10.101.223.47:80}};
+  \node[ch, draw=QBleu, fill=QBleuBg] (svcs) at (4.4,0) {\textbf{\ttfamily KUBE-SERVICES}\\... une règle par Service ...\\{\ttfamily -d 10.101.223.47/32 --dport 80}\\{\ttfamily -j KUBE-SVC-LJMWSUCFDC3EU5W3}};
+  \node[ch, draw=QBleu, fill=QBleuBg, text width=5.1cm] (svc) at (10.1,0) {\textbf{\ttfamily KUBE-SVC-LJMWSUCFDC3EU5W3}\\règle 1 : {\ttfamily --probability 0.333} vers SEP 1\\règle 2 : {\ttfamily --probability 0.500} vers SEP 2\\règle 3 : sans condition, vers SEP 3};
+
+  \node[ch, draw=QOcre, fill=QOcreBg, text width=4.3cm] (s1) at (5.3,-2.9) {\textbf{\ttfamily KUBE-SEP-5UXWIQPGM76JJN4E}\\{\ttfamily DNAT --to 10.244.0.9:8080}};
+  \node[ch, draw=QOcre, fill=QOcreBg, text width=4.3cm] (s2) at (10.1,-2.9) {\textbf{\ttfamily KUBE-SEP-ZEO37YB32KABCENC}\\{\ttfamily DNAT --to 10.244.1.7:8080}};
+  \node[ch, draw=QOcre, fill=QOcreBg, text width=4.3cm] (s3) at (14.9,-2.9) {\textbf{\ttfamily KUBE-SEP-6STEJ6R4P2SZLFDQ}\\{\ttfamily DNAT --to 10.244.1.8:8080}};
+  \node[pod] (p1) at (5.3,-4.7) {Pod {\ttfamily ...-ft499}\\{\ttfamily 10.244.0.9}\\88 connexions sur 300};
+  \node[pod] (p2) at (10.1,-4.7) {Pod {\ttfamily ...-dhmtd}\\{\ttfamily 10.244.1.7}\\112 sur 300};
+  \node[pod] (p3) at (14.9,-4.7) {Pod {\ttfamily ...-7x8bd}\\{\ttfamily 10.244.1.8}\\100 sur 300};
+
+  \draw[qarr] (cl) -- node[etape, above=1mm] {1} (svcs);
+  \draw[qarr] (svcs) -- node[etape, above=1mm] {2} (svc);
+  \draw[qarr, draw=QOcre] (svc.south) -- node[lien, left, pos=0.45] {1/3} (s1.north);
+  \draw[qarr, draw=QOcre] (svc.south) -- node[lien, right, pos=0.5] {2/3 × 1/2} (s2.north);
+  \draw[qarr, draw=QOcre] (svc.south) -- node[lien, right, pos=0.45] {le reste, 1/3} (s3.north);
+  \node[etape] at (8.9,-1.2) {3};
+  \foreach \i in {1,2,3} { \draw[qarr, draw=QVert] (s\i) -- (p\i); }
+  \node[etape] at (3.4,-3.8) {4};
+  \node[lien, anchor=west, text width=4cm, align=left] at (-1.3,-2.9) {conntrack retient la traduction : les paquets suivants et la réponse ne repassent pas par les règles};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,45 @@
+# Trois répliques d'un petit serveur qui répond par le nom de son Pod, leur Service, et un client.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels: {app: web}
+  template:
+    metadata:
+      labels: {app: web}
+    spec:
+      containers:
+      - name: web
+        image: registry.k8s.io/e2e-test-images/agnhost:2.61
+        args: [netexec, --http-port=8080]
+        ports:
+        - {name: http, containerPort: 8080}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  selector: {app: web}
+  ports:
+  - {name: http, port: 80, targetPort: http}
+---
+# Le client : une image d'outils réseau (curl, dig, tcpdump), sur le nœud qui n'est pas le plan de contrôle.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: client
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - {key: node-role.kubernetes.io/control-plane, operator: DoesNotExist}
+  containers:
+  - name: c
+    image: nicolaka/netshoot:v0.14
+    command: [sleep, infinity]
