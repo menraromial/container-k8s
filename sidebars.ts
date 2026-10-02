@@ -114,6 +114,7 @@ const sidebars: SidebarsConfig = {
       link: {type: 'doc', id: 'partie-6/index'},
       items: [
         'partie-6/authentification',
+        'partie-6/rbac',
       ],
     },
   ],

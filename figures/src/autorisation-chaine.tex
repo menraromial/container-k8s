@@ -1,0 +1,27 @@
+% Figure 43.1 : la chaîne d'autorisation de l'API server de minikube (chapitre 43).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    e/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=4.2cm, minimum height=1.1cm},
+    r/.style={qbox, font=\scriptsize, align=center, inner sep=4pt, text width=3.2cm, minimum height=0.9cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[qbox, font=\scriptsize, align=left, inner sep=4pt, text width=4.2cm] (q) at (0,0)
+    {\textbf{attributs de la requête}\\utilisateur, groupes\\verbe, groupe d'API, ressource\\namespace, nom};
+  \node[e, draw=QViolet] (m) at (0,-2.1) {\textbf{1. groupes privilégiés}\\membre de {\ttfamily system:masters} ?};
+  \node[e, draw=QSarcelle] (n) at (0,-3.9) {\textbf{2. Node}\\une identité {\ttfamily system:node:*} ?\\seulement ce qu'utilisent ses Pods};
+  \node[e, draw=QBleu] (b) at (0,-5.7) {\textbf{3. RBAC}\\une liaison réunit portée, sujet\\et règle qui couvre la requête ?};
+
+  \node[r, draw=QVert, fill=QVertBg] (ok) at (6,-3.9) {\textbf{autorisé}\\étape suivante : l'admission};
+  \node[r, draw=QBrique, fill=QBriqueBg] (ko) at (0,-7.6) {\textbf{403 Forbidden}\\personne n'a dit oui};
+
+  \draw[qarr] (q) -- (m);
+  \draw[qarr] (m) -- node[lien, right] {non} (n);
+  \draw[qarr] (n) -- node[lien, right] {pas d'avis} (b);
+  \draw[qarr] (b) -- node[lien, right] {non} (ko);
+  \draw[qarr, draw=QVert] (m.east) -| node[lien, above, pos=0.25] {oui, sans regarder RBAC} (ok.north);
+  \draw[qarr, draw=QVert] (n.east) -- node[lien, above] {oui} (ok.west);
+  \draw[qarr, draw=QVert] (b.east) -| node[lien, below, pos=0.25] {oui : la raison nomme la liaison} (ok.south);
+\end{tikzpicture}
+\end{document}

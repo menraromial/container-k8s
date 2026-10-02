@@ -1,0 +1,92 @@
+.cadre {
+  border: 1px solid var(--q-rule);
+  border-left: 4px solid var(--part);
+  background: var(--q-surface);
+  border-radius: 3px;
+  padding: 1rem 1.1rem;
+  margin: 1.5rem 0;
+}
+
+.formulaire {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.choix {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.85rem;
+  color: var(--q-muted);
+}
+
+.choix select,
+.choix input {
+  font-family: var(--ifm-font-family-base);
+  font-size: 0.9rem;
+  padding: 0.25rem 0.4rem;
+  color: var(--q-ink);
+  background: var(--q-bg);
+  border: 1px solid var(--q-rule);
+  border-radius: 2px;
+  min-width: 8rem;
+}
+
+.requete {
+  font-size: 0.9rem;
+  margin-bottom: 0.6rem;
+}
+
+.etapes {
+  margin: 0 0 0.8rem;
+  padding-left: 1.4rem;
+  font-size: 0.9rem;
+}
+
+.etapes li {
+  margin-bottom: 0.4rem;
+}
+
+.table {
+  display: block;
+  overflow-x: auto;
+  margin: 0.4rem 0 0;
+  font-size: 0.82rem;
+}
+
+.table th,
+.table td {
+  padding: 0.2rem 0.5rem;
+}
+
+.oui {
+  color: var(--q-ink);
+}
+
+.non {
+  color: var(--q-muted);
+}
+
+.accorde td {
+  font-weight: 600;
+  background: color-mix(in srgb, var(--part) 12%, transparent);
+}
+
+.verdictOui,
+.verdictNon {
+  font-size: 0.9rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 2px;
+  border: 1px solid var(--q-rule);
+  overflow-wrap: anywhere;
+}
+
+.verdictOui {
+  border-left: 4px solid var(--part);
+}
+
+.verdictNon {
+  border-left: 4px solid var(--q-muted);
+}

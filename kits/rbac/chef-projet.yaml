@@ -1,0 +1,26 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: chef-projet
+  namespace: ch43
+rules:
+- apiGroups: [""]
+  resources: [pods, configmaps]
+  verbs: [get, list, watch]
+- apiGroups: [rbac.authorization.k8s.io]
+  resources: [roles, rolebindings]
+  verbs: [get, list, create, delete]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: chef-projet
+  namespace: ch43
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
+  name: alice
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: chef-projet

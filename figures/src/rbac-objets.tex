@@ -1,0 +1,25 @@
+% Figure 43.2 : un rôle, une liaison, des sujets ; trois combinaisons (chapitre 43).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    b/.style={qbox, font=\scriptsize, align=left, inner sep=3pt, text width=3.6cm, minimum height=1cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[qtitre] at (-1.9,1.2) {sujets};
+  \node[qtitre] at (3,1.2) {liaison};
+  \node[qtitre] at (8.2,1.2) {rôle};
+
+  \foreach \y/\c/\s/\l/\r/\p in {
+      0/QVert/{groupe {\ttfamily equipe-colis}}/{{\ttfamily RoleBinding astreinte}\\namespace {\ttfamily colis}}/{{\ttfamily Role astreinte}\\défini dans {\ttfamily colis}}/{valable dans {\ttfamily colis}},
+      -2/QBleu/{utilisatrice {\ttfamily carla}}/{{\ttfamily RoleBinding cours-view-carla}\\namespace {\ttfamily colis}}/{{\ttfamily ClusterRole view}\\défini pour tout le cluster}/{valable dans {\ttfamily colis} seulement},
+      -4/QOcre/{ServiceAccount\\{\ttfamily kube-system/default}}/{{\ttfamily ClusterRoleBinding}\\{\ttfamily minikube-rbac}}/{{\ttfamily ClusterRole cluster-admin}}/{valable partout}} {
+    \node[b, draw=\c, fill=\c Bg] (s) at (-0.6,\y) {\s};
+    \node[b, draw=\c] (l) at (4.6,\y) {\l};
+    \node[b, draw=\c] (r) at (9.8,\y) {\r};
+    \draw[qarr] (l.west) -- node[lien, above] {subjects} (s.east);
+    \draw[qarr] (l.east) -- node[lien, above] {roleRef} (r.west);
+    \node[qlbl, font=\scriptsize, text=\c, anchor=west] at (11.9,\y) {\p};
+  }
+\end{tikzpicture}
+\end{document}

@@ -13,7 +13,7 @@ Cette partie suit le trajet d'une requête dans l'API server, celui de la partie
 | Chapitre | Ce que vous y apprenez |
 |---|---|
 | [42. L'authentification](authentification.md) | certificats par l'API CSR, ce qu'on ne peut pas révoquer, jetons de ServiceAccount liés et projetés, OIDC avec un fournisseur écrit à la main |
-| 43. RBAC | Role, ClusterRole, bindings, moindre privilège, `kubectl auth can-i`, escalades classiques |
+| [43. RBAC](rbac.md) | rôles et liaisons, un rôle d'astreinte et un compte de CI pour Colis, agrégation, garde-fous de l'API server, autorisation Node, relire les droits d'un cluster |
 | 44. Durcir les Pods | securityContext, Pod Security Standards et Pod Security Admission |
 | 45. Le contrôle d'admission | webhooks, ValidatingAdmissionPolicy en CEL, Kyverno |
 | 46. Les secrets pour de vrai | chiffrement au repos dans etcd, Sealed Secrets, External Secrets |
