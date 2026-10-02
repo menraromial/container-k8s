@@ -1,0 +1,35 @@
+% Figure 42.1 : les authentificateurs de l'API server et l'identité qu'ils produisent (chapitre 42).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    piece/.style={qbox, font=\scriptsize, align=left, inner sep=3pt, text width=3.1cm, minimum height=0.95cm},
+    auth/.style={qbox, font=\scriptsize, align=left, inner sep=3pt, text width=5.5cm, minimum height=0.95cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[qtitre] at (-1.2,1.35) {ce que présente le client};
+  \node[piece, draw=QBleu, fill=QBleuBg] (p1) at (0.4,0) {\textbf{certificat client}\\pendant la poignée TLS};
+  \node[piece, draw=QViolet, fill=QVioletBg] (p2) at (0.4,-1.5) {\textbf{en-têtes X-Remote-*}\\posés par un proxy frontal};
+  \node[piece, draw=QSarcelle, fill=QSarcelleBg] (p3) at (0.4,-3.4) {\textbf{Authorization: Bearer}\\un jeton};
+  \node[piece, draw=QGris, fill=QGrisBg] (p4) at (0.4,-5.3) {\textbf{rien}};
+
+  \node[qcadre, draw=QOcre, minimum width=6.3cm, minimum height=7.6cm] (as) at (6.7,-2.45) {};
+  \node[qtitre, text=QOcre] at ([xshift=2mm,yshift=-2mm]as.north west) {API server : authentification};
+  \node[auth, draw=QBleu] (a1) at (6.7,0) {signé par l'autorité {\ttfamily -{}-client-ca-file} ?\\CN $\to$ nom, chaque O $\to$ groupe};
+  \node[auth, draw=QViolet] (a2) at (6.7,-1.5) {proxy reconnu par son certificat ?\\X-Remote-User, X-Remote-Group};
+  \node[auth, draw=QSarcelle, text width=5.5cm] (a3) at (6.7,-3.4) {\textbf{jeton d'amorçage} : Secret {\ttfamily bootstrap-token-*}\\\textbf{ServiceAccount} : signé par {\ttfamily sa.key}, objets liés vivants\\\textbf{OIDC} : émetteur de l'{\ttfamily AuthenticationConfiguration}};
+  \node[auth, draw=QGris] (a4) at (6.7,-5.3) {anonyme permis sur ce chemin ?\\{\ttfamily system:anonymous}};
+
+  \foreach \i in {1,2,3,4} { \draw[qarr] (p\i.east) -- (a\i.west); }
+
+  \node[qbox, draw=QVert, fill=QVertBg, font=\scriptsize, align=left, text width=4.1cm, inner sep=4pt] (ui) at (13.2,-1.6)
+    {\textbf{UserInfo}\\[2pt]{\ttfamily username}\\{\ttfamily uid}\\{\ttfamily groups}, dont\\\quad{\ttfamily system:authenticated}\\{\ttfamily extra} : identifiant de la\\\quad pièce, Pod, nœud\dots};
+  \node[qbox, draw=QBrique, fill=QBriqueBg, font=\scriptsize, align=center, text width=4.1cm, inner sep=4pt] (ko) at (13.2,-4.6)
+    {\textbf{401 Unauthorized}\\pièce présentée mais refusée, ou rien et pas d'anonyme};
+  \node[qbox, font=\scriptsize, align=center, text width=4.1cm, inner sep=4pt] (authz) at (13.2,0.9) {autorisation (chapitre 43)};
+
+  \draw[qarr, draw=QVert] (as.east |- ui.west) -- node[lien, above] {un succès} (ui.west);
+  \draw[qarr, draw=QBrique] (as.east |- ko.west) -- node[lien, above] {aucun} (ko.west);
+  \draw[qarr] (ui.north) -- (authz.south);
+\end{tikzpicture}
+\end{document}

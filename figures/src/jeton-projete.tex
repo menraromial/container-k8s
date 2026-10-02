@@ -1,0 +1,38 @@
+% Figure 42.2 : la vie d'un jeton projeté de 600 s, et qui peut vérifier quoi (chapitre 42).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center},
+    verif/.style={qbox, anchor=north, font=\scriptsize, align=left, inner sep=4pt, text width=5.6cm}]
+
+  \node[qtitre] at (-0.3,2.4) {le fichier {\ttfamily /var/run/secrets/coffre/jeton}, vu dans le temps};
+  % axe : 1 cm = 100 s
+  \draw[qarr] (0,0) -- (13.3,0) node[qlbl, right] {s};
+  \foreach \t/\l in {0/0,2/200,4/400,6/600,8/800,10/1000,12/1200} { \draw[draw=QLine, line width=0.6pt] (\t,0.08) -- (\t,-0.08) node[qlbl, below, font=\scriptsize] {\l}; }
+
+  % jetons
+  \draw[draw=QSarcelle, fill=QSarcelleBg, line width=0.8pt, rounded corners=1pt] (0,0.35) rectangle (6,0.85);
+  \node[font=\scriptsize, text=QInk] at (2.4,0.6) {jeton 1 : {\ttfamily iat} 0, {\ttfamily exp} 600};
+  \draw[draw=QSarcelle, fill=QSarcelleBg, line width=0.8pt, rounded corners=1pt] (5.47,-0.95) rectangle (11.47,-0.45);
+  \node[font=\scriptsize, text=QInk] at (8.6,-0.7) {jeton 2 : {\ttfamily iat} 547, {\ttfamily exp} 1147};
+  \draw[draw=QSarcelle, fill=QSarcelleBg, line width=0.8pt, rounded corners=1pt, dashed] (10.9,0.35) rectangle (13.1,0.85);
+  \node[font=\scriptsize, text=QMuted] at (12,0.6) {jeton 3\dots};
+
+  % seuils
+  \draw[qdarr, draw=QOcre] (4.8,1.25) -- (4.8,0.05);
+  \node[lien, text=QOcre, anchor=south] at (4.8,1.25) {80 \% : 480 s};
+  \draw[qarr, draw=QVert] (5.47,-1.35) -- (5.47,-0.98);
+  \node[lien, text=QVert, anchor=north] at (5.47,-1.35) {le kubelet remplace le fichier : 547 s};
+  \draw[decorate, decoration={brace, amplitude=3pt, mirror}, draw=QBrique, line width=0.7pt] (5.47,1.0) -- (6,1.0);
+  \node[lien, text=QBrique, anchor=south west] at (6.05,1.0) {les deux sont valides};
+
+  % qui vérifie quoi
+  \node[verif, draw=QBleu, fill=QBleuBg] (hl) at (2.6,-2.1)
+    {\textbf{n'importe qui, avec les clés publiques}\\({\ttfamily /openid/v1/jwks}, {\ttfamily verifier-jeton.py})\\[2pt]
+     signature RS256 et {\ttfamily kid}\\émetteur {\ttfamily iss}\\audience {\ttfamily aud}\\dates {\ttfamily nbf}, {\ttfamily exp}};
+  \node[verif, draw=QOcre, fill=QOcreBg] (as) at (9.6,-2.1)
+    {\textbf{seul l'API server} (ou un {\ttfamily TokenReview})\\[2pt]
+     tout ce qui est à gauche, plus :\\le ServiceAccount existe, avec le même {\ttfamily uid}\\le Pod lié existe, avec le même {\ttfamily uid}\\(ou le Secret, ou le nœud lié)};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: outil
+  namespace: ch42
+spec:
+  serviceAccountName: robot
+  containers:
+  - name: outil
+    image: nicolaka/netshoot:v0.14
+    command: [sleep, infinity]

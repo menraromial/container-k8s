@@ -106,6 +106,16 @@ const sidebars: SidebarsConfig = {
         'partie-5/defi',
       ],
     },
+    {
+      type: 'category',
+      label: 'VI · Sécurité',
+      className: 'partie-6',
+      collapsed: false,
+      link: {type: 'doc', id: 'partie-6/index'},
+      items: [
+        'partie-6/authentification',
+      ],
+    },
   ],
 };
 

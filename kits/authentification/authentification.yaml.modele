@@ -1,0 +1,21 @@
+apiVersion: apiserver.config.k8s.io/v1
+kind: AuthenticationConfiguration
+jwt:
+- issuer:
+    url: https://192.168.49.1:9443
+    audiences: [cluster-cours]
+    certificateAuthority: |
+CA_DU_FOURNISSEUR
+  claimMappings:
+    username:
+      claim: email
+      prefix: "oidc:"
+    groups:
+      claim: groups
+      prefix: "oidc:"
+anonymous:
+  enabled: true
+  conditions:
+  - path: /livez
+  - path: /readyz
+  - path: /healthz
