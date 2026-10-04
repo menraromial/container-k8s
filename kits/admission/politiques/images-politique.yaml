@@ -1,0 +1,33 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: images-colis
+spec:
+  failurePolicy: Fail
+  paramKind:
+    apiVersion: v1
+    kind: ConfigMap
+  matchConstraints:
+    resourceRules:
+    - apiGroups: ["apps"]
+      apiVersions: ["v1"]
+      operations: ["CREATE", "UPDATE"]
+      resources: ["deployments", "statefulsets", "daemonsets"]
+    - apiGroups: [""]
+      apiVersions: ["v1"]
+      operations: ["CREATE", "UPDATE"]
+      resources: ["pods"]
+  variables:
+  - name: gabarit
+    expression: "object.kind == 'Pod' ? object.spec : object.spec.template.spec"
+  - name: images
+    expression: "variables.gabarit.containers.map(c, c.image) + (has(variables.gabarit.initContainers) ? variables.gabarit.initContainers.map(c, c.image) : [])"
+  - name: registres
+    expression: "params.data.registres.split(',')"
+  validations:
+  - expression: "variables.images.all(i, i.contains('@sha256:') || (i.split('/')[i.split('/').size() - 1].contains(':') && !i.endsWith(':latest')))"
+    messageExpression: "'chaque image doit porter une étiquette autre que latest, ou une empreinte : ' + variables.images.join(', ')"
+    reason: Invalid
+  - expression: "variables.images.all(i, variables.registres.exists(r, i.startsWith(r)))"
+    messageExpression: "'image hors des registres autorisés (' + params.data.registres + ') : ' + variables.images.filter(i, !variables.registres.exists(r, i.startsWith(r))).join(', ')"
+    reason: Forbidden

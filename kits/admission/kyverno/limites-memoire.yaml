@@ -1,0 +1,23 @@
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  name: limites-memoire
+spec:
+  validationActions: [Audit]
+  evaluation:
+    background:
+      enabled: true
+  matchConstraints:
+    resourceRules:
+    - apiGroups: [apps]
+      apiVersions: [v1]
+      operations: [CREATE, UPDATE]
+      resources: [deployments, statefulsets]
+  validations:
+  - expression: >-
+      object.spec.template.spec.containers.all(c,
+        has(c.resources) && has(c.resources.limits) && 'memory' in c.resources.limits)
+    messageExpression: >-
+      'conteneurs sans limite mémoire : ' + object.spec.template.spec.containers
+        .filter(c, !(has(c.resources) && has(c.resources.limits) && 'memory' in c.resources.limits))
+        .map(c, c.name).join(', ')

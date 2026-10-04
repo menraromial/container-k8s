@@ -1,0 +1,26 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: epingle-images
+  annotations:
+    cert-manager.io/inject-ca-from: verif-images/verif-images
+webhooks:
+- name: epingle-images.cours.example
+  admissionReviewVersions: [v1]
+  sideEffects: None
+  failurePolicy: Fail
+  timeoutSeconds: 5
+  reinvocationPolicy: Never
+  clientConfig:
+    service:
+      namespace: verif-images
+      name: verif-images
+      path: /epingler
+  rules:
+  - apiGroups: [apps]
+    apiVersions: [v1]
+    operations: [CREATE, UPDATE]
+    resources: [deployments, statefulsets]
+  namespaceSelector:
+    matchLabels:
+      cours/images-epinglees: "oui"

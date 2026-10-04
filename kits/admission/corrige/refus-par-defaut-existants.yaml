@@ -1,0 +1,53 @@
+apiVersion: policies.kyverno.io/v1
+kind: GeneratingPolicy
+metadata:
+  name: refus-par-defaut
+spec:
+  evaluation:
+    synchronize:
+      enabled: true
+    generateExisting:
+      enabled: true
+  matchConstraints:
+    resourceRules:
+    - apiGroups: [""]
+      apiVersions: [v1]
+      operations: [CREATE, UPDATE]
+      resources: [namespaces]
+  matchConditions:
+  - name: namespace-d-equipe
+    expression: "has(object.metadata.labels) && 'cours/equipe' in object.metadata.labels"
+  generate:
+  - template:
+      interpolate: cel
+      value: |
+        apiVersion: networking.k8s.io/v1
+        kind: NetworkPolicy
+        metadata:
+          name: refus-par-defaut
+          namespace: (( object.metadata.name ))
+        spec:
+          podSelector: {}
+          policyTypes: [Ingress, Egress]
+  - template:
+      interpolate: cel
+      value: |
+        apiVersion: networking.k8s.io/v1
+        kind: NetworkPolicy
+        metadata:
+          name: autoriser-dns
+          namespace: (( object.metadata.name ))
+        spec:
+          podSelector: {}
+          policyTypes: [Egress]
+          egress:
+          - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: kube-system
+              podSelector:
+                matchLabels:
+                  k8s-app: kube-dns
+            ports:
+            - {protocol: UDP, port: 53}
+            - {protocol: TCP, port: 53}

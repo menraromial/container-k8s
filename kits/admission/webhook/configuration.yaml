@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: verif-images
+  annotations:
+    cert-manager.io/inject-ca-from: verif-images/verif-images
+webhooks:
+- name: verif-images.cours.example
+  admissionReviewVersions: [v1]
+  sideEffects: None
+  failurePolicy: Fail
+  timeoutSeconds: 5
+  clientConfig:
+    service:
+      namespace: verif-images
+      name: verif-images
+      path: /valider
+  rules:
+  - apiGroups: [""]
+    apiVersions: [v1]
+    operations: [CREATE, UPDATE]
+    resources: [pods]
+  - apiGroups: [apps]
+    apiVersions: [v1]
+    operations: [CREATE, UPDATE]
+    resources: [deployments, statefulsets]
+  namespaceSelector:
+    matchLabels:
+      cours/images-controlees: "oui"

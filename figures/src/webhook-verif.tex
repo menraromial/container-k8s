@@ -1,0 +1,24 @@
+% Figure 45.2 : le webhook verif-images de bout en bout (chapitre 45).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    b/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=#1, minimum height=1cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[b=3.2cm, draw=QOcre, fill=QOcreBg] (api) at (0,0) {\textbf{API server}\\lit la {\ttfamily ValidatingWebhook-}\\{\ttfamily Configuration} : règles, {\ttfamily caBundle}, {\ttfamily failurePolicy}};
+  \node[b=3.3cm, draw=QSarcelle] (pod) at (8.4,0) {\textbf{Pod} {\ttfamily verif-images}\\Service {\ttfamily verif-images:443}\\{\ttfamily webhook.py}};
+  \node[b=3.9cm, draw=QBleu] (reg) at (14.8,0) {\textbf{registre du cours}\\{\ttfamily host.minikube.internal:5001}};
+
+  \draw[qarr] ([yshift=3mm]api.east) -- node[lien, above] {HTTPS : {\ttfamily AdmissionReview} (uid, objet)} ([yshift=3mm]pod.west);
+  \draw[qarr] ([yshift=-3mm]pod.west) -- node[lien, below] {{\ttfamily allowed}, ou {\ttfamily status} et message} ([yshift=-3mm]api.east);
+  \draw[qarr] ([yshift=3mm]pod.east) -- node[lien, above] {HEAD manifeste} ([yshift=3mm]reg.west);
+  \draw[qarr] ([yshift=-3mm]reg.west) -- node[lien, below] {200 ou 404} ([yshift=-3mm]pod.east);
+
+  \node[b=4.6cm, draw=QVert] (cm) at (8.4,-2.7) {\textbf{cert-manager}\\{\ttfamily Certificate} $\to$ Secret {\ttfamily verif-images-tls}, monté dans le Pod ; le {\ttfamily cainjector} recopie le certificat dans le {\ttfamily caBundle}};
+  \draw[qdarr, draw=QVert] (cm.north) -- (pod.south);
+  \draw[qdarr, draw=QVert] (cm.west) -| (api.south);
+
+  \node[b=4.6cm, draw=QBrique, fill=QBriqueBg] (fp) at (14.6,-2.7) {\textbf{webhook injoignable, en erreur ou trop lent}\\{\ttfamily Fail} : requête refusée (500)\\{\ttfamily Ignore} : requête acceptée, sans contrôle};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,15 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: images-colis
+spec:
+  policyName: images-colis
+  validationActions: [Deny]
+  paramRef:
+    name: images-autorisees
+    namespace: politiques
+    parameterNotFoundAction: Deny
+  matchResources:
+    namespaceSelector:
+      matchLabels:
+        cours/politique-images: "oui"

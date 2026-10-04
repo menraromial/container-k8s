@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: politiques
+---
+# Paramètres de la politique images-colis : préfixes d'images autorisés, séparés par des virgules.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: images-autorisees
+  namespace: politiques
+data:
+  registres: "host.minikube.internal:5001/,redis:,postgres:,busybox:"

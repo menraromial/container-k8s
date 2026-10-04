@@ -15,7 +15,7 @@ Cette partie suit le trajet d'une requête dans l'API server, celui de la partie
 | [42. L'authentification](authentification.md) | certificats par l'API CSR, ce qu'on ne peut pas révoquer, jetons de ServiceAccount liés et projetés, OIDC avec un fournisseur écrit à la main |
 | [43. RBAC](rbac.md) | rôles et liaisons, un rôle d'astreinte et un compte de CI pour Colis, agrégation, garde-fous de l'API server, autorisation Node, relire les droits d'un cluster |
 | [44. Durcir les Pods](durcir-pods.md) | les trois Pod Security Standards, Pod Security Admission et ses modes, nginx durci pas à pas, Colis passé au niveau restricted, le bilan du cluster |
-| 45. Le contrôle d'admission | webhooks, ValidatingAdmissionPolicy en CEL, Kyverno |
+| [45. Le contrôle d'admission](admission.md) | politiques CEL de validation et de mutation, un webhook écrit à la main, failurePolicy, Kyverno pour juger l'existant et générer |
 | 46. Les secrets pour de vrai | chiffrement au repos dans etcd, Sealed Secrets, External Secrets |
 | 47. Faire confiance aux images | vérification des signatures à l'admission, politiques de registres |
 | Défi VI | audit de sécurité de Colis, et correction des écarts |
