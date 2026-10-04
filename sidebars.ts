@@ -115,6 +115,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'partie-6/authentification',
         'partie-6/rbac',
+        'partie-6/durcir-pods',
       ],
     },
   ],

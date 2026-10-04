@@ -1,0 +1,22 @@
+# Durcissement de redis : utilisateur redis (999, groupe 1000), /data dans un emptyDir
+spec:
+  template:
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: redis
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: [ALL]
+        volumeMounts:
+        - {name: donnees-redis, mountPath: /data}
+      volumes:
+      - {name: donnees-redis, emptyDir: {}}

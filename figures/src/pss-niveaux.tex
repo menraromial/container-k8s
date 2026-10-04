@@ -1,0 +1,22 @@
+% Figure 44.1 : les trois niveaux des Pod Security Standards, emboîtés, et ce que chacun ajoute (chapitre 44).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    liste/.style={font=\scriptsize, align=left, anchor=north west, text width=#1, text=QInk}]
+  \node[qcadre, draw=QBrique, minimum width=16.4cm, minimum height=6.6cm, anchor=north west] at (0,0) {};
+  \node[qtitre, text=QBrique] at (0.25,-0.25) {privileged : aucune restriction};
+  \node[liste=4.6cm] at (0.25,-0.95) {plan de contrôle, réseau, stockage :\\{\ttfamily kube-system}, {\ttfamily metallb-system}\\[3pt]
+    tout est permis : conteneurs privilégiés, réseau et PID de l'hôte, {\ttfamily hostPath}\dots};
+
+  \node[qcadre, draw=QOcre, minimum width=11.1cm, minimum height=5.7cm, anchor=north west] at (5.05,-0.6) {};
+  \node[qtitre, text=QOcre] at (5.3,-0.85) {baseline : pas d'accès à l'hôte};
+  \node[liste=5.1cm] at (5.3,-1.55) {interdit :\\- {\ttfamily privileged: true}\\- {\ttfamily hostNetwork}, {\ttfamily hostPID}, {\ttfamily hostIPC}\\- volumes {\ttfamily hostPath}, {\ttfamily hostPort}\\- capabilities hors de la liste par défaut\\- seccomp {\ttfamily Unconfined}\\[3pt]
+    tout Pod « ordinaire » y passe};
+
+  \node[qcadre, draw=QVert, fill=QVertBg, minimum width=5.4cm, minimum height=4.8cm, anchor=north west] at (10.55,-1.2) {};
+  \node[qtitre, text=QVert] at (10.8,-1.45) {restricted};
+  \node[liste=5cm] at (10.8,-2.15) {en plus, exigé :\\- {\ttfamily runAsNonRoot: true}\\- {\ttfamily allowPrivilegeEscalation: false}\\- {\ttfamily capabilities.drop: [ALL]}\\- seccomp {\ttfamily RuntimeDefault}\\- volumes : {\ttfamily configMap}, {\ttfamily secret}, PVC, {\ttfamily emptyDir}\dots\\[3pt]
+    Colis, après ce chapitre};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,25 @@
+% Figure 44.2 : où s'appliquent enforce, warn et audit ; le Deployment accepté dont les Pods sont refusés (chapitre 44).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    b/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=#1, minimum height=1cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[b=2.9cm, draw=QBleu, fill=QBleuBg] (vous) at (0,0) {\textbf{vous}\\{\ttfamily kubectl apply}\\un Deployment};
+  \node[b=4.6cm, draw=QOcre] (adm1) at (5.2,0) {\textbf{Pod Security Admission}\\sur le Deployment :\\{\ttfamily warn} et {\ttfamily audit} vérifient le gabarit,\\{\ttfamily enforce} ne s'applique pas};
+  \node[b=3.2cm, draw=QVert, fill=QVertBg] (dep) at (10.4,0) {Deployment créé\\puis ReplicaSet};
+
+  \node[b=3.6cm, draw=QSarcelle] (ctrl) at (10.4,-2.6) {le contrôleur du ReplicaSet crée un Pod};
+  \node[b=4.6cm, draw=QOcre] (adm2) at (5.2,-2.6) {\textbf{Pod Security Admission}\\sur le Pod : {\ttfamily enforce} s'applique};
+  \node[b=2.9cm, draw=QBrique, fill=QBriqueBg] (refus) at (0,-2.6) {\textbf{Pod refusé}\\événement {\ttfamily FailedCreate} sur le ReplicaSet};
+
+  \draw[qarr] (vous) -- (adm1);
+  \draw[qarr] (adm1) -- node[lien, above] {accepté} (dep);
+  \draw[qarr, draw=QOcre] (adm1.north) -- ++(0,0.55) -| node[lien, above, pos=0.25] {« Warning: would violate PodSecurity… »} (vous.north);
+  \draw[qarr] (dep) -- (ctrl);
+  \draw[qarr] (ctrl) -- (adm2);
+  \draw[qarr, draw=QBrique] (adm2) -- node[lien, above] {violation} (refus);
+  \node[qlbl, font=\scriptsize, align=center, text width=8cm] at (5.2,-3.9) {kubectl a affiché un avertissement et rendu la main ; le Deployment reste à 0 réplique prête, sans autre message};
+\end{tikzpicture}
+\end{document}

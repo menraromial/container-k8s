@@ -1,0 +1,24 @@
+# Durcissement de web (nginx) : utilisateur nginx (101), cache et PID dans des emptyDir
+spec:
+  template:
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: web
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: [ALL]
+        volumeMounts:
+        - {name: cache, mountPath: /var/cache/nginx}
+        - {name: run, mountPath: /run}
+      volumes:
+      - {name: cache, emptyDir: {}}
+      - {name: run, emptyDir: {}}
