@@ -118,6 +118,7 @@ const sidebars: SidebarsConfig = {
         'partie-6/durcir-pods',
         'partie-6/admission',
         'partie-6/secrets',
+        'partie-6/images',
       ],
     },
   ],

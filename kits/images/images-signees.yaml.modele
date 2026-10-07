@@ -1,0 +1,37 @@
+apiVersion: policies.kyverno.io/v1
+kind: ImageValidatingPolicy
+metadata:
+  name: images-signees
+spec:
+  validationActions: [Deny]
+  matchConstraints:
+    resourceRules:
+    - apiGroups: [""]
+      apiVersions: [v1]
+      operations: [CREATE, UPDATE]
+      resources: [pods]
+    namespaceSelector:
+      matchLabels:
+        cours/images-signees: "oui"
+  # seules les images du registre du cours sont concernées
+  matchImageReferences:
+  - glob: "host.minikube.internal:5001/*"
+  credentials:
+    allowInsecureRegistry: true      # le registre du cours parle HTTP
+  attestors:
+  - name: cours
+    cosign:
+      key:
+        data: |
+          CLE_PUBLIQUE
+      ctlog:
+        insecureIgnoreTlog: true     # signatures faites hors ligne, sans journal de transparence (chapitre 14)
+        insecureIgnoreSCT: true
+  validationConfigurations:
+    required: true
+    verifyDigest: true
+    mutateDigest: true
+  validations:
+  - expression: >-
+      images.containers.map(image, verifyImageSignatures(image, [attestors.cours])).all(n, n > 0)
+    message: "image du registre du cours sans signature valide de la clé du cours"

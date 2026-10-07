@@ -17,7 +17,7 @@ Cette partie suit le trajet d'une requête dans l'API server, celui de la partie
 | [44. Durcir les Pods](durcir-pods.md) | les trois Pod Security Standards, Pod Security Admission et ses modes, nginx durci pas à pas, Colis passé au niveau restricted, le bilan du cluster |
 | [45. Le contrôle d'admission](admission.md) | politiques CEL de validation et de mutation, un webhook écrit à la main, failurePolicy, Kyverno pour juger l'existant et générer |
 | [46. Les secrets pour de vrai](secrets.md) | une sauvegarde d'etcd qui contient les mots de passe, le chiffrement au repos et ses pièges, Sealed Secrets, External Secrets et Vault |
-| 47. Faire confiance aux images | vérification des signatures à l'admission, politiques de registres |
+| [47. Faire confiance aux images](images.md) | signatures vérifiées à l'admission, épinglage par empreinte, analyses signées exigées, signatures sans clé des projets tiers |
 | Défi VI | audit de sécurité de Colis, et correction des écarts |
 
 Il vous faut le cluster minikube principal, tel que la partie V l'a laissé. Plusieurs chapitres modifient la configuration de l'API server pour la durée d'une expérience ; chacun dit comment la remettre en état, et les scripts de rejeu le font d'eux-mêmes en sortant.

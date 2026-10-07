@@ -1,0 +1,40 @@
+apiVersion: policies.kyverno.io/v1
+kind: ImageValidatingPolicy
+metadata:
+  name: analyse-vulnerabilites
+spec:
+  validationActions: [Deny]
+  matchConstraints:
+    resourceRules:
+    - apiGroups: [""]
+      apiVersions: [v1]
+      operations: [CREATE, UPDATE]
+      resources: [pods]
+    namespaceSelector:
+      matchLabels:
+        cours/analyse-exigee: "oui"
+  matchImageReferences:
+  - glob: "host.minikube.internal:5001/*"
+  credentials:
+    allowInsecureRegistry: true
+  attestors:
+  - name: cours
+    cosign:
+      key:
+        data: |
+          CLE_PUBLIQUE
+      ctlog:
+        insecureIgnoreTlog: true
+        insecureIgnoreSCT: true
+  attestations:
+  - name: vuln
+    intoto:
+      type: https://cosign.sigstore.dev/attestation/vuln/v1
+  validations:
+  - expression: >-
+      images.containers.map(image, verifyAttestationSignatures(image, attestations.vuln, [attestors.cours])).all(n, n > 0)
+    message: "aucune analyse de vulnérabilités signée par la clé du cours"
+  - expression: >-
+      images.containers.map(image, extractPayload(image, attestations.vuln).scanner.result.Results.all(r,
+        !has(r.Vulnerabilities) || r.Vulnerabilities.all(v, v.Severity != 'CRITICAL' && v.Severity != 'HIGH'))).all(ok, ok)
+    message: "l'analyse signée signale des vulnérabilités de sévérité HIGH ou CRITICAL"

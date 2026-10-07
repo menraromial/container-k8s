@@ -1,0 +1,28 @@
+% Figure 47.1 : de la construction à l'admission, ce qui accompagne l'image dans le registre (chapitre 47).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    b/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=#1, minimum height=1.05cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[b=3cm, draw=QBleu, fill=QBleuBg] (ci) at (0,0) {\textbf{intégration continue}\\construit {\ttfamily colis/web:1.1}\\analyse avec Trivy};
+  \node[b=2.6cm, draw=QBrique] (cle) at (0,-2.4) {\textbf{clé privée}\\{\ttfamily cosign.key}, chez qui publie};
+
+  \node[qcadre, draw=QOcre, minimum width=4.6cm, minimum height=3.7cm] (reg) at (5.6,-1.05) {};
+  \node[qtitre, text=QOcre] at ([xshift=2mm,yshift=-2mm]reg.north west) {registre};
+  \node[b=4cm, draw=QOcre] (img) at (5.6,-0.45) {image {\ttfamily sha256:9ac4\dots}\\étiquette {\ttfamily 1.1} : un pointeur mobile};
+  \node[b=4cm, draw=QOcre, fill=QOcreBg] (sig) at (5.6,-1.75) {{\ttfamily sha256-9ac4\dots.sig} : signature\\{\ttfamily sha256-9ac4\dots.att} : analyse signée};
+
+  \node[qcadre, draw=QVert, minimum width=4.9cm, minimum height=3.7cm] (adm) at (11.6,-1.05) {};
+  \node[qtitre, text=QVert] at ([xshift=2mm,yshift=-2mm]adm.north west) {admission (Kyverno)};
+  \node[font=\scriptsize, align=left, text width=4.5cm, anchor=north west] at (9.35,-0.6) {1. étiquette $\to$ empreinte\\2. signature vérifiée avec la clé publique\\3. analyse signée, sans faille grave\\4. le Pod reçoit {\ttfamily web:1.1@sha256:9ac4\dots}};
+
+  \draw[qarr] (ci) -- node[lien, above] {pousse} (img.west |- ci);
+  \draw[qarr] (cle) -- node[lien, below] {signe, atteste} (sig.west |- cle);
+  \draw[qdarr] (cle) -- (ci);
+  \draw[qarr] (reg.east) -- node[lien, above] {lit} (adm.west);
+  \node[b=2.8cm, draw=QSarcelle] (pub) at (11.6,-3.9) {\textbf{clé publique}\\dans la politique};
+  \draw[qarr] (pub) -- (adm.south);
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,40 @@
+# Contournement : avec Kyverno 1.19.1, une ImageValidatingPolicy ne sait pas vérifier une
+# attestation signée hors ligne (pull request kyverno#17217). L'ancien type ClusterPolicy, déprécié, le fait.
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: analyse-vulnerabilites-classique
+spec:
+  validationFailureAction: Enforce
+  webhookTimeoutSeconds: 15
+  rules:
+  - name: analyse-signee-sans-faille-grave
+    match:
+      any:
+      - resources:
+          kinds: [Pod]
+          namespaceSelector:
+            matchLabels:
+              cours/analyse-exigee: "oui"
+    verifyImages:
+    - imageReferences: ["host.minikube.internal:5001/*"]
+      mutateDigest: true
+      imageRegistryCredentials:
+        allowInsecureRegistry: true
+      attestations:
+      - type: https://cosign.sigstore.dev/attestation/vuln/v1
+        attestors:
+        - entries:
+          - keys:
+              publicKeys: |-
+                  CLE_PUBLIQUE
+              rekor:
+                ignoreTlog: true
+              ctlog:
+                ignoreSCT: true
+        conditions:
+        - all:
+          - key: "{{ scanner.result.Results[].Vulnerabilities[?Severity=='HIGH' || Severity=='CRITICAL'][] | length(@) }}"
+            operator: Equals
+            value: 0
+            message: "l'analyse signée signale des vulnérabilités de sévérité HIGH ou CRITICAL"

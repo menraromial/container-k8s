@@ -1,0 +1,21 @@
+% Figure 47.2 : signer avec une clé, ou sans clé (identité du workflow), et ce que vérifie chacun (chapitre 47).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    b/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=#1, minimum height=1cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[qtitre] at (-1.3,1.1) {avec une clé (Colis, dans ce cours)};
+  \node[b=3.1cm, draw=QBrique] (k1) at (0.3,0) {\textbf{clé privée}\\gardée par l'équipe, à protéger et faire tourner};
+  \node[b=3.1cm, draw=QOcre] (k2) at (4.8,0) {\textbf{signature}\\dans le registre};
+  \node[b=3.6cm, draw=QVert] (k3) at (9.6,0) {\textbf{on vérifie :}\\signé par la clé dont on a la partie publique};
+  \draw[qarr] (k1) -- (k2); \draw[qarr] (k2) -- (k3);
+
+  \node[qtitre] at (-1.3,-1.6) {sans clé (Kyverno, External Secrets)};
+  \node[b=3.1cm, draw=QBleu] (s1) at (0.3,-2.8) {\textbf{workflow de publication}\\identité OIDC fournie par GitHub Actions};
+  \node[b=3.1cm, draw=QOcre] (s2) at (4.8,-2.8) {\textbf{certificat éphémère}\\(Fulcio), signature inscrite au journal public (Rekor)};
+  \node[b=3.6cm, draw=QVert] (s3) at (9.6,-2.8) {\textbf{on vérifie :}\\signé par \emph{ce} workflow de \emph{ce} dépôt, à \emph{tel} commit};
+  \draw[qarr] (s1) -- (s2); \draw[qarr] (s2) -- (s3);
+\end{tikzpicture}
+\end{document}
