@@ -1,0 +1,21 @@
+% Figure 46.2 : External Secrets et Vault, du coffre au Pod (chapitre 46).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    b/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=#1, minimum height=1.05cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[b=3.6cm, draw=QViolet, fill=QVioletBg] (eso) at (0,0) {\textbf{External Secrets}\\lit l'{\ttfamily ExternalSecret} {\ttfamily colis-partenaire} et son {\ttfamily SecretStore}};
+  \node[b=3.2cm, draw=QOcre, fill=QOcreBg] (api) at (4.2,-3.4) {\textbf{API server}\\TokenRequest, TokenReview, Secrets};
+  \node[b=3.6cm, draw=QBleu, fill=QBleuBg] (vault) at (8.4,0) {\textbf{Vault} ({\ttfamily coffre})\\rôle {\ttfamily colis-eso} : compte {\ttfamily colis/eso-colis}, politique {\ttfamily colis-lecture}};
+  \node[b=3.2cm, draw=QSarcelle] (pod) at (10.4,-3.4) {\textbf{Pod} {\ttfamily lecteur}\\fichier : environ 1 min\\variable : jamais};
+
+  \draw[qarr] ([xshift=-6mm]eso.south) |- node[lien, left, text width=2.3cm, align=right, pos=0.3] {1. jeton pour {\ttfamily eso-colis}, audience {\ttfamily vault}} (api.west);
+  \draw[qarr] (eso.east) -- node[lien, above] {2. connexion avec le jeton} (vault.west);
+  \draw[qarr] ([xshift=-6mm]vault.south) |- node[lien, right, text width=2.6cm, align=left, pos=0.3] {3. TokenReview : ce jeton est-il valide ?} (api.east);
+  \draw[qarr] ([yshift=-3mm]vault.west) -- node[lien, below] {4. secret {\ttfamily colis/api}} ([yshift=-3mm]eso.east);
+  \draw[qarr] (eso.south east) -- node[lien, right, text width=2.2cm, align=left] {5. écrit le Secret, toutes les 30 s} ([xshift=-6mm]api.north);
+  \draw[qarr] (api.south) -- ++(0,-0.6) -| node[lien, below, pos=0.25] {6. kubelet, au Pod} (pod.south);
+\end{tikzpicture}
+\end{document}
