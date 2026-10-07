@@ -1,0 +1,254 @@
+# Corrigé du défi VI : le même Colis, conforme aux règles de la partie VI.
+# Le Secret colis-db est créé par corriger.sh (jamais écrit en clair dans un manifeste versionné).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: colis-audit
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: v1.37
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: v1.37
+    cours/politique-images: "oui"
+    cours/images-signees: "oui"
+    cours/analyse-exigee: "oui"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: colis-config
+  namespace: colis-audit
+data:
+  COLIS_REDIS: redis://redis:6379/0
+  COLIS_PURGE_JOURS: "30"
+  COLIS_VERSION: "2.1.0"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: colis-audit
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app.kubernetes.io/name: postgres}
+  template:
+    metadata:
+      labels: {app.kubernetes.io/name: postgres, app.kubernetes.io/part-of: colis}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 70
+        runAsGroup: 70
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+      - name: postgres
+        image: postgres:18-alpine
+        env:
+        - {name: POSTGRES_USER, value: colis}
+        - {name: POSTGRES_DB, value: colis}
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef: {name: colis-db, key: POSTGRES_PASSWORD}
+        ports:
+        - containerPort: 5432
+        resources:
+          requests: {cpu: 20m, memory: 64Mi}
+          limits: {memory: 256Mi}
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: {drop: [ALL]}
+        volumeMounts:
+        - {name: donnees, mountPath: /var/lib/postgresql}
+        - {name: socket, mountPath: /var/run/postgresql}
+        - {name: tmp, mountPath: /tmp}
+      volumes:
+      - {name: donnees, emptyDir: {}}
+      - {name: socket, emptyDir: {}}
+      - {name: tmp, emptyDir: {}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: colis-audit
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app.kubernetes.io/name: redis}
+  template:
+    metadata:
+      labels: {app.kubernetes.io/name: redis, app.kubernetes.io/part-of: colis}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 1000
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+      - name: redis
+        image: redis:8.8-alpine
+        ports:
+        - containerPort: 6379
+        resources:
+          requests: {cpu: 10m, memory: 16Mi}
+          limits: {memory: 128Mi}
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: {drop: [ALL]}
+        volumeMounts:
+        - {name: donnees-redis, mountPath: /data}
+      volumes:
+      - {name: donnees-redis, emptyDir: {}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: colis-audit
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app.kubernetes.io/name: api}
+  template:
+    metadata:
+      labels: {app.kubernetes.io/name: api, app.kubernetes.io/part-of: colis}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+      - name: api
+        image: host.minikube.internal:5001/colis/api:2.1
+        envFrom:
+        - configMapRef: {name: colis-config}
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef: {name: colis-db, key: POSTGRES_PASSWORD}
+        - {name: COLIS_DB, value: "postgresql://colis:$(POSTGRES_PASSWORD)@postgres:5432/colis"}
+        ports:
+        - {name: http, containerPort: 8000}
+        readinessProbe:
+          httpGet: {path: /pret, port: http}
+        resources:
+          requests: {cpu: 20m, memory: 64Mi}
+          limits: {memory: 256Mi}
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: {drop: [ALL]}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: colis-audit
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app.kubernetes.io/name: web}
+  template:
+    metadata:
+      labels: {app.kubernetes.io/name: web, app.kubernetes.io/part-of: colis}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+      - name: web
+        image: host.minikube.internal:5001/colis/web:1.1
+        ports:
+        - {name: http, containerPort: 80}
+        resources:
+          requests: {cpu: 10m, memory: 16Mi}
+          limits: {memory: 64Mi}
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: {drop: [ALL]}
+        volumeMounts:
+        - {name: cache, mountPath: /var/cache/nginx}
+        - {name: run, mountPath: /run}
+      volumes:
+      - {name: cache, emptyDir: {}}
+      - {name: run, emptyDir: {}}
+---
+# Réseau : tout fermé, puis les seuls flux de l'application (chapitre 41).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: refus-par-defaut, namespace: colis-audit}
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: dns, namespace: colis-audit}
+spec:
+  podSelector: {}
+  policyTypes: [Egress]
+  egress:
+  - to:
+    - namespaceSelector: {matchLabels: {kubernetes.io/metadata.name: kube-system}}
+      podSelector: {matchLabels: {k8s-app: kube-dns}}
+    ports:
+    - {protocol: UDP, port: 53}
+    - {protocol: TCP, port: 53}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: web, namespace: colis-audit}
+spec:
+  podSelector: {matchLabels: {app.kubernetes.io/name: web}}
+  policyTypes: [Ingress, Egress]
+  ingress:
+  - ports: [{port: 80}]
+  egress:
+  - to: [{podSelector: {matchLabels: {app.kubernetes.io/name: api}}}]
+    ports: [{port: 8000}]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: api, namespace: colis-audit}
+spec:
+  podSelector: {matchLabels: {app.kubernetes.io/name: api}}
+  policyTypes: [Ingress, Egress]
+  ingress:
+  - from: [{podSelector: {matchLabels: {app.kubernetes.io/name: web}}}]
+    ports: [{port: 8000}]
+  egress:
+  - to: [{podSelector: {matchLabels: {app.kubernetes.io/name: postgres}}}]
+    ports: [{port: 5432}]
+  - to: [{podSelector: {matchLabels: {app.kubernetes.io/name: redis}}}]
+    ports: [{port: 6379}]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: postgres, namespace: colis-audit}
+spec:
+  podSelector: {matchLabels: {app.kubernetes.io/name: postgres}}
+  policyTypes: [Ingress]
+  ingress:
+  - from: [{podSelector: {matchLabels: {app.kubernetes.io/name: api}}}]
+    ports: [{port: 5432}]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: redis, namespace: colis-audit}
+spec:
+  podSelector: {matchLabels: {app.kubernetes.io/name: redis}}
+  policyTypes: [Ingress]
+  ingress:
+  - from: [{podSelector: {matchLabels: {app.kubernetes.io/name: api}}}]
+    ports: [{port: 6379}]

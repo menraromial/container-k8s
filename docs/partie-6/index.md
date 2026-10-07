@@ -18,6 +18,6 @@ Cette partie suit le trajet d'une requête dans l'API server, celui de la partie
 | [45. Le contrôle d'admission](admission.md) | politiques CEL de validation et de mutation, un webhook écrit à la main, failurePolicy, Kyverno pour juger l'existant et générer |
 | [46. Les secrets pour de vrai](secrets.md) | une sauvegarde d'etcd qui contient les mots de passe, le chiffrement au repos et ses pièges, Sealed Secrets, External Secrets et Vault |
 | [47. Faire confiance aux images](images.md) | signatures vérifiées à l'admission, épinglage par empreinte, analyses signées exigées, signatures sans clé des projets tiers |
-| Défi VI | audit de sécurité de Colis, et correction des écarts |
+| [Défi VI](defi.md) | auditer une copie de Colis déployée trop vite, avec les outils de la partie, et la corriger sans la casser |
 
 Il vous faut le cluster minikube principal, tel que la partie V l'a laissé. Plusieurs chapitres modifient la configuration de l'API server pour la durée d'une expérience ; chacun dit comment la remettre en état, et les scripts de rejeu le font d'eux-mêmes en sortant.
