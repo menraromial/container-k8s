@@ -1,0 +1,31 @@
+% Figure 48.1 : descendre d'une couche à la fois, du symptôme au nœud (chapitre 48).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    couche/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=3.3cm, minimum height=0.95cm},
+    q/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=5.1cm, minimum height=0.95cm, draw=QGris},
+    o/.style={qbox, font=\scriptsize\ttfamily, align=left, inner sep=4pt, text width=5.4cm, minimum height=0.95cm, fill=QGrisBg, draw=QGris}]
+
+  \node[qlbl] at (0,0.75) {couche};
+  \node[qlbl] at (5.0,0.75) {la question};
+  \node[qlbl] at (10.9,0.75) {les commandes};
+
+  \foreach \i/\c/\coul/\fond/\qq/\oo in {
+    0/{\textbf{1. le symptôme}\\ce que voit l'utilisateur}/QBrique/QBriqueBg/{Quel code, quel message, pour quelle URL ? Toujours, ou parfois ?}/{curl -v, port-forward,\\journal du composant d'entrée},
+    1/{\textbf{2. les objets}\\Deployments, Pods}/QOcre/QOcreBg/{Qui n'est pas prêt, qui redémarre ? Depuis quand ?}/{get deploy,pods -o wide\\events --types=Warning},
+    2/{\textbf{3. le Service}\\sélecteur, EndpointSlices}/QViolet/QVioletBg/{Le Service a-t-il des points d'accès, et sont-ils prêts ?}/{get svc -o wide\\get endpointslices},
+    3/{\textbf{4. le Pod}\\ordonnancement, sondes}/QBleu/QBleuBg/{Placé ? Démarré ? Pourquoi le kubelet l'a-t-il tué ou écarté ?}/{describe pod, events --for\\.status.containerStatuses},
+    4/{\textbf{5. le conteneur}\\le processus}/QSarcelle/QSarcelleBg/{Pourquoi le processus s'arrête-t-il ? Que dit-il avant ?}/{logs, logs --previous\\lastState.terminated},
+    5/{\textbf{6. l'intérieur du Pod}\\réseau, fichiers, processus}/QVert/QVertBg/{Que voit le processus : DNS, ports, fichiers, variables ?}/{exec, debug (éphémère),\\debug --copy-to},
+    6/{\textbf{7. le nœud}\\kubelet, runtime}/QGris/QGrisBg/{Que disent le kubelet et le runtime ? Où sont les fichiers ?}/{debug node/, crictl,\\journalctl -u kubelet}}{
+    \node[couche, draw=\coul, fill=\fond] (c\i) at (0,-1.25*\i) {\c};
+    \node[q] (q\i) at (5.0,-1.25*\i) {\qq};
+    \node[o] (o\i) at (10.9,-1.25*\i) {\oo};
+  }
+  \foreach \i [evaluate=\i as \j using int(\i+1)] in {0,...,5} {
+    \draw[qarr] (c\i.south) -- (c\j.north);
+  }
+  \node[qlbl, align=left, font=\scriptsize, text width=3.4cm, anchor=north west] at (-1.75,-8.15) {on ne descend d'une couche que si celle-ci n'explique pas le symptôme};
+\end{tikzpicture}
+\end{document}

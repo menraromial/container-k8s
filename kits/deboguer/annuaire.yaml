@@ -1,0 +1,72 @@
+# Un petit serveur DNS bâti sur l'image de CoreDNS : une image « distroless »,
+# sans shell ni outils. Il répond pour la zone colis.interne.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: annuaire
+  namespace: ch48
+data:
+  Corefile: |
+    colis.interne:53 {
+        file /etc/coredns/colis.interne.zone
+        log
+        errors
+    }
+  colis.interne.zone: |
+    $ORIGIN colis.interne.
+    @       3600 IN SOA annuaire.colis.interne. astreinte.colis.interne. 1 7200 3600 1209600 3600
+    api     3600 IN A   10.0.0.10
+    web     3600 IN A   10.0.0.20
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: annuaire
+  namespace: ch48
+  labels:
+    app.kubernetes.io/name: annuaire
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: annuaire
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: annuaire
+    spec:
+      containers:
+      - name: coredns
+        image: registry.k8s.io/coredns/coredns:v1.14.6
+        args: ["-conf", "/etc/coredns/Corefile", "-dns.port", "1053"]
+        ports:
+        - name: dns
+          containerPort: 1053
+          protocol: UDP
+        resources:
+          requests:
+            cpu: 10m
+            memory: 16Mi
+          limits:
+            memory: 64Mi
+        volumeMounts:
+        - name: config
+          mountPath: /etc/coredns
+      volumes:
+      - name: config
+        configMap:
+          name: annuaire
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: annuaire
+  namespace: ch48
+spec:
+  selector:
+    app.kubernetes.io/name: annuaire
+  ports:
+  - name: dns
+    port: 53
+    protocol: UDP
+    targetPort: dns

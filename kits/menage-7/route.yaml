@@ -1,0 +1,55 @@
+# La route de Colis, en HTTPS seulement, sans le canari du chapitre 28 : /api va à l'API,
+# le reste au site. La redirection HTTP vers HTTPS ne change pas.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: colis
+  namespace: colis
+spec:
+  parentRefs:
+  - name: principale
+    namespace: passerelle
+    sectionName: https       # seulement l'écouteur HTTPS
+  hostnames:
+  - colis.local
+  rules:
+  - matches:                 # /api/... va directement à l'API, sans le préfixe
+    - path:
+        type: PathPrefix
+        value: /api
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: /
+    backendRefs:
+    - name: api
+      port: 8000
+  - matches:                 # tout le reste va au site
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: web
+      port: 80
+---
+# Sur l'écouteur HTTP, une seule règle : rediriger vers HTTPS.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: colis-redirection
+  namespace: colis
+spec:
+  parentRefs:
+  - name: principale
+    namespace: passerelle
+    sectionName: http
+  hostnames:
+  - colis.local
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301

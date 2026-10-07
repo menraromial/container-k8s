@@ -1,0 +1,22 @@
+% Figure 48.2 : ce qu'un conteneur éphémère partage avec le conteneur qu'il cible (chapitre 48).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    b/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=#1},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[qcadre, minimum width=13.4cm, minimum height=6.4cm] (pod) at (6.2,-2.3) {};
+  \node[qtitre] at ([xshift=2mm,yshift=-2mm]pod.north west) {Pod {\ttfamily annuaire}};
+
+  % réseau
+  \node[b=12.6cm, draw=QSarcelle, fill=QSarcelleBg, minimum height=0.8cm] (net) at (6.2,-0.55) {\textbf{espace réseau du Pod}, toujours partagé : même adresse IP, même {\ttfamily localhost}, mêmes ports d'écoute ({\ttfamily ss -lunp} y voit le port 53)};
+  % processus
+  \node[b=12.6cm, draw=QBleu, fill=QBleuBg, minimum height=0.8cm] (pid) at (6.2,-1.65) {\textbf{espace de processus de {\ttfamily coredns}}, partagé grâce à {\ttfamily --target=coredns} : le conteneur éphémère voit le PID 1, ses arguments, {\ttfamily /proc/1/environ}};
+
+  \node[b=4.4cm, draw=QLine, minimum height=2.3cm] (cd) at (2.55,-3.85) {\textbf{conteneur {\ttfamily coredns}}\\image distroless : un binaire, des certificats, pas de shell\\PID 1, utilisateur 65532\\{\ttfamily exec -- sh} : introuvable};
+  \node[b=4.9cm, draw=QVert, dashed, fill=QVertBg, minimum height=2.3cm] (eph) at (9.95,-3.85) {\textbf{conteneur éphémère {\ttfamily enquete}}\\image {\ttfamily netshoot} : shell, {\ttfamily dig}, {\ttfamily ss}, {\ttfamily tcpdump}\\ajouté au Pod en marche, jamais retiré\\pas de ports, pas de sondes, pas de ressources};
+
+  \draw[qarr, draw=QVert] (eph.west) -- node[lien, above, text width=2cm] {lit les fichiers par} node[lien, below] {{\ttfamily /proc/1/root}} (cd.east);
+\end{tikzpicture}
+\end{document}

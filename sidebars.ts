@@ -122,6 +122,16 @@ const sidebars: SidebarsConfig = {
         'partie-6/defi',
       ],
     },
+    {
+      type: 'category',
+      label: 'VII · Observer et exploiter',
+      className: 'partie-7',
+      collapsed: false,
+      link: {type: 'doc', id: 'partie-7/index'},
+      items: [
+        'partie-7/deboguer',
+      ],
+    },
   ],
 };
 
