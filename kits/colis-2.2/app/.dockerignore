@@ -1,0 +1,6 @@
+# ce qui ne doit pas partir dans le contexte de construction
+.venv/
+__pycache__/
+.pytest_cache/
+Dockerfile
+.dockerignore

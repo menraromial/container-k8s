@@ -1,0 +1,10 @@
+fastapi==0.141.1
+uvicorn==0.54.0
+psycopg[binary]==3.3.6
+redis==8.1.0
+prometheus-client==0.26.0
+opentelemetry-sdk==1.45.1
+opentelemetry-exporter-otlp-proto-http==1.45.1
+opentelemetry-instrumentation-fastapi==0.66b1
+opentelemetry-instrumentation-psycopg==0.66b1
+opentelemetry-instrumentation-redis==0.66b1

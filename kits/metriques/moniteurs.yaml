@@ -1,0 +1,28 @@
+# Ce que Prometheus doit collecter dans Colis : l'API par son Service, le worker par ses Pods
+# (il n'a pas de Service : personne ne l'appelle).
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: api
+  namespace: colis
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: api
+  endpoints:
+  - port: http          # nom du port du Service
+    path: /metrics/
+    interval: 15s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: worker
+  namespace: colis
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: worker
+  podMetricsEndpoints:
+  - port: metriques     # nom du port du conteneur
+    interval: 15s

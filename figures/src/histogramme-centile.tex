@@ -1,0 +1,32 @@
+% Figure 50.2 : estimation du 95e centile par histogram_quantile, avec les buckets mesurés sur la route /colis (chapitre 50).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=0.22cm,y=0.13cm,
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  % axe des y : de 60 % à 100 %, y = (p - 60)
+  \fill[QOcreBg] (10,0.3) rectangle (25,43);
+  \draw[qarr] (0,0) -- (54,0) node[right, qlbl, font=\scriptsize] {durée (ms)};
+  \draw[qarr] (0,0) -- (0,44) node[above, qlbl, font=\scriptsize, align=center] {part des requêtes\\(cumulée, axe à partir de 60 \%)};
+  \foreach \x in {0,5,10,25,50} {\draw[draw=QLine] (\x,0) -- (\x,-1) node[below, font=\scriptsize] {\x};}
+  \foreach \p in {60,70,80,90,100} {\draw[draw=QLine] (0,\p-60) -- (-0.8,\p-60) node[left, font=\scriptsize] {\p\,\%};}
+  % buckets : le=5 ms 70,8 %, le=10 ms 86,1 %, le=25 ms 99,85 %, le=50 ms 99,85 %
+  \foreach \x/\p/\n in {5/70.8/944, 10/86.1/1148, 25/99.85/1330, 50/99.85/1330} {
+    \fill[QBleu] (\x,\p-60) circle (2.2pt);
+    \node[font=\scriptsize, text=QBleu, anchor=south east] at (\x,\p-60) {\n};
+  }
+  \draw[draw=QBleu, line width=0.8pt] (5,10.8) -- (10,26.1) -- (25,39.85) -- (50,39.85);
+  % 95 % : rang 1266 sur 1332
+  \draw[draw=QBrique, dashed] (0,35) -- (19.7,35);
+  \node[font=\scriptsize, text=QBrique, anchor=east] at (0,35) {95\,\%\ };
+  \draw[draw=QBrique, dashed] (19.7,35) -- (19.7,0);
+  \fill[QBrique] (19.7,35) circle (2.4pt);
+  \node[lien, text=QBrique, anchor=north] at (19.7,-3.8) {19,7 ms\\estimé};
+  \node[lien, anchor=south, fill=none] at (17.5,43) {le bucket qui contient le rang 95 \%};
+  \node[qbox, font=\scriptsize, align=left, text width=5.2cm, inner sep=4pt, anchor=north west] at (29,30) {
+    1\,332 requêtes en 10 minutes\\[2pt]
+    rang visé : $0{,}95 \times 1\,332 = 1\,266$\\[2pt]
+    entre 1\,148 (10 ms) et 1\,330 (25 ms)\\[2pt]
+    $10 + 15 \times \frac{1\,266 - 1\,148}{1\,330 - 1\,148} \approx 19{,}7$ ms};
+\end{tikzpicture}
+\end{document}

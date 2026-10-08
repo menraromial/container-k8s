@@ -1,0 +1,246 @@
+# Le tableau de bord de Colis : le sidecar de Grafana charge toute ConfigMap étiquetée grafana_dashboard.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tableau-colis
+  namespace: colis
+  labels:
+    grafana_dashboard: "1"
+data:
+  colis.json: |
+    {
+      "uid": "colis",
+      "title": "Colis",
+      "tags": [
+        "colis",
+        "cours"
+      ],
+      "timezone": "browser",
+      "refresh": "30s",
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "schemaVersion": 41,
+      "panels": [
+        {
+          "id": 1,
+          "type": "timeseries",
+          "title": "Requêtes par seconde, par route",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "reqps"
+            },
+            "overrides": []
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum by (route) (colis:requetes:taux5m{namespace=\"colis\"})",
+              "legendFormat": "{{route}}"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "type": "timeseries",
+          "title": "Part des réponses en erreur",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "gridPos": {
+            "x": 12,
+            "y": 0,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(colis:requetes:taux5m{namespace=\"colis\", code=~\"5..\"}) / sum(colis:requetes:taux5m{namespace=\"colis\"})",
+              "legendFormat": "5xx"
+            },
+            {
+              "refId": "B",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(colis:requetes:taux5m{namespace=\"colis\", code=~\"4..\"}) / sum(colis:requetes:taux5m{namespace=\"colis\"})",
+              "legendFormat": "4xx"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "type": "timeseries",
+          "title": "Latence, 95e centile",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 8,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "colis:latence:p95_5m{namespace=\"colis\", route!=\"inconnue\"}",
+              "legendFormat": "{{route}}"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "type": "timeseries",
+          "title": "File d'estimation et workers",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "gridPos": {
+            "x": 12,
+            "y": 8,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "max(colis_file_longueur{namespace=\"colis\"})",
+              "legendFormat": "colis en attente"
+            },
+            {
+              "refId": "B",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "kube_deployment_status_replicas{namespace=\"colis\", deployment=\"worker\"}",
+              "legendFormat": "workers"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "type": "timeseries",
+          "title": "Colis enregistrés et estimés (par minute)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 16,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum(rate(colis_enregistres_total{namespace=\"colis\"}[5m])) * 60",
+              "legendFormat": "enregistrés"
+            },
+            {
+              "refId": "B",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum by (par) (rate(colis_estimes_total{namespace=\"colis\"}[5m])) * 60",
+              "legendFormat": "estimés par {{par}}"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "type": "timeseries",
+          "title": "Mémoire des conteneurs",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "gridPos": {
+            "x": 12,
+            "y": 16,
+            "w": 12,
+            "h": 8
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes"
+            },
+            "overrides": []
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"colis\", container!=\"\"})",
+              "legendFormat": "{{pod}}"
+            }
+          ]
+        }
+      ]
+    }

@@ -1,0 +1,48 @@
+# kube-prometheus-stack sur le minikube du cours : Prometheus, Alertmanager, Grafana,
+# kube-state-metrics et node-exporter, réglés pour tenir dans un nœud de 4 Gio.
+prometheus:
+  prometheusSpec:
+    retention: 2d
+    retentionSize: 1GB
+    resources:
+      requests: {cpu: 100m, memory: 400Mi}
+      limits: {memory: 1Gi}
+    # sans ces trois lignes, Prometheus ne lirait que les ServiceMonitor, PodMonitor
+    # et PrometheusRule portant l'étiquette release: supervision
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+alertmanager:
+  alertmanagerSpec:
+    resources:
+      requests: {cpu: 10m, memory: 32Mi}
+      limits: {memory: 128Mi}
+grafana:
+  persistence:
+    enabled: false
+  resources:
+    requests: {cpu: 50m, memory: 128Mi}
+    limits: {memory: 384Mi}
+  sidecar:
+    dashboards:
+      searchNamespace: ALL      # tableaux de bord lus dans les ConfigMaps de tous les namespaces
+prometheusOperator:
+  resources:
+    requests: {cpu: 20m, memory: 64Mi}
+    limits: {memory: 256Mi}
+kube-state-metrics:
+  resources:
+    requests: {cpu: 10m, memory: 32Mi}
+    limits: {memory: 128Mi}
+prometheus-node-exporter:
+  resources:
+    requests: {cpu: 10m, memory: 24Mi}
+    limits: {memory: 64Mi}
+# Dans minikube (comme avec kubeadm par défaut), etcd, kube-controller-manager et kube-scheduler
+# n'exposent leurs métriques que sur 127.0.0.1 : Prometheus ne peut pas les joindre.
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false

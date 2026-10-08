@@ -1,0 +1,19 @@
+# Où envoyer les alertes de Colis. L'opérateur ajoute de lui-même le filtre namespace="colis" :
+# cette configuration ne reçoit que les alertes de son namespace.
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: colis
+  namespace: colis
+spec:
+  route:
+    receiver: pager
+    groupBy: [alertname]
+    groupWait: 30s
+    groupInterval: 2m
+    repeatInterval: 4h
+  receivers:
+  - name: pager
+    webhookConfigs:
+    - url: http://pager.supervision.svc:8080/
+      sendResolved: true

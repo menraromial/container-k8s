@@ -1,0 +1,39 @@
+% Figure 50.1 : la pile de supervision du chapitre 50, de la collecte aux alertes.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    cible/.style={qbox, font=\scriptsize, align=left, inner sep=3pt, text width=4.1cm, minimum height=0.95cm},
+    b/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=#1},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[qtitre] at (-2.1,1.15) {ce qui est collecté};
+  \foreach \i/\t/\d in {
+    0/{API de Colis}/{\ttfamily :8000/metrics/ \rmfamily ServiceMonitor},
+    1/{worker de Colis}/{\ttfamily :9101 \rmfamily PodMonitor},
+    2/{kubelet et cAdvisor}/{conteneurs : processeur, mémoire},
+    3/{kube-state-metrics}/{état des objets : répliques, redémarrages},
+    4/{node-exporter}/{le nœud : disque, réseau, charge},
+    5/{API server, CoreDNS}/{le plan de contrôle joignable}} {
+    \node[cible, anchor=west, draw=\ifnum\i<2 QBleu\else QLine\fi, fill=\ifnum\i<2 QBleuBg\else QPaper\fi] (c\i) at (-2.1,-1.15*\i) {\textbf{\t}\\\d};
+  }
+
+  \node[b=4.2cm, draw=QOcre, fill=QOcreBg, minimum height=3.2cm] (prom) at (6.3,-2.3) {\textbf{Prometheus}\\[2pt]
+    interroge chaque cible toutes les 15 à 30 s (\emph{pull})\\[2pt]
+    base de séries temporelles, 2 jours\\[2pt]
+    évalue les règles : enregistrement et alertes (\texttt{PrometheusRule})};
+  \node[b=4.2cm, draw=QViolet, fill=QVioletBg] (op) at (6.3,0.75) {\textbf{Prometheus Operator}\\traduit ServiceMonitor, PodMonitor, PrometheusRule et AlertmanagerConfig en configuration};
+
+  \foreach \i in {0,...,5} {\draw[qarr] (prom.west) -- (c\i.east);}
+  \node[lien] at (3.6,0.55) {HTTP GET};
+  \draw[qdarr, draw=QViolet] (op.south) -- (prom.north);
+
+  \node[b=3.6cm, draw=QVert, fill=QVertBg] (graf) at (12.4,-0.6) {\textbf{Grafana}\\requêtes PromQL ; tableaux de bord chargés depuis des ConfigMaps};
+  \node[b=3.6cm, draw=QBrique, fill=QBriqueBg] (am) at (12.4,-3.6) {\textbf{Alertmanager}\\regroupe, déduplique, route selon les étiquettes};
+  \node[b=3.6cm] (pager) at (12.4,-5.8) {\textbf{récepteur}\\webhook \texttt{pager} (ailleurs : astreinte, messagerie)};
+
+  \draw[qarr] (graf.west) -- node[lien, above] {PromQL} ([yshift=7mm]prom.east);
+  \draw[qarr] ([yshift=-7mm]prom.east) -- node[lien, below, sloped] {alertes actives} (am.west);
+  \draw[qarr] (am.south) -- (pager.north);
+\end{tikzpicture}
+\end{document}

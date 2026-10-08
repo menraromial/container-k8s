@@ -1,0 +1,46 @@
+# Les règles de Colis : deux règles d'enregistrement (des requêtes calculées d'avance)
+# et trois alertes, chacune sur un symptôme que voit l'utilisateur ou qui le précède.
+# Chaque expression garde l'étiquette namespace : Alertmanager s'en sert pour le routage.
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: colis
+  namespace: colis
+spec:
+  groups:
+  - name: colis.enregistrements
+    rules:
+    - record: colis:requetes:taux5m
+      expr: sum by (namespace, route, code) (rate(colis_http_requetes_total{namespace="colis"}[5m]))
+    - record: colis:latence:p95_5m
+      expr: |
+        histogram_quantile(0.95,
+          sum by (namespace, le, route) (rate(colis_http_duree_secondes_bucket{namespace="colis"}[5m])))
+  - name: colis.alertes
+    rules:
+    - alert: ColisErreursServeur
+      expr: |
+        sum by (namespace) (rate(colis_http_requetes_total{namespace="colis", code=~"5.."}[5m]))
+          / sum by (namespace) (rate(colis_http_requetes_total{namespace="colis"}[5m])) > 0.05
+      for: 2m
+      labels:
+        severite: page
+      annotations:
+        resume: "Plus de 5 % des requêtes de l'API échouent (5xx)"
+        description: "{{ $value | humanizePercentage }} des requêtes en erreur sur 5 minutes."
+    - alert: ColisLenteur
+      expr: colis:latence:p95_5m{route!="inconnue"} > 0.5
+      for: 5m
+      labels:
+        severite: ticket
+      annotations:
+        resume: "La route {{ $labels.route }} est lente"
+        description: "95 % des requêtes en moins de {{ $value | humanizeDuration }}, au lieu de 0,5 s."
+    - alert: ColisFileBloquee
+      expr: max by (namespace) (colis_file_longueur{namespace="colis"}) > 20
+      for: 2m
+      labels:
+        severite: page
+      annotations:
+        resume: "La file d'estimation ne se vide plus"
+        description: "{{ $value }} colis attendent leur date de livraison."

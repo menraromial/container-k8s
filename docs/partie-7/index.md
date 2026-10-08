@@ -14,6 +14,7 @@ La partie avance du plus immédiat au plus lointain. On commence par **l'enquêt
 |---|---|
 | [48. Déboguer](deboguer.md) | une méthode couche par couche, `describe` et les événements, journaux courants et précédents, conteneurs éphémères, copies de Pods, le nœud vu de l'intérieur |
 | [49. Catalogue de pannes](pannes.md) | treize pannes reproduites et corrigées, de `Pending` au finaliseur bloqué, leur signature exacte, et un arbre de diagnostic interactif |
+| [50. Les métriques](metriques.md) | kube-prometheus-stack dans 4 Gio, Colis 2.2 instrumenté, ServiceMonitor et PodMonitor, PromQL par l'exemple, centiles d'histogramme, Grafana versionné, une alerte de bout en bout |
 
 ## Avant de commencer : faire de la place
 
