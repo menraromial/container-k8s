@@ -1,0 +1,22 @@
+# Le refus par défaut du chapitre 41 bloque aussi les sorties : l'API et le worker
+# doivent pouvoir envoyer leurs traces au collecteur, et à lui seul.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: traces
+  namespace: colis
+spec:
+  podSelector:
+    matchExpressions:
+    - {key: app.kubernetes.io/name, operator: In, values: [api, worker]}
+  policyTypes: [Egress]
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: supervision
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: opentelemetry-collector
+    ports:
+    - port: 4318

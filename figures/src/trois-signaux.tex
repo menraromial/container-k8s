@@ -1,0 +1,33 @@
+% Figure 51.1 : métriques, journaux et traces de Colis, leur chemin jusqu'à Grafana, et ce qui les relie (chapitre 51).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    b/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=#1},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+
+  \node[b=3.3cm, draw=QBleu, fill=QBleuBg, minimum height=3.4cm] (pod) at (0,-1.2) {\textbf{Pod de l'API}\\[3pt]
+    \texttt{/metrics/} : compteurs, histogrammes\\[3pt]
+    sortie standard : une ligne JSON par requête, avec \texttt{trace\_id}\\[3pt]
+    SDK OpenTelemetry : un span par requête et par appel à PostgreSQL ou Redis};
+
+  \node[b=2.9cm] (fichier) at (5.2,-1.6) {\texttt{/var/log/pods/}\\fichiers du nœud (kubelet)};
+  \node[b=2.9cm, draw=QViolet, fill=QVioletBg] (col) at (5.2,-4.3) {\textbf{collecteur} OpenTelemetry\\un par nœud ; ajoute namespace, Pod, Deployment};
+
+  \node[b=2.8cm, draw=QOcre, fill=QOcreBg] (prom) at (9.6,0.4) {\textbf{Prometheus}\\quand, combien, quelle tendance};
+  \node[b=2.8cm, draw=QSarcelle, fill=QSarcelleBg] (loki) at (9.6,-1.6) {\textbf{Loki}\\ce qui s'est passé, requête par requête};
+  \node[b=2.8cm, draw=QVert, fill=QVertBg] (tempo) at (9.6,-4.3) {\textbf{Tempo}\\où passe le temps d'une requête};
+
+  \node[b=2.6cm, minimum height=4.6cm] (graf) at (13.7,-1.9) {\textbf{Grafana}\\[4pt] une courbe de latence\\$\downarrow$ intervalle choisi\\les lignes lentes de Loki\\$\downarrow$ \texttt{trace\_id}\\la trace dans Tempo\\$\uparrow$ \texttt{trace\_id}\\les lignes de la trace};
+
+  \draw[qarr] ([yshift=11mm]pod.east) -- node[lien, above, sloped] {collecte (pull)} (prom.west);
+  \draw[qarr] (pod.east) -- node[lien, above] {stdout} (fichier.west);
+  \draw[qarr] (fichier.south) -- node[lien, right] {filelog} (col.north);
+  \draw[qarr] (pod.south) |- node[lien, below, pos=0.75] {traces en OTLP, port 4318} (col.west);
+  \draw[qarr] (col.east) -- node[lien, below] {OTLP} (tempo.west);
+  \draw[qarr] (col.north east) -- node[lien, above, sloped] {OTLP} (loki.south west);
+  \draw[qarr] (prom.east) -- ([yshift=17mm]graf.west);
+  \draw[qarr] (loki.east) -- (graf.west);
+  \draw[qarr] (tempo.east) -- ([yshift=-17mm]graf.west);
+\end{tikzpicture}
+\end{document}

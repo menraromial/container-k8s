@@ -132,6 +132,7 @@ const sidebars: SidebarsConfig = {
         'partie-7/deboguer',
         'partie-7/pannes',
         'partie-7/metriques',
+        'partie-7/journaux',
       ],
     },
   ],

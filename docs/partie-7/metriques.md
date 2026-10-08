@@ -220,7 +220,14 @@ Chaque requête passe par une fonction intermédiaire qui mesure sa durée, incr
 
 Le détail qui compte est l'étiquette `route`. Elle vaut le **modèle** de la route, `/colis/{id_}`, jamais le chemin réel, `/colis/249`. Avec le chemin réel, chaque identifiant de colis créerait ses propres séries, des dizaines par colis avec l'histogramme, et la base de Prometheus grossirait avec le nombre de colis. C'est la règle de base de l'instrumentation : des étiquettes en petit nombre, à valeurs bornées[^nommage]. Les sondes `/sante` et `/pret`, appelées en boucle par le kubelet, sont exclues des métriques comme du journal.
 
-Le script `passer-en-2.2.sh` du kit passe l'API, le worker et la purge à l'image 2.2, déclare le port de métriques du worker et pose sur le Service `api` une étiquette qui servira à le sélectionner :
+L'image se construit comme celles de la partie II, avec le constructeur `cours` du chapitre 13, et l'étape de tests (16 tests, dont trois nouveaux pour les métriques et l'estimation) doit passer :
+
+```bash
+tar -xzf colis-2.2.tar.gz
+docker buildx build --builder cours -t localhost:5001/colis/api:2.2 --push colis-2.2/app
+```
+
+Le script `passer-en-2.2.sh` du kit passe ensuite l'API, le worker et la purge à l'image 2.2, déclare le port de métriques du worker et pose sur le Service `api` une étiquette qui servira à le sélectionner :
 
 ```bash
 bash passer-en-2.2.sh

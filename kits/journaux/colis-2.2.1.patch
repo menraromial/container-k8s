@@ -1,0 +1,124 @@
+--- a/app/colis/app.py
++++ b/app/colis/app.py
+@@ -15,7 +15,7 @@
+ from .file import File
+ from .modele import Colis, NouveauColis
+ from .observabilite import (DUREE, ENREGISTRES, ESTIMES, LIVRES, REQUETES, configurer_traces,
+-                            journal, mesurer_file)
++                            instrumenter_app, journal, mesurer_file)
+ from .stockage import Stockage
+ 
+ VERSION = os.environ.get("COLIS_VERSION", "1.0.0")
+@@ -112,6 +112,8 @@
+     return app
+ 
+ 
++traces = configurer_traces()          # avant stockage_depuis_env(), qui ouvre la connexion
+ app = creer_app(stockage_depuis_env(), file_depuis_env())
+-if configurer_traces(app):
++if traces:
++    instrumenter_app(app)
+     log.info("traces actives", extra={"champs": {"collecteur": os.environ["OTEL_EXPORTER_OTLP_ENDPOINT"]}})
+--- a/app/colis/observabilite.py
++++ b/app/colis/observabilite.py
+@@ -32,12 +32,19 @@
+     """La longueur de la file est lue au moment de la collecte, pas tenue à jour."""
+     def longueur() -> float:
+         try:
+-            return float(file.longueur())
++            with sans_traces():   # une collecte toutes les 15 s ne mérite pas une trace
++                return float(file.longueur())
+         except Exception:  # file injoignable : pas de valeur plutôt qu'une collecte en erreur
+             return float("nan")
+     FILE.set_function(longueur)
+ 
+ 
++def sans_traces():
++    """Un bloc dont les appels (Redis, PostgreSQL) ne produisent aucun span."""
++    from opentelemetry.instrumentation.utils import suppress_instrumentation
++    return suppress_instrumentation()
++
++
+ class FormatJSON(logging.Formatter):
+     """Une ligne JSON par message, avec l'identifiant de trace quand il y en a un."""
+ 
+@@ -79,8 +86,12 @@
+     return format(ctx.trace_id, "032x"), format(ctx.span_id, "016x")
+ 
+ 
+-def configurer_traces(app=None) -> bool:
+-    """Active OpenTelemetry si un collecteur est indiqué. Renvoie True si les traces sont actives."""
++def configurer_traces() -> bool:
++    """Active OpenTelemetry si un collecteur est indiqué. Renvoie True si les traces sont actives.
++
++    À appeler AVANT d'ouvrir la moindre connexion : l'instrumentation de psycopg remplace
++    psycopg.connect, et une connexion ouverte avant ne produirait jamais de span.
++    """
+     if not os.environ.get("OTEL_EXPORTER_OTLP_ENDPOINT"):
+         return False
+     from opentelemetry import trace
+@@ -97,7 +108,10 @@
+     trace.set_tracer_provider(fournisseur)
+     PsycopgInstrumentor().instrument(enable_commenter=False)
+     RedisInstrumentor().instrument()
+-    if app is not None:
+-        from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+-        FastAPIInstrumentor.instrument_app(app, excluded_urls="sante,pret,metrics")
+     return True
++
++
++def instrumenter_app(app) -> None:
++    """Un span par requête HTTP, sauf pour les sondes et la collecte des métriques."""
++    from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
++    FastAPIInstrumentor.instrument_app(app, excluded_urls="sante,pret,metrics")
+--- a/app/colis/worker.py
++++ b/app/colis/worker.py
+@@ -13,7 +13,7 @@
+ 
+ from .config import file_depuis_env, stockage_depuis_env
+ from .delais import VilleInconnue, date_estimee, jours_de_livraison
+-from .observabilite import ESTIMES, configurer_traces, journal, mesurer_file
++from .observabilite import ESTIMES, configurer_traces, journal, mesurer_file, sans_traces
+ 
+ log = journal("colis.worker")
+ traceur = trace.get_tracer("colis.worker")
+@@ -30,6 +30,7 @@
+ def main() -> int:
+     signal.signal(signal.SIGTERM, arreter)
+     signal.signal(signal.SIGINT, arreter)
++    configurer_traces()          # avant d'ouvrir les connexions à Redis et PostgreSQL
+     file = file_depuis_env()
+     if file is None:
+         log.error("COLIS_REDIS n'est pas défini : le worker n'a pas de file à lire")
+@@ -41,10 +42,10 @@
+     # métriques du worker sur un port à lui (le worker n'a pas de serveur HTTP)
+     start_http_server(int(os.environ.get("COLIS_METRIQUES_PORT", "9101")))
+     mesurer_file(file)
+-    configurer_traces()
+     log.info(f"worker {nom} prêt (stockage : {stockage.nom})")
+     while continuer:
+-        id_ = file.prendre(attente_s=2)
++        with sans_traces():      # attendre la file n'est pas un travail : pas de trace
++            id_ = file.prendre(attente_s=2)
+         if id_ is None:
+             continue
+         with traceur.start_as_current_span("estimer un colis", attributes={"colis.id": id_}):
+--- a/app/Dockerfile
++++ b/app/Dockerfile
+@@ -1,6 +1,7 @@
+ # syntax=docker/dockerfile:1
+ # Image de Colis, version 2.2 : métriques Prometheus, journaux JSON, traces OpenTelemetry (chapitres 50 et 51),
+ # et une estimation qui ne remplace plus le statut d'un colis déjà livré.
++# 2.2.1 : traces activées avant les connexions, plus de traces pour LLEN et BLPOP (chapitre 51).
+ 
+ # 1. Les dépendances, dans un environnement virtuel sans pip
+ FROM python:3.14-alpine AS dependances
+@@ -25,7 +26,7 @@
+ FROM python:3.14-alpine
+ LABEL org.opencontainers.image.title="colis" \
+       org.opencontainers.image.source="https://github.com/menraromial/container-k8s" \
+-      org.opencontainers.image.version="2.2.0"
++      org.opencontainers.image.version="2.2.1"
+ # PYTHONDONTWRITEBYTECODE d'abord : sinon, faire tourner pip écrit 4 Mo de .pyc
+ ENV PYTHONUNBUFFERED=1 \
+     PYTHONDONTWRITEBYTECODE=1 \

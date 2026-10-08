@@ -1,0 +1,19 @@
+# Tempo en un seul processus : reçoit les traces en OTLP, les garde 24 heures sur un volume.
+tempo:
+  retention: 24h
+  reportingEnabled: false
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+  resources:
+    # Tempo garde en mémoire les traces récentes avant de les écrire : à 384 Mio de limite,
+    # il a été tué pendant l'incident du chapitre. 640 Mio laissent de la marge.
+    requests: {cpu: 50m, memory: 128Mi}
+    limits: {memory: 640Mi}
+persistence:
+  enabled: true
+  size: 2Gi

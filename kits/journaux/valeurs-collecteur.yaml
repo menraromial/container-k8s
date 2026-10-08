@@ -1,0 +1,43 @@
+# Le collecteur OpenTelemetry, un par nœud : il lit les journaux des conteneurs sur le disque du nœud
+# et reçoit les traces des applications, ajoute les attributs Kubernetes, et envoie le tout à Loki et Tempo.
+mode: daemonset
+fullnameOverride: collecteur
+image:
+  repository: otel/opentelemetry-collector-k8s
+presets:
+  logsCollection:
+    enabled: true          # récepteur filelog sur /var/log/pods
+  kubernetesAttributes:
+    enabled: true          # namespace, Pod, Deployment, nœud ajoutés à chaque donnée
+service:
+  enabled: true            # un Service « collecteur » pour que les applications envoient leurs traces
+resources:
+  requests: {cpu: 20m, memory: 64Mi}
+  limits: {memory: 256Mi}
+config:
+  receivers:
+    jaeger: null
+    zipkin: null
+    prometheus: null
+    filelog:
+      # pas les journaux de la supervision elle-même (dont ceux du collecteur : sinon, une boucle)
+      exclude:
+      - /var/log/pods/supervision_*/*/*.log
+  exporters:
+    otlphttp/loki:
+      endpoint: http://loki.supervision:3100/otlp
+    otlp/tempo:
+      endpoint: tempo.supervision:4317
+      tls:
+        insecure: true
+  service:
+    pipelines:
+      logs:
+        receivers: [filelog]
+        processors: [memory_limiter, k8sattributes, batch]
+        exporters: [otlphttp/loki]
+      traces:
+        receivers: [otlp]
+        processors: [memory_limiter, k8sattributes, batch]
+        exporters: [otlp/tempo]
+      metrics: null

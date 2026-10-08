@@ -1,0 +1,54 @@
+# À ajouter aux valeurs du chapitre 50 avant d'installer Loki et Tempo :
+# moins de séries dans Prometheus, un conteneur de moins dans Grafana, et les sources de données
+# déclarées une fois pour toutes (Prometheus, Alertmanager, Loki, Tempo).
+kubeApiServer:
+  serviceMonitor:
+    metricRelabelings:
+    # les histogrammes de l'API server : 44 000 séries sur 68 000, que personne ne lit ici.
+    # On garde apiserver_request_sli_duration_seconds, dont se servent les alertes du chart.
+    - sourceLabels: [__name__]
+      regex: (apiserver_(request_body_size_bytes|watch_events_dispatch_duration_seconds|request_duration_seconds|watch_list_duration_seconds|storage_list_duration_seconds|response_sizes|watch_cache_read_wait_seconds|watch_cache_initialization_duration_seconds|watch_events_sizes)|etcd_request_duration_seconds)_bucket
+      action: drop
+grafana:
+  serviceMonitor:
+    enabled: false        # les 4 000 séries de Grafana sur lui-même
+  sidecar:
+    datasources:
+      enabled: false      # un conteneur annexe de moins : les sources sont déclarées ci-dessous
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: Prometheus
+        uid: prometheus
+        type: prometheus
+        url: http://supervision-kube-prometheu-prometheus.supervision:9090/
+        isDefault: true
+      - name: Alertmanager
+        uid: alertmanager
+        type: alertmanager
+        url: http://supervision-kube-prometheu-alertmanager.supervision:9093/
+        jsonData: {implementation: prometheus}
+      - name: Loki
+        uid: loki
+        type: loki
+        url: http://loki.supervision:3100/
+        jsonData:
+          derivedFields:          # un trace_id dans une ligne de journal devient un lien vers Tempo
+          - name: trace_id
+            matcherType: regex
+            matcherRegex: '"trace_id": "(\w+)"'
+            datasourceUid: tempo
+            url: $${__value.raw}
+      - name: Tempo
+        uid: tempo
+        type: tempo
+        url: http://tempo.supervision:3200/
+        jsonData:
+          tracesToLogsV2:         # d'une trace vers les lignes de journal qui portent son identifiant
+            datasourceUid: loki
+            filterByTraceID: true
+            spanStartTimeShift: -5m
+            spanEndTimeShift: 5m
+          serviceMap:
+            datasourceUid: prometheus

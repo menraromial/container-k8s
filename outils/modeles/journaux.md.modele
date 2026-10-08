@@ -1,0 +1,476 @@
+---
+title: Journaux et traces
+sidebar_label: 51. Journaux et traces
+description: "Les deux autres signaux : les journaux de tous les conteneurs dans Loki, collectés par OpenTelemetry, et les traces de Colis dans Tempo. LogQL, TraceQL, deux défauts d'instrumentation trouvés et corrigés (Colis 2.2.1), et une requête lente suivie de la courbe au verrou PostgreSQL qui la bloquait."
+partie: 7
+chapitre: '51'
+---
+
+import troisSignaux from '@site/src/figures/trois-signaux.svg';
+
+```sortie
+@@ouverture@@
+```
+
+Deux requêtes, deux lignes de journal comme l'API en écrit des milliers. Celles-ci ont pris @@ouverture-durees@@, alors que leurs voisines répondent en quelques millisecondes. Les métriques du chapitre 50 n'en ont presque rien vu : le 95e centile de la route est resté à @@ouverture-p95@@. Pour comprendre ce qui est arrivé à ces deux requêtes-là, il faut deux autres outils. Les **journaux** disent ce qui s'est passé, requête par requête. Les **traces** disent où le temps s'est écoulé à l'intérieur de chacune. Et l'identifiant `trace_id`, présent dans les deux, permet de passer de l'un à l'autre.
+
+Ce chapitre installe Loki pour les journaux et Tempo pour les traces, avec un collecteur OpenTelemetry qui alimente les deux. Puis il refait l'enquête de bout en bout. Les fichiers sont dans [l'archive journaux](pathname:///kits/journaux.tar.gz).
+
+<Figure svg={troisSignaux} num="51.1" alt="À gauche, le Pod de l'API produit trois signaux : des compteurs et histogrammes sur /metrics/, une ligne JSON par requête avec trace_id sur sa sortie standard, et des spans par requête et par appel à PostgreSQL ou Redis grâce au SDK OpenTelemetry. Prometheus collecte /metrics/ directement. La sortie standard devient des fichiers sous /var/log/pods sur le nœud, que le collecteur OpenTelemetry lit avec filelog ; les traces lui arrivent en OTLP sur le port 4318. Le collecteur, un par nœud, ajoute namespace, Pod et Deployment, et envoie en OTLP les journaux à Loki et les traces à Tempo. Grafana interroge les trois : d'une courbe de latence, on choisit un intervalle, on y trouve les lignes lentes dans Loki, leur trace_id ouvre la trace dans Tempo, et la trace renvoie aux lignes qui portent son identifiant.">
+Les trois signaux de Colis et leur chemin jusqu'à Grafana. Prometheus répond à « combien », Loki à « quoi », Tempo à « où » ; le <code>trace_id</code> relie les deux derniers.
+</Figure>
+
+## Faire de la place, encore
+
+Le chapitre 50 a laissé un nœud presque plein. Avant d'ajouter trois composants, on regarde ce que coûte l'existant. Le plus gros poste de Prometheus n'est pas là où on l'attend :
+
+```promql
+count({__name__=~".+"})
+sort_desc(count by (job) ({__name__=~".+"}))
+```
+
+```sortie
+@@avant@@
+```
+
+L'API server publie à lui seul 44 000 séries sur 68 000, presque toutes des buckets d'histogrammes (durées et tailles des requêtes, par ressource, verbe et code), que personne ne regarde sur ce cluster. Grafana en publie 4 000 sur lui-même. Le fichier `valeurs-allegees.yaml` s'ajoute à celui du chapitre 50 : il supprime ces buckets à la collecte (`metricRelabelings` avec `action: drop`, en gardant celui dont se servent les alertes du chart), cesse de collecter Grafana, et remplace le conteneur annexe qui chargeait les sources de données par une déclaration directe, qui inclut déjà Loki et Tempo :
+
+```yaml title="valeurs-allegees.yaml (extrait)"
+@@allegees@@
+```
+
+```bash
+helm -n supervision upgrade supervision oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack --version 92.1.0 \
+  -f ../metriques/valeurs-supervision.yaml -f valeurs-allegees.yaml --wait --timeout 10m
+# sept minutes plus tard
+```
+
+```sortie
+@@allegement@@
+```
+
+Les séries passent de 68 000 à 40 000. La mémoire de Prometheus, elle, ne baisse pas tout de suite : les séries récentes restent dans son bloc en mémoire jusqu'à la prochaine compaction, toutes les deux heures. Sur un cluster réel, c'est le premier réglage à faire avant d'agrandir quoi que ce soit.
+
+:::panne[Le nœud sature : processus tués, nœud NotReady, passerelle muette]
+
+Même allégée, la pile complète (Prometheus, Grafana, Loki, Tempo, le collecteur) laisse peu de marge dans 4 Gio. Pendant la préparation de ce chapitre, une charge un peu soutenue a fait monter le HPA de l'API à six répliques, et le nœud a débordé. Le conteneur `minikube` a atteint sa limite, et le noyau y a tué des processus (54 fois en quelques minutes, d'après `memory.events`). Le kubelet n'a plus répondu à temps, et le nœud est passé `NotReady`. Envoy Gateway, cert-manager et KEDA ont perdu leur élection de leader et redémarré en boucle. La passerelle HTTPS est restée muette jusqu'au redémarrage de son proxy. Avec le pilote Docker, la limite du nœud est celle du conteneur, et `docker update` la change sans recréer le cluster :
+
+```bash
+docker update --memory 5g --memory-swap 5g minikube
+minikube ssh -- cat /sys/fs/cgroup/memory.max
+```
+
+```sortie
+5368709120
+```
+
+minikube n'en sait rien : la valeur se perd si le conteneur est recréé (`minikube delete`), pas lors d'un `minikube stop` suivi d'un `start`. Si votre poste ne peut pas donner un gigaoctet de plus, gardez Loki ou Tempo, pas les deux, ou retirez Grafana entre deux séances.
+
+:::
+
+## Loki et le collecteur
+
+**Loki** stocke des journaux en ne les indexant que par quelques **étiquettes** (namespace, service, Pod), pas par leur contenu. Une recherche commence par choisir des flux d'après leurs étiquettes, puis lit les lignes de ces flux pour les filtrer. C'est moins rapide qu'un moteur qui indexe chaque mot, et beaucoup moins coûteux à stocker[^loki]. Le chart est installé en mode **monolithique**, un seul processus, avec un volume de 2 Gio et deux jours de rétention :
+
+```yaml title="valeurs-loki.yaml (extrait)"
+@@valeurs-loki@@
+```
+
+Pour faire arriver les journaux, il faut un agent sur chaque nœud qui lise les fichiers que le kubelet écrit sous `/var/log/pods` (chapitre 48). On utilise le **collecteur OpenTelemetry**, en DaemonSet, parce qu'il saura aussi recevoir les traces : un seul agent pour deux signaux. Son préréglage `logsCollection` configure le récepteur `filelog` et le montage des fichiers du nœud ; `kubernetesAttributes` ajoute à chaque ligne le namespace, le Pod, le Deployment, d'après l'adresse du Pod ou le chemin du fichier[^collecteur]. Le reste de la configuration décrit deux chaînes, une par signal :
+
+```yaml title="valeurs-collecteur.yaml (extrait)"
+@@valeurs-collecteur@@
+```
+
+On exclut les journaux du namespace `supervision` : le collecteur lirait les siens, les enverrait à Loki, qui en produirait d'autres, et ainsi de suite. Les trois installations :
+
+```bash
+helm install loki oci://ghcr.io/grafana-community/helm-charts/loki --version 18.14.0 -n supervision -f valeurs-loki.yaml --wait
+helm install tempo oci://ghcr.io/grafana-community/helm-charts/tempo --version 3.1.0 -n supervision -f valeurs-tempo.yaml --wait
+helm install collecteur oci://ghcr.io/open-telemetry/opentelemetry-helm-charts/opentelemetry-collector --version 0.175.1 \
+  -n supervision -f valeurs-collecteur.yaml --wait
+kubectl -n supervision get pods
+```
+
+```sortie
+@@installation@@
+```
+
+Les charts de Loki et Tempo utilisés ici sont ceux du dépôt `grafana-community`, publié aussi en OCI sur ghcr.io. Dans le dépôt historique `grafana.github.io`, les charts `tempo` et `grafana` sont désormais marqués obsolètes, et leurs nouvelles versions paraissent dans `grafana-community`.
+
+### Ce que Loki a reçu
+
+```bash
+kubectl -n supervision port-forward svc/loki 3101:3100 &
+curl -s localhost:3101/loki/api/v1/labels | jq -c .data
+curl -s localhost:3101/loki/api/v1/label/service_name/values | jq -c .data
+```
+
+```sortie
+@@etiquettes@@
+```
+
+Les étiquettes viennent des attributs que le collecteur a posés : `service_name` vaut le nom du conteneur, `service_namespace` son namespace. Loki a tout reçu, y compris les journaux du plan de contrôle (`etcd`, `kube-controller-manager`). Les flux de l'API, et le nombre total de flux sur 15 minutes :
+
+```sortie
+@@flux@@
+```
+
+Une poignée d'étiquettes, une vingtaine de flux pour tout le cluster. Le nom du Pod n'est pas une étiquette d'index : Loki le range en **métadonnées structurées**, attachées à chaque ligne sans multiplier les flux. C'est la même règle que pour les métriques : chaque combinaison d'étiquettes crée un flux, avec son index et ses morceaux de stockage, et une étiquette à valeurs non bornées (un identifiant de requête, une adresse) le ferait exploser.
+
+### LogQL
+
+On interroge Loki en **LogQL**, qui ressemble à PromQL : un sélecteur de flux entre accolades, puis une chaîne de filtres et d'analyseurs[^logql]. Les deux dernières lignes de l'API :
+
+```logql
+{service_name="api"}
+```
+
+```sortie
+@@ligne@@
+```
+
+L'analyseur `json` transforme les champs de la ligne en étiquettes temporaires, sur lesquelles on filtre :
+
+```logql
+{service_name="api"} | json | code >= 400
+```
+
+```sortie
+@@filtres@@
+```
+
+Et comme en PromQL, on peut **compter** : LogQL fabrique des métriques à partir des lignes, au moment de la requête. Les réponses par code sur cinq minutes, d'abord :
+
+```logql
+sum by (code) (count_over_time({service_name="api"} | json [5m]))
+```
+
+```sortie
+@@erreur-json@@
+```
+
+La requête échoue entièrement. Toutes les lignes de l'API ne sont pas du JSON : Uvicorn écrit en texte ses messages de démarrage et d'arrêt, et l'analyseur `json` marque ces lignes d'une étiquette `__error__`. Une requête de type métrique refuse de mélanger lignes valides et lignes en erreur. On les retrouve avec `| json | __error__!=""` :
+
+```sortie
+@@erreur-lignes@@
+```
+
+et on les écarte avec `__error__=""` juste après l'analyseur. Voici les réponses par code, le 95e centile des durées lues dans les lignes (`unwrap` prend la valeur d'un champ), et le volume de journaux par service :
+
+```logql
+sum by (code) (count_over_time({service_name="api"} | json | __error__="" [5m]))
+quantile_over_time(0.95, {service_name="api"} | json | __error__="" | unwrap duree_ms [5m]) by (route)
+sum by (service_name) (bytes_over_time({k8s_namespace_name="colis"}[5m]))
+```
+
+```sortie
+@@metriques-logql@@
+```
+
+La première ligne, sans étiquette `code`, compte les lignes JSON qui ne décrivent pas une requête : le message « traces actives » qu'écrit chaque Pod au démarrage.
+
+Ce 95e centile est **exact** : calculé sur toutes les durées réelles, pas estimé à partir de buckets comme au chapitre 50. Il est aussi beaucoup plus coûteux, puisque Loki relit chaque ligne. Les métriques restent l'outil des tableaux de bord et des alertes, les journaux celui de l'enquête.
+
+## Les traces
+
+Une **trace** est l'histoire d'une requête. Elle est faite de **spans** : chacun est une opération (traiter la requête HTTP, exécuter une requête SQL, écrire dans Redis) avec son début, sa durée, ses attributs, et l'identifiant de son parent. Tous les spans d'une même requête portent le même `trace_id`. Quand une requête traverse plusieurs services, le contexte (identifiant de trace, identifiant du span parent) voyage avec elle, dans l'en-tête HTTP standard `traceparent` du W3C[^w3c]. C'est la **propagation de contexte**.
+
+Colis 2.2 sait produire des traces grâce au SDK OpenTelemetry et à ses **instrumentations** automatiques pour FastAPI, psycopg et Redis. Il ne le fait que si `OTEL_EXPORTER_OTLP_ENDPOINT` est défini. **Tempo** les stocke, en un seul processus lui aussi (`valeurs-tempo.yaml`). On donne aux services les mêmes noms que ceux que le collecteur donne à leurs journaux :
+
+```bash
+bash activer-traces.sh
+# du trafic, puis, une minute plus tard :
+curl -s -G localhost:3201/api/search --data-urlencode 'q={ resource.service.name = "api" }' | jq '.traces | length'
+kubectl -n colis logs deploy/api | grep -v '^{' | grep -v '^INFO:' | head -4
+```
+
+```sortie
+@@bloquees@@
+```
+
+Aucune trace, et le SDK le dit dans le journal : il n'arrive pas à exporter. On connaît cette signature depuis le chapitre 50 : le refus par défaut du chapitre 41 bloque aussi les **sorties** des Pods de Colis, et rien n'autorise l'API à joindre le collecteur. Cette fois, c'est une règle `Egress` qu'il faut :
+
+```yaml title="politique-traces.yaml"
+@@politique@@
+```
+
+```bash
+kubectl apply -f politique-traces.yaml
+kubectl -n colis rollout restart deployment/api deployment/worker
+curl -s -G localhost:3201/api/search --data-urlencode 'q={ resource.service.name = "api" }' --data-urlencode limit=4 \
+  | jq -r '.traces[] | "\(.traceID) \(.rootServiceName) \(.rootTraceName) \(.durationMs // 0) ms"'
+```
+
+```sortie
+@@premieres@@
+```
+
+Des traces arrivent, mais pas celles qu'on attendait : `PING`, `LLEN`. Et quand on ouvre la trace d'un enregistrement, avec le petit script `arbre-trace.py` du kit qui l'affiche en arbre :
+
+```sortie
+@@arbre-22@@
+```
+
+Le span racine `POST /colis` (la requête HTTP), ses étapes internes (`http receive`, `http send`, posées par l'instrumentation ASGI), l'écriture dans Redis (`RPUSH`)... et rien pour PostgreSQL. L'insertion du colis, qui est pourtant la moitié du travail, n'apparaît pas. Le journal de la même requête porte bien le même `trace_id` :
+
+```sortie
+@@journal-22@@
+```
+
+Comptons les traces par nom de span racine, sur les dernières minutes :
+
+```sortie
+@@racines-22@@
+```
+
+### Deux défauts d'instrumentation
+
+Ces chiffres trahissent deux défauts dans Colis 2.2, du genre qu'on ne découvre qu'en regardant de vraies traces.
+
+**Les requêtes SQL manquent.** L'instrumentation de psycopg fonctionne en remplaçant la fonction `psycopg.connect` : une connexion ouverte **après** l'activation produit des spans, une connexion ouverte **avant** n'en produira jamais. Or Colis ouvre sa connexion en créant son stockage, à l'import du module, puis active les traces. Dans le worker, même chose. Le script `ordre-des-traces.py` du kit isole le phénomène : il ouvre une connexion avant ou après l'activation, puis exécute la même lecture dans un span, avec un exportateur en mémoire.
+
+```bash
+A=$(kubectl -n colis get pods -l app.kubernetes.io/name=api -o name | head -1)
+for o in connexion-avant connexion-apres; do
+  kubectl -n colis exec -i $A -- sh -c "cd /app && python - $o" < ordre-des-traces.py
+done
+```
+
+```sortie
+@@ordre@@
+```
+
+L'ordre des deux lignes suffit à tout perdre. Pire, le défaut est intermittent : quand la connexion se coupe et que Colis la rouvre (chapitre 26), la nouvelle connexion est instrumentée, et des spans SQL réapparaissent sans qu'on comprenne pourquoi.
+
+**Des traces parasites.** Les `PING` viennent de la sonde `/pret`, exclue des traces HTTP mais pas des appels Redis qu'elle fait : sans span parent, chaque `PING` devient la racine d'une trace. Les `LLEN` viennent de la jauge `colis_file_longueur`, lue dans Redis à chaque collecte de Prometheus, toutes les 15 secondes. Et le worker, qui attend la file par `BLPOP` avec un délai de 2 secondes, produit une trace toutes les 2 secondes, qu'il y ait du travail ou non. Ces traces ne disent rien d'utile, mais elles se stockent et se paient.
+
+Le correctif, Colis **2.2.1**, est dans le kit sous forme de patch (dix blocs de modification). Il active les traces avant toute connexion, et entoure la lecture de la jauge et l'attente du worker par `suppress_instrumentation()`, qui coupe les instrumentations le temps d'un bloc :
+
+```diff title="colis-2.2.1.patch (extrait)"
+@@patch@@
+```
+
+```bash
+patch -p1 -d colis-2.2 < colis-2.2.1.patch
+docker buildx build --builder cours -t localhost:5001/colis/api:2.2.1 --push colis-2.2/app
+bash passer-en-2.2.1.sh
+```
+
+Les mêmes requêtes, après le correctif. Un enregistrement, une lecture, et une estimation par le worker :
+
+```sortie
+@@arbres-221@@
+```
+
+Les requêtes SQL apparaissent, avec leur texte (paramètres masqués), sous le span de la requête HTTP. Le worker n'a plus que des traces `estimer un colis`, avec leur lecture et leur écriture en base, et plus aucun `BLPOP`. Dans le décompte, `PING` et `SELECT` viennent de la sonde `/pret`, qui interroge Redis et PostgreSQL : ce sont des appels réels, faits par une requête qu'on a choisi de ne pas tracer, d'où des spans orphelins. Les exclure demanderait d'entourer le corps de `/pret` du même `suppress_instrumentation()`. `CREATE` est la création du schéma au démarrage du Pod. Le dernier `LLEN` date des derniers instants d'un Pod encore en 2.2 : l'attribut `service.version` de sa trace l'indique. Une dernière remarque : la trace du worker est séparée de celle de la requête qui a déposé le colis. La file ne transporte que l'identifiant du colis, pas le contexte de trace ; l'exercice 3 corrige cela.
+
+## Corréler une requête lente
+
+Reprenons l'enquête du début. Pendant une charge régulière de huit requêtes par seconde (deux exemplaires de `charge.py`), quelqu'un pose sur la table `colis` un verrou exclusif pendant six secondes. Cela se produit, par exemple, avec une migration de schéma (`ALTER TABLE`) lancée en pleine journée. À la troisième seconde, on regarde ce qu'attend PostgreSQL :
+
+```bash
+kubectl -n colis exec postgres-0 -- psql -U colis -d colis -c \
+  "BEGIN; LOCK TABLE colis IN ACCESS EXCLUSIVE MODE; SELECT pg_sleep(6); COMMIT;" &
+sleep 3
+kubectl -n colis exec postgres-0 -- psql -U colis -d colis -c "SELECT pid, state, wait_event_type AS attente,
+  wait_event, now() - query_start AS depuis, left(query, 50) AS requete FROM pg_stat_activity
+  WHERE datname = 'colis' AND pid <> pg_backend_pid() ORDER BY query_start"
+```
+
+```sortie
+@@incident@@
+```
+
+Dans la vraie vie, on ne regarderait pas `pg_stat_activity` à la bonne seconde : on découvrirait le problème après coup. Reprenons donc dans l'ordre d'une enquête.
+
+**Les métriques.** Le 95e centile de la route `/colis`, au plus haut sur dix minutes, et le nombre de requêtes de plus de 2,5 secondes, qu'on lit directement dans les buckets :
+
+```promql
+max_over_time(colis:latence:p95_5m{route="/colis"}[10m])
+sum(increase(colis_http_duree_secondes_count{namespace="colis"}[10m]))
+  - sum(increase(colis_http_duree_secondes_bucket{namespace="colis", le="2.5"}[10m]))
+```
+
+```sortie
+@@metriques@@
+```
+
+C'est la limite des centiles : quelques requêtes bloquées parmi des centaines ne déplacent pas le 95e centile. Le second chiffre, deux requêtes et une fraction, n'est pas entier parce que `increase()` extrapole (exercice 1). Elles se voient dans le compte des requêtes qui dépassent un seuil, et c'est ce qu'il faut surveiller pour les attraper.
+
+**Les journaux.** LogQL retrouve les requêtes de plus d'une seconde, et chacune donne son `trace_id` :
+
+```logql
+sum by (route) (count_over_time({service_name="api"} | json | __error__="" | duree_ms > 1000 [5m]))
+{service_name="api"} | json | duree_ms > 1000
+```
+
+```sortie
+@@lentes@@
+```
+
+**La trace.** L'identifiant de la plus lente ouvre sa trace :
+
+```sortie
+@@trace-lente@@
+```
+
+Tout le temps est dans un seul span : la requête SQL, qui a attendu. Le span HTTP la contient, les autres étapes prennent quelques millisecondes. On saurait maintenant quoi chercher côté base : un verrou, à cette heure-là. **TraceQL**, le langage de recherche de Tempo, permet aussi de partir directement des traces : toutes celles de l'API de plus d'une seconde, ou tous les spans PostgreSQL de plus d'une seconde, quel que soit le service[^traceql] :
+
+```
+{ resource.service.name = "api" && duration > 1s }
+{ span.db.system = "postgresql" && duration > 1s }
+```
+
+```sortie
+@@traceql@@
+```
+
+### Dans Grafana
+
+Le même parcours se fait à la souris. Grafana a été configuré avec quatre sources de données, et les liens entre elles :
+
+```sortie
+@@grafana@@
+```
+
+Dans **Explore**, choisissez Loki et la requête `{service_name="api"} | json | duree_ms > 1000`. Chaque ligne affiche un lien `trace_id` : c'est le champ dérivé (`derivedFields`) de `valeurs-allegees.yaml`, qui extrait l'identifiant par une expression régulière et en fait un lien vers Tempo. La trace s'ouvre à côté, en cascade ; depuis un span, « Logs for this span » repart vers Loki avec l'identifiant (`tracesToLogsV2`). Le tableau de bord du chapitre 50 complète le tableau : la courbe de latence situe l'incident, l'intervalle choisi se reporte dans Explore. L'adresse est `http://localhost:3050/explore`, après une redirection de port vers `svc/supervision-grafana`.
+
+## Ce que coûtent les journaux et les traces
+
+```bash
+kubectl top pod -n supervision
+```
+
+```sortie
+@@memoire@@
+```
+
+Loki, Tempo et le collecteur ajoutent environ 400 Mio, moins que Prometheus seul. Le volume, lui, croît avec le trafic : chaque requête produit une ligne de journal et une trace de quatre à huit spans. Les leviers sont connus : ne pas tout garder (rétention de deux jours pour Loki, un jour pour Tempo), ne pas tout tracer (l'**échantillonnage**, exercice 4), et ne pas journaliser en boucle ce qui n'apporte rien, comme les sondes, déjà exclues par Colis.
+
+## Exercices
+
+:::exercice[Exercice 1 : deux façons de compter]
+
+Comptez les réponses 404 de l'API sur les deux dernières minutes, une fois avec LogQL à partir des journaux, une fois avec PromQL à partir des métriques. Les deux nombres sont-ils égaux ? Pourquoi peuvent-ils différer ?
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+```logql
+sum(count_over_time({service_name="api"} | json | __error__="" | code="404" [2m]))
+```
+
+```promql
+sum(increase(colis_http_requetes_total{namespace="colis", code="404"}[2m]))
+```
+
+```sortie
+@@ex1@@
+```
+
+Les deux sont proches sans être égaux. LogQL compte des lignes dont l'horodatage tombe dans la fenêtre : c'est un compte exact des requêtes journalisées. `increase()` extrapole à partir des échantillons collectés toutes les 15 secondes : le premier et le dernier échantillon de la fenêtre ne tombent pas exactement à ses bords, et Prometheus prolonge la pente, d'où une valeur décimale. Sur une longue période, l'écart relatif devient négligeable. Il existe aussi des différences de fond : une requête dont le journal est perdu (Pod supprimé avant la collecte, ligne trop longue) manque dans Loki, tandis qu'un redémarrage du Pod remet le compteur à zéro, ce que `increase()` rattrape.
+
+</details>
+
+:::exercice[Exercice 2 : une étiquette de trop]
+
+Un collègue propose de faire de `trace_id` une étiquette d'index de Loki, « pour retrouver plus vite les lignes d'une trace ». Combien de flux Loki aurait-il après une heure de trafic à 6 requêtes par seconde ? Que se passerait-il ? Comment Grafana retrouve-t-il les lignes d'une trace sans cela ?
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+Chaque requête a son propre `trace_id` : 6 par seconde, c'est 21 600 nouveaux flux par heure pour l'API seule, contre une vingtaine de flux aujourd'hui pour tout le cluster. Chaque flux a son entrée d'index, et ses lignes sont regroupées en morceaux compressés par flux : 21 600 flux d'une ligne chacun, c'est un index énorme et des morceaux minuscules, que Loki gère très mal. Les limites par défaut finissent par refuser les écritures (`max_global_streams_per_user`), et l'ingestion s'arrête. La documentation de Loki le dit sans détour : les étiquettes doivent avoir une faible cardinalité[^loki].
+
+Grafana n'en a pas besoin. « Logs for this span » lance une requête qui sélectionne les flux du service par ses étiquettes, puis **filtre** sur le contenu des lignes (`|= "<trace_id>"`). Loki ne lit alors que les lignes de la bonne période et des bons flux, ce qui reste rapide sur une fenêtre de quelques minutes. C'est ce que fait le script de rejeu avec `{service_name="api"} |= "<trace_id>"`. Quand on veut vraiment un accès direct par identifiant, on le range en métadonnée structurée, que Loki attache à la ligne sans créer de flux.
+
+</details>
+
+:::exercice[Exercice 3 : suivre un colis à travers la file (programmation)]
+
+La trace du worker est séparée de celle de la requête qui a déposé le colis. Modifiez `deposer` et `prendre` (dans `colis/file.py`) pour que l'API dépose, avec l'identifiant du colis, le contexte de trace courant, et que le worker ouvre son span `estimer un colis` comme enfant de ce contexte. Les messages déjà dans la file (de simples identifiants) doivent rester lisibles. Testez sans cluster, avec un exportateur en mémoire.
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+Le corrigé, `corrige/propagation.py`, n'est pas dans l'archive. Il utilise le propagateur par défaut d'OpenTelemetry, celui du W3C, qui sait écrire et relire `traceparent` dans n'importe quel dictionnaire :
+
+```python
+def deposer(redis, id_: int) -> None:
+    porteur: dict[str, str] = {}
+    propagate.inject(porteur)                 # {"traceparent": "00-<trace>-<span>-01"} s'il y a une trace
+    redis.rpush(CLE, json.dumps({"id": id_, **porteur}))
+
+
+def prendre(redis, attente_s: int) -> tuple[int, context.Context] | None:
+    resultat = redis.blpop([CLE], timeout=attente_s)
+    if not resultat:
+        return None
+    message = resultat[1]
+    if message.isdigit():                     # un message déposé par une API 2.2 : pas de contexte
+        return int(message), context.get_current()
+    donnees = json.loads(message)
+    return int(donnees.pop("id")), propagate.extract(donnees)
+```
+
+Le worker passe le contexte relu à `start_as_current_span(..., context=parent)`. Le test (`corrige/test_propagation.py`) remplace Redis par une liste et Tempo par un exportateur en mémoire :
+
+```bash
+pip install opentelemetry-sdk==1.45.1 pytest
+python -m pytest -q -s test_propagation.py
+```
+
+```sortie
+@@ex3@@
+```
+
+Le span du worker a le même `trace_id` que la requête de l'API, et son parent est le span de cette requête : dans Tempo, l'estimation apparaîtrait sous `POST /colis`, avec le temps passé dans la file entre les deux. Le dernier caractère de `traceparent` (`03`) contient les drapeaux : échantillonnée, et identifiant aléatoire. Un vrai déploiement doit aussi tenir compte des deux versions qui cohabitent pendant une mise à jour progressive (chapitre 19). Une API 2.2.1 dépose encore des identifiants nus, que le nouveau worker doit savoir lire : c'est le rôle du test `isdigit()`. Et un ancien worker doit pouvoir lire les messages JSON, ce qui impose de déployer le worker **avant** l'API.
+
+</details>
+
+:::exercice[Exercice 4 : n'en garder qu'une sur dix]
+
+Configurez l'API pour n'enregistrer qu'une trace sur dix (`OTEL_TRACES_SAMPLER=parentbased_traceidratio`, `OTEL_TRACES_SAMPLER_ARG=0.1`), envoyez une minute de trafic, et comparez le nombre de traces de l'API dans Tempo au nombre de requêtes dans les journaux. Puis prenez quelques `trace_id` dans les journaux, et demandez leur trace à Tempo. Que constatez-vous, et quel problème cela pose-t-il pour l'enquête de ce chapitre ?
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+```bash
+kubectl -n colis set env deployment/api OTEL_TRACES_SAMPLER=parentbased_traceidratio OTEL_TRACES_SAMPLER_ARG=0.1
+# une minute de trafic à 5 requêtes par seconde, puis :
+```
+
+```sortie
+@@ex4@@
+```
+
+Environ une trace sur dix arrive dans Tempo, comme demandé. Mais **toutes** les lignes de journal portent un `trace_id`, y compris celles des requêtes non retenues : le SDK crée toujours un contexte de trace, et ne décide qu'ensuite de l'enregistrer ou non. Pour la plupart des identifiants, Tempo ne trouve rien ; il ne répond pas par une erreur 404 mais par un code 200 et une trace vide, `{"trace":{}}`, qu'il faut savoir reconnaître. C'est le piège de l'échantillonnage « en tête » (*head sampling*), décidé au début de la requête, au hasard : la requête lente de l'enquête a neuf chances sur dix de ne pas avoir de trace. Deux remèdes. Journaliser aussi le drapeau d'échantillonnage, pour que Grafana ne propose le lien que s'il mène quelque part. Ou échantillonner **en queue** (*tail sampling*) : le collecteur garde toutes les traces quelques secondes, puis décide de conserver les lentes et celles en erreur, et une fraction des autres. C'est le rôle du processeur `tail_sampling` du collecteur, qui demande de faire passer toutes les traces d'une même requête par le même collecteur.
+
+</details>
+
+## Nettoyer
+
+Loki, Tempo et le collecteur restent en place, comme Prometheus et Grafana : le défi VII s'en servira. Colis reste en version 2.2.1, traces actives. On retire seulement ce qui ne sert qu'aux exercices, déjà fait par le script des exercices : l'échantillonnage revient à 100 %.
+
+Interfaces (redirections de port) : Grafana `http://localhost:3050` (Explore pour Loki et Tempo), Loki `http://localhost:3101`, Tempo `http://localhost:3201`, Prometheus `http://localhost:9095`.
+
+```bash
+kubectl -n supervision port-forward svc/loki 3101:3100 &
+kubectl -n supervision port-forward svc/tempo 3201:3200 &
+```
+
+Pour tout retirer plus tard : `helm -n supervision uninstall collecteur tempo loki`, puis les PVC `storage-loki-0` et `storage-tempo-0`, que Helm laisse en place.
+
+[^loki]: Grafana Labs, « Loki overview » et « Understand labels » : index par étiquettes seulement, lignes compressées par flux, recommandation d'étiquettes à faible cardinalité, métadonnées structurées pour les valeurs à forte cardinalité. [grafana.com/docs/loki/latest/get-started/labels](https://grafana.com/docs/loki/latest/get-started/labels/)
+[^collecteur]: OpenTelemetry, « Important Components for Kubernetes » : récepteur filelog en DaemonSet sur /var/log/pods, processeur k8sattributes (association par adresse IP du Pod ou par chemin du fichier), préréglages du chart. [opentelemetry.io/docs/platforms/kubernetes/collector/components](https://opentelemetry.io/docs/platforms/kubernetes/collector/components/)
+[^logql]: Grafana Labs, « LogQL: Log query language » : sélecteurs de flux, filtres de ligne, analyseurs (`json`, `logfmt`), requêtes métriques (`count_over_time`, `bytes_over_time`, `quantile_over_time` avec `unwrap`). [grafana.com/docs/loki/latest/query](https://grafana.com/docs/loki/latest/query/)
+[^w3c]: W3C, « Trace Context », recommandation : en-têtes `traceparent` (version, identifiant de trace de 16 octets, identifiant du parent de 8 octets, drapeaux) et `tracestate`. [w3.org/TR/trace-context](https://www.w3.org/TR/trace-context/)
+[^traceql]: Grafana Labs, « Construct a TraceQL query » : ensembles de spans entre accolades, attributs `span.` et `resource.`, champs intrinsèques `name`, `duration`, `kind`. [grafana.com/docs/tempo/latest/traceql](https://grafana.com/docs/tempo/latest/traceql/)
