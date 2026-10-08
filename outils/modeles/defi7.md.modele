@@ -43,11 +43,11 @@ La page arrive au bout de trois minutes environ. Notez une première différence
 
 ## Le cahier des charges
 
-1. **Rétablir le service.** Le calcul des dates doit reprendre et la file se vider, en changeant le moins de choses possible.
-2. **Trouver toutes les causes**, y compris celles qui n'ont encore rien cassé. Un changement qui a provoqué une panne en a souvent préparé d'autres.
-3. **Mesurer l'impact.** Combien de colis, quel retard, combien de requêtes en erreur, avec la source de chaque chiffre. « Le worker était en panne » n'est pas un impact ; « 300 colis sans date pendant 6 minutes » en est un.
-4. **Écrire le post-mortem** à partir de `post-mortem-modele.md`. Le modèle suit celui du livre *Site Reliability Engineering* de Google[^sre-exemple], et la même règle : un post-mortem est **sans blâme**. Il cherche ce qui, dans le système et ses pratiques, a permis l'erreur, sans désigner de coupable[^sre-culture].
-5. **Programmation : `impact.py`.** Pour chaque colis enregistré pendant l'incident, calculez le retard entre son enregistrement (colonne `cree_le` de PostgreSQL) et le calcul de sa date (la ligne « colis N : … livraison estimée » du worker, dans Loki, qui porte le champ `colis`). Le script affiche le nombre de colis, ceux qui n'ont jamais été estimés, puis la médiane, le 95e centile et le maximum des retards.
+1. Rétablir le service : le calcul des dates doit reprendre et la file se vider, en changeant le moins de choses possible.
+2. Trouver toutes les causes, y compris celles qui n'ont encore rien cassé. Un changement qui a provoqué une panne en a souvent préparé d'autres.
+3. Mesurer l'impact : combien de colis, quel retard, combien de requêtes en erreur, avec la source de chaque chiffre. « Le worker était en panne » n'est pas un impact ; « 300 colis sans date pendant 6 minutes » en est un.
+4. Écrire le post-mortem à partir de `post-mortem-modele.md`. Le modèle suit celui du livre *Site Reliability Engineering* de Google[^sre-exemple], et la même règle : un post-mortem est sans blâme. Il cherche ce qui, dans le système et ses pratiques, a permis l'erreur, sans désigner de coupable[^sre-culture].
+5. Programmation : écrire `impact.py`. Pour chaque colis enregistré pendant l'incident, calculez le retard entre son enregistrement (colonne `cree_le` de PostgreSQL) et le calcul de sa date (la ligne « colis N : … livraison estimée » du worker, dans Loki, qui porte le champ `colis`). Le script affiche le nombre de colis, ceux qui n'ont jamais été estimés, puis la médiane, le 95e centile et le maximum des retards.
 
 ## La grille
 
@@ -301,10 +301,9 @@ Reste la troisième modification, la requête mémoire de l'API. Elle n'est pas 
 
 ### La chronologie
 
-<figure className="figure-quai">
-<img src={chronologieIncident} alt="Courbe de la file d'estimation pendant l'incident, mesurée par Prometheus toutes les 30 secondes : elle monte régulièrement de 0 à 491 colis entre 18:37 et 18:45, pendant la phase 1 où le worker est tué par manque de mémoire puis la phase 2 où il ne joint pas la base, et retombe à 0 en une minute et demie après le second correctif. Les événements sont marqués sous l'axe du temps : changement à 18:37:16, alerte active à 18:39:45, page à 18:40:16, correctifs à 18:43:01 et 18:44:21, file vide à 18:45:55, page résolue à 18:46:16." />
-<figcaption>La file d'estimation pendant l'incident, relevée toutes les 30 secondes dans Prometheus, et les événements qui jalonnent la chronologie.</figcaption>
-</figure>
+<Figure svg={chronologieIncident} num="VII.1" alt="Courbe de la file d'estimation pendant l'incident, mesurée par Prometheus toutes les 30 secondes : elle monte régulièrement de 0 à 491 colis entre 18:37 et 18:45, pendant la phase 1 où le worker est tué par manque de mémoire puis la phase 2 où il ne joint pas la base, et retombe à 0 en une minute et demie après le second correctif. Les événements sont marqués sous l'axe du temps : changement à 18:37:16, alerte active à 18:39:45, page à 18:40:16, correctifs à 18:43:01 et 18:44:21, file vide à 18:45:55, page résolue à 18:46:16.">
+La file d'estimation pendant l'incident, relevée toutes les 30 secondes dans Prometheus, et les événements qui jalonnent la chronologie.
+</Figure>
 
 La file monte d'environ 60 colis par minute, le rythme des enregistrements du générateur de trafic, et continue de monter une minute après le second correctif : le temps que KEDA voie la file (toutes les 5 secondes), que l'HPA crée les Pods et que chacun démarre. La chronologie du post-mortem se reconstruit à partir de quatre sources : les `managedFields` pour le changement, les événements pour les Pods et KEDA, Prometheus pour la file et l'alerte, le récepteur pour la page. Les événements de KEDA, par exemple :
 
@@ -372,9 +371,9 @@ Avec ce post-mortem et le service rétabli :
 
 ### Ce que la grille ne vérifie pas
 
-- **Les manifestes versionnés.** Les deux correctifs sont des `kubectl patch`, comme le changement fautif. Tant que les fichiers du dépôt ne sont pas corrigés, le prochain `kubectl apply` de quelqu'un d'autre peut réintroduire les valeurs de son choix. C'est la première action du post-mortem, et le sujet de la partie VIII avec Argo CD.
-- **La qualité de l'écriture.** Un bon post-mortem se lit sans avoir suivi l'incident, met chaque chiffre à côté de sa source, et propose des actions qui changent le système. « Faire plus attention » n'est pas une action.
-- **Les alertes manquantes.** Une seule alerte a sonné, parce qu'elle mesurait le symptôme. La règle générale `KubePodCrashLooping` attend 15 minutes ; une alerte sur les redémarrages des conteneurs de `colis` sur 5 minutes, ou sur l'échec d'un Job de purge, aurait vu plus tôt les deux défauts.
+- Les deux correctifs sont des `kubectl patch`, comme le changement fautif. Tant que les fichiers du dépôt ne sont pas corrigés, le prochain `kubectl apply` de quelqu'un d'autre peut réintroduire les valeurs de son choix. C'est la première action du post-mortem, et le sujet de la partie VIII avec Argo CD.
+- La grille ne lit pas le post-mortem. Un bon post-mortem se lit sans avoir suivi l'incident, met chaque chiffre à côté de sa source, et propose des actions qui changent le système. « Faire plus attention » n'est pas une action.
+- Une seule alerte a sonné, celle qui mesurait le symptôme. La règle générale `KubePodCrashLooping` attend 15 minutes ; une alerte sur les redémarrages des conteneurs de `colis` sur 5 minutes, ou sur l'échec d'un Job de purge, aurait vu plus tôt les deux défauts.
 
 </details>
 
