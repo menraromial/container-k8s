@@ -1,0 +1,9 @@
+apiVersion: cours.example.com/v1
+kind: Colis
+metadata:
+  labels:
+    app.kubernetes.io/name: colis-operateur
+    app.kubernetes.io/managed-by: kustomize
+  name: colis-sample
+spec:
+  # TODO(user): Add fields here

@@ -1,0 +1,229 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.22.0
+  name: colis.cours.example.com
+spec:
+  group: cours.example.com
+  names:
+    categories:
+    - cours
+    kind: Colis
+    listKind: ColisList
+    plural: colis
+    shortNames:
+    - cl
+    singular: colis
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.version
+      name: Version
+      type: string
+    - jsonPath: .spec.api.replicas
+      name: API
+      type: integer
+    - jsonPath: .status.conditions[?(@.type=="Prete")].status
+      name: Prête
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="Prete")].reason
+      name: Raison
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: Colis est une installation complète de l'application Colis, une
+          par namespace.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: |-
+              ColisSpec décrit l'installation voulue. Les marqueurs // +kubebuilder:... deviennent
+              le schéma OpenAPI et les règles CEL de la CustomResourceDefinition (make manifests).
+            properties:
+              api:
+                default: {}
+                properties:
+                  replicas:
+                    default: 2
+                    description: Nombre de répliques de l'API.
+                    format: int32
+                    maximum: 10
+                    minimum: 1
+                    type: integer
+                type: object
+              base:
+                default: {}
+                properties:
+                  classe:
+                    default: standard
+                    enum:
+                    - standard
+                    - csi-hostpath-sc
+                    type: string
+                  taille:
+                    default: 1Gi
+                    description: Taille du volume de PostgreSQL, fixée à la création.
+                    maxLength: 10
+                    pattern: ^[0-9]+(Mi|Gi)$
+                    type: string
+                    x-kubernetes-validations:
+                    - message: la taille de la base ne change pas après la création
+                      rule: self == oldSelf
+                type: object
+              version:
+                description: Version de l'image de l'API et du worker.
+                maxLength: 20
+                pattern: ^[0-9]+\.[0-9]+\.[0-9]+$
+                type: string
+              web:
+                default: {}
+                properties:
+                  replicas:
+                    default: 2
+                    format: int32
+                    maximum: 10
+                    minimum: 1
+                    type: integer
+                type: object
+              worker:
+                default:
+                  max: 5
+                  min: 0
+                description: Le worker est mis à l'échelle par KEDA d'après la longueur
+                  de la file Redis.
+                properties:
+                  max:
+                    default: 5
+                    format: int32
+                    maximum: 20
+                    minimum: 1
+                    type: integer
+                  min:
+                    default: 0
+                    format: int32
+                    minimum: 0
+                    type: integer
+                type: object
+                x-kubernetes-validations:
+                - messageExpression: '''min (%d) dépasse max (%d)''.format([self.min,
+                    self.max])'
+                  rule: self.min <= self.max
+            required:
+            - version
+            type: object
+            x-kubernetes-validations:
+            - message: pas de retour à une version antérieure
+              rule: semver(self.version).compareTo(semver(oldSelf.version)) >= 0
+            - messageExpression: '''worker.max doit rester sous 4 × api.replicas,
+                soit %d''.format([4 * self.api.replicas])'
+              rule: self.worker.max <= 4 * self.api.replicas
+          status:
+            description: ColisStatus est écrit par l'opérateur seul, par la sous-ressource
+              status.
+            properties:
+              apiPretes:
+                description: 'Répliques de l''API prêtes : lu par la sous-ressource
+                  scale.'
+                format: int32
+                type: integer
+              conditions:
+                description: 'Prete : tous les composants ont leurs répliques disponibles.'
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: La génération de spec que l'opérateur a traitée en dernier.
+                format: int64
+                type: integer
+              selecteur:
+                description: Sélecteur des Pods de l'API, pour un HorizontalPodAutoscaler.
+                type: string
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      scale:
+        labelSelectorPath: .status.selecteur
+        specReplicasPath: .spec.api.replicas
+        statusReplicasPath: .status.apiPretes
+      status: {}

@@ -1,0 +1,29 @@
+% Figure 55.1 : la boucle d'un opérateur écrit avec controller-runtime (chapitre 55).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    e/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=#1},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  % API server
+  \node[qbox, draw=QBleu, fill=QBleuBg, font=\scriptsize, align=center, text width=2.2cm, minimum height=5.2cm, inner sep=4pt] (api) at (0,0) {\textbf{API server}\\[4pt]Colis\\Deployment\\StatefulSet\\Service\\ConfigMap\\ScaledObject};
+  % opérateur
+  \node[qcadre, draw=QViolet, minimum width=11.6cm, minimum height=6.2cm] (op) at (8.3,0) {};
+  \node[qtitre, text=QViolet] at ([xshift=2mm,yshift=-2mm]op.north west) {l'opérateur (un processus, une image)};
+  \node[e=3.1cm, draw=QViolet] (cache) at (4.4,0.4) {\textbf{caches et informateurs}\\un \emph{watch} par type, une copie locale de chaque objet};
+  \node[e=3.2cm] (for) at (8.2,1.55) {\textbf{For(Colis)}\\un Colis change : clé {\ttfamily ch55/principal}};
+  \node[e=3.2cm] (owns) at (8.2,-0.75) {\textbf{Owns(Deployment\dots)}\\un objet possédé change : la clé de son propriétaire, lue dans {\ttfamily ownerReferences}};
+  \node[e=2.3cm, draw=QOcre, fill=QOcreBg] (file) at (11.65,0.4) {\textbf{file de travail}\\clés sans doublon, nouvel essai avec délai croissant};
+  \node[e=4.2cm, draw=QVert, fill=QVertBg] (rec) at (9.2,-2.35) {\textbf{Reconcile(ch55/principal)}\\lit dans le cache, compare, crée ou modifie, écrit le statut};
+  % flèches
+  \draw[qarr] (api.east |- cache.west) -- node[lien, above] {1. \emph{watch}} (cache.west);
+  \draw[qarr] (cache.east) -- (for.west);
+  \draw[qarr] (cache.east) -- (owns.west);
+  \draw[qarr] (for.east) -- node[lien, above, pos=0.4] {2} (file.west);
+  \draw[qarr] (owns.east) -- (file.west);
+  \draw[qarr] (file.south) |- node[lien, pos=0.25, right] {3} (rec.east);
+  \draw[qarr] (rec.west) -| node[lien, pos=0.75, left] {lit} (cache.south);
+  \draw[qarr] (rec.south west) -- ++(0,-0.6) -| node[lien, pos=0.25, below] {4. Create, Update, Status().Update} (api.south);
+  \node[qlbl, font=\scriptsize, align=left, anchor=north west] at (8.0,-3.45) {chaque écriture (4) revient par le \emph{watch} (1) : la boucle s'arrête quand\\Reconcile n'a plus rien à écrire};
+\end{tikzpicture}
+\end{document}

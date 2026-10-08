@@ -1,0 +1,37 @@
+% Figure 55.2 : les objets d'une installation, leurs propriétaires et ce qui survit à la suppression (chapitre 55).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    o/.style={qbox, font=\ttfamily\scriptsize, inner sep=3pt, minimum width=2.6cm, align=center},
+    possede/.style={o, draw=QViolet},
+    autre/.style={o, draw=QBleu},
+    libre/.style={o, draw=QVert, fill=QVertBg, dashed},
+    lien/.style={qlbl, font=\scriptsize, align=left}]
+  \node[o, draw=QViolet, fill=QVioletBg, font=\ttfamily\small, minimum width=3.2cm] (colis) at (0,0) {Colis principal};
+  % possédés par le Colis
+  \foreach \n/\t/\y in {cm/{ConfigMap colis-config}/3.0, svc/{Service api, web,\\postgres, redis}/1.85, dapi/{Deployment api}/0.7, dw/{Deployment worker}/-0.45, dweb/{Deployment web, redis}/-1.6, sts/{StatefulSet postgres}/-2.75, so/{ScaledObject worker}/-3.9} {
+    \node[possede, text width=3.1cm] (\n) at (5,\y) {\t};
+    \draw[qarr, draw=QViolet] (\n.west) -- (colis.east);
+  }
+  % possédés par d'autres
+  \node[autre, text width=2.6cm] (rs) at (9.6,0.7) {ReplicaSet api-\dots};
+  \node[autre, text width=2.6cm] (pods) at (13.4,0.7) {Pods api-\dots};
+  \draw[qarr, draw=QBleu] (rs.west) -- (dapi.east);
+  \draw[qarr, draw=QBleu] (pods.west) -- (rs.east);
+  \node[autre, text width=2.6cm] (hpa) at (9.6,-3.9) {HPA keda-hpa-worker};
+  \draw[qarr, draw=QBleu] (hpa.west) -- (so.east);
+  \node[autre, text width=2.6cm] (pg) at (9.6,-2.75) {Pod postgres-0};
+  \draw[qarr, draw=QBleu] (pg.west) -- (sts.east);
+  % sans propriétaire
+  \node[libre, text width=3.1cm] (secret) at (0,-2.4) {Secret colis-db};
+  \node[libre, text width=3.1cm] (pvc) at (14.3,-2.75) {PVC donnees-postgres-0};
+  \draw[qdarr, draw=QVert] (pvc.west) -- node[lien, above, align=center, font=\tiny] {montée} (pg.east);
+  \node[lien, align=center, text width=3.4cm] at (14.3,-3.75) {créée par le contrôleur\\des StatefulSets,\\d'après le gabarit};
+  % légende
+  \node[lien, anchor=west] at (8.1,3.0) {\textcolor{QViolet}{\rule[2pt]{6mm}{0.8pt}} propriétaire : le Colis (l'opérateur)};
+  \node[lien, anchor=west] at (8.1,2.5) {\textcolor{QBleu}{\rule[2pt]{6mm}{0.8pt}} propriétaire : un contrôleur de Kubernetes ou KEDA};
+  \node[lien, anchor=west] at (8.1,2.0) {\textcolor{QVert}{\rule[2pt]{6mm}{0.8pt}} sans propriétaire : survit à la suppression du Colis};
+  \node[lien, align=center, text width=3.4cm] at (0,-1.35) {supprimer le Colis supprime\\tout ce qui en dépend,\\de proche en proche};
+\end{tikzpicture}
+\end{document}

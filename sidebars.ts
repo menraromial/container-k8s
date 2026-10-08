@@ -146,6 +146,7 @@ const sidebars: SidebarsConfig = {
       link: {type: 'doc', id: 'partie-8/index'},
       items: [
         'partie-8/crd',
+        'partie-8/operateur',
       ],
     },
   ],

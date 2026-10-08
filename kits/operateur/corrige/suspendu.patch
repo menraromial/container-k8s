@@ -1,0 +1,56 @@
+--- a/api/v1/colis_types.go
++++ b/api/v1/colis_types.go
+@@ -47,6 +47,11 @@
+ 	// +kubebuilder:default={}
+ 	// +optional
+ 	Base BaseSpec `json:"base,omitzero"`
++
++	// Suspendu arrête la réconciliation : l'opérateur ne crée, ne modifie ni ne répare plus rien
++	// pour ce Colis, le temps d'une intervention à la main.
++	// +optional
++	Suspendu bool `json:"suspendu,omitempty"`
+ }
+ 
+ type APISpec struct {
+--- a/internal/controller/colis_controller.go
++++ b/internal/controller/colis_controller.go
+@@ -102,6 +102,15 @@
+ 		return ctrl.Result{}, err
+ 	}
+ 
++	if colis.Spec.Suspendu {
++		err := r.majStatut(ctx, &colis, metav1.ConditionUnknown, "Suspendu",
++			"réconciliation suspendue (spec.suspendu)", colis.Status.APIPretes)
++		if apierrors.IsConflict(err) {
++			return ctrl.Result{RequeueAfter: time.Second}, nil
++		}
++		return ctrl.Result{}, err
++	}
++
+ 	etapes := []struct {
+ 		nom string
+ 		f   func(context.Context, *coursv1.Colis) (controllerutil.OperationResult, error)
+--- a/internal/controller/colis_controller_test.go
++++ b/internal/controller/colis_controller_test.go
+@@ -124,6 +124,21 @@
+ 		Expect(*deploiement("worker").Spec.Replicas).To(Equal(int32(3)))
+ 	})
+ 
++	It("ne touche plus à rien quand le Colis est suspendu", func() {
++		reconcilier("principal")
++		colis := &coursv1.Colis{}
++		Expect(k8sClient.Get(ctx, client.ObjectKey{Namespace: ns, Name: "principal"}, colis)).To(Succeed())
++		colis.Spec.Suspendu = true
++		Expect(k8sClient.Update(ctx, colis)).To(Succeed())
++		api := deploiement("api")
++		api.Spec.Replicas = ptr.To(int32(5))
++		Expect(k8sClient.Update(ctx, api)).To(Succeed())
++		reconcilier("principal")
++		Expect(*deploiement("api").Spec.Replicas).To(Equal(int32(5)))
++		Expect(k8sClient.Get(ctx, client.ObjectKey{Namespace: ns, Name: "principal"}, colis)).To(Succeed())
++		Expect(meta.FindStatusCondition(colis.Status.Conditions, "Prete").Reason).To(Equal("Suspendu"))
++	})
++
+ 	It("refuse un second Colis dans le même namespace", func() {
+ 		creerColis("second")
+ 		reconcilier("second")

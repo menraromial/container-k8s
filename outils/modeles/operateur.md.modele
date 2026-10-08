@@ -1,0 +1,442 @@
+---
+title: Écrire un opérateur
+sidebar_label: 55. Écrire un opérateur
+description: "Un opérateur en Go avec kubebuilder pour le type Colis : le projet généré, les types et leurs marqueurs, la boucle de réconciliation de controller-runtime, les références de propriétaire, le piège des réécritures, la dérive corrigée, la mise à l'échelle et la montée de version, les tests avec envtest, l'image, le déploiement et les métriques."
+partie: 8
+chapitre: '55'
+---
+
+import operateurBoucle from '@site/src/figures/operateur-boucle.svg';
+import operateurObjets from '@site/src/figures/operateur-objets.svg';
+
+`kubectl apply` d'un objet `Colis` répond `created`, et c'est tout. Aucun Pod ne démarre, aucun Service n'apparaît : la définition du type accepte l'objet, le valide, le range dans etcd, et personne ne le lit. Pour qu'un objet `Colis` devienne une installation de l'application, il faut un programme qui le surveille, crée les Deployments, les Services et le volume de la base, puis les maintient dans l'état décrit, quoi qu'il arrive. Ce programme est un **opérateur**.
+
+Le mot vient d'un article de CoreOS publié en novembre 2016. Brandon Philips y décrit un opérateur comme un contrôleur propre à une application, qui étend l'API de Kubernetes pour créer, configurer et gérer des instances d'applications complexes au nom de l'utilisateur, en codant dans un logiciel le savoir d'un administrateur humain[^coreos]. L'article s'appuyait sur les ThirdPartyResources, l'ancêtre des CRD. La documentation de Kubernetes reprend l'idée : un opérateur suit le principe de la boucle de contrôle (chapitre 15), appliqué à des ressources personnalisées[^operateur].
+
+Ce chapitre écrit cet opérateur en Go, avec kubebuilder, l'outil de génération de projet maintenu par le groupe API Machinery de Kubernetes, et la bibliothèque controller-runtime sur laquelle il repose[^kubebuilder]. Les fichiers sont dans [l'archive operateur](pathname:///kits/operateur.tar.gz) : le projet complet, tel qu'il est à la fin du chapitre.
+
+## Les outils
+
+kubebuilder génère un projet Go ; il faut donc Go sur le poste, et le binaire `kubebuilder` lui-même, téléchargé depuis la page de ses versions :
+
+```bash
+go version
+curl -sL -o ~/.local/bin/kubebuilder \
+  https://github.com/kubernetes-sigs/kubebuilder/releases/download/v4.16.0/kubebuilder_linux_amd64
+chmod +x ~/.local/bin/kubebuilder
+kubebuilder version
+```
+
+```sortie
+@@outils@@
+```
+
+Les autres outils (le générateur de code `controller-gen`, `kustomize`, les binaires de test) sont téléchargés par le `Makefile` du projet, dans son dossier `bin/`, à la première commande qui en a besoin.
+
+## Le projet généré
+
+Deux commandes créent le projet. `init` pose le squelette : un programme principal, un `Makefile`, une image, les manifestes de déploiement. `create api` ajoute un type, son contrôleur et ses tests :
+
+```bash
+mkdir colis-operateur && cd colis-operateur
+kubebuilder init --domain example.com --repo example.com/colis-operateur --project-name colis-operateur
+kubebuilder create api --group cours --version v1 --kind Colis --plural colis --resource --controller
+```
+
+```sortie
+@@init@@
+```
+
+La première fois, `init` a pris 2 min 38 s, presque entièrement passées à télécharger les dépendances Go ; avec le cache de modules rempli, quelques secondes suffisent. Le groupe `cours` et le domaine `example.com` donnent le groupe d'API `cours.example.com`, celui du chapitre 54. Le projet compte @@nb-fichiers@@ :
+
+```sortie
+@@arbre@@
+```
+
+Quatre endroits comptent. `api/v1/colis_types.go` décrit le type en Go. `internal/controller/colis_controller.go` contient la fonction de réconciliation. `cmd/main.go` crée le **manager**, l'objet de controller-runtime qui ouvre la connexion à l'API server, tient les caches, lance les contrôleurs, sert les sondes et les métriques, et organise l'élection d'un chef quand plusieurs copies tournent. Le dossier `config/` contient les manifestes Kustomize (chapitre 30) qui installent la CRD, les rôles RBAC et le Deployment de l'opérateur. `zz_generated.deepcopy.go` est produit par `controller-gen` et ne se modifie jamais à la main. Le projet contient aussi un fichier `AGENTS.md`, destiné aux assistants de programmation, et une configuration de conteneur de développement (`.devcontainer`) ; ni l'un ni l'autre ne servent ici.
+
+## Le type, en Go
+
+Au chapitre 54, le schéma était écrit en YAML. Avec kubebuilder, on écrit des structures Go, et des commentaires spéciaux, les **marqueurs** (`// +kubebuilder:...`), portent ce que Go ne sait pas dire : bornes, motifs, valeurs par défaut, règles CEL, sous-ressources, colonnes[^marqueurs]. Le schéma du chapitre 54 se retrouve presque mot pour mot :
+
+```go title="api/v1/colis_types.go (extrait)"
+@@code-types@@
+```
+
+Deux différences avec le chapitre 54. La taille de la base porte maintenant la règle `self == oldSelf` : l'opérateur crée le volume une fois, et un StatefulSet ne permet pas de modifier son gabarit de volume ensuite. Le statut a trois champs, écrits par l'opérateur : `observedGeneration`, le nombre de répliques de l'API prêtes (lu par la sous-ressource `scale`), et une liste de conditions au format standard `metav1.Condition`, celui que recommandent les conventions de l'API de Kubernetes[^conventions].
+
+`make manifests` lit les marqueurs et écrit la CRD ; `make generate` écrit les fonctions de copie profonde :
+
+```bash
+make manifests generate
+grep -c "" config/crd/bases/cours.example.com_colis.yaml
+```
+
+```sortie
+@@generation@@
+```
+
+Une définition de @@nb-lignes-crd@@ lignes, qu'on n'écrit plus à la main. Les mêmes marqueurs dans le contrôleur produisent le ClusterRole de l'opérateur.
+
+## La boucle de réconciliation
+
+controller-runtime fait presque tout le travail qui entoure la réconciliation. Le manager ouvre un *watch* sur chaque type que le contrôleur déclare, garde une copie locale de chaque objet (le cache), et transforme chaque événement en une **clé**, `namespace/nom`, déposée dans une file de travail. La fonction `Reconcile` reçoit ces clés une à une.
+
+<Figure svg={operateurBoucle} num="55.1" alt="L'API server à gauche, avec les types Colis, Deployment, StatefulSet, Service, ConfigMap et ScaledObject. À droite, dans l'opérateur : 1, les caches et informateurs reçoivent les watch de l'API server ; un changement de Colis donne la clé ch55/principal (For), un changement d'un objet possédé donne la clé de son propriétaire, lue dans ownerReferences (Owns) ; 2, ces clés vont dans la file de travail, sans doublon et avec nouvel essai à délai croissant ; 3, Reconcile(ch55/principal) lit dans le cache, compare, crée ou modifie et écrit le statut ; 4, ses écritures (Create, Update, Status().Update) vont à l'API server et reviennent par le watch. La boucle s'arrête quand Reconcile n'a plus rien à écrire.">
+La boucle d'un opérateur écrit avec controller-runtime. Reconcile ne reçoit qu'une clé, jamais l'événement qui l'a provoquée.
+</Figure>
+
+Un point de conception découle de ce schéma : `Reconcile` ne sait pas pourquoi elle est appelée. Elle reçoit `ch55/principal`, pas « le Deployment `api` vient d'être supprimé ». Elle doit donc comparer l'état voulu à l'état réel, tout entier, à chaque appel. On parle de contrôleur déclenché par niveau (*level-triggered*), par opposition à un programme qui réagirait à chaque événement (*edge-triggered*) : si des événements se perdent, si l'opérateur redémarre, la prochaine réconciliation rattrape tout. La file dédoublonne les clés : plusieurs changements rapprochés sur les objets d'un même `Colis` peuvent ne donner qu'une réconciliation.
+
+La fonction de l'opérateur :
+
+```go title="internal/controller/colis_controller.go (extrait)"
+@@code-reconcile@@
+```
+
+Chaque étape appelle `controllerutil.CreateOrUpdate`, qui lit l'objet (dans le cache), le crée s'il manque, sinon applique une fonction de modification et n'envoie une mise à jour que si l'objet a changé[^controllerutil]. Le Deployment, par exemple :
+
+```go title="internal/controller/colis_controller.go (extrait)"
+@@code-deploiement@@
+```
+
+`SetControllerReference` ajoute au Deployment une **référence de propriétaire** (`ownerReferences`) vers le `Colis`, marquée `controller: true`. Elle sert deux fois. Le ramasse-miettes de Kubernetes supprime les objets dont le propriétaire a disparu (chapitre 36) ; et controller-runtime s'en sert pour remonter d'un objet modifié à la clé de son propriétaire. C'est ce que déclare la fin du fichier :
+
+```go title="internal/controller/colis_controller.go (extrait)"
+@@code-setup@@
+```
+
+`For` désigne le type principal, `Owns` les types possédés : un changement sur un Deployment possédé par un `Colis` déclenche la réconciliation de ce `Colis`. Le ScaledObject de KEDA n'a pas de type Go dans le projet ; on le manipule comme un objet générique (`unstructured.Unstructured`), en donnant son groupe, sa version et son type.
+
+Les droits de l'opérateur sont déclarés au même endroit, par des marqueurs placés au-dessus de `Reconcile`. `make manifests` en tire `config/rbac/role.yaml` :
+
+```go title="internal/controller/colis_controller.go (extrait)"
+@@code-rbac@@
+```
+
+L'opérateur peut lire les `Colis` et écrire leur statut, mais pas modifier leur `spec` : c'est l'utilisateur qui décrit ce qu'il veut, l'opérateur qui constate et agit.
+
+## Premier lancement
+
+Pendant le développement, l'opérateur tourne sur le poste, avec les droits de votre `kubeconfig`. `make install` installe la CRD, `make run` compile et lance le manager :
+
+```bash
+make install
+make run          # dans un terminal à part ; ici : bin/manager après make build
+kubectl create namespace ch55
+kubectl apply -f principal.yaml
+```
+
+```yaml title="principal.yaml"
+@@f-principal@@
+```
+
+L'état du `Colis`, relevé chaque seconde pendant le démarrage :
+
+```sortie
+@@lancement@@
+```
+
+En 28 secondes, l'installation est complète. La condition `Prete` donne à chaque instant la liste de ce qui manque, avec le nombre de répliques disponibles : c'est le genre d'information qu'on cherchait à la main au chapitre 48, posée cette fois dans le statut de l'objet. Ce qui a été créé :
+
+```bash
+kubectl -n ch55 get deploy,sts,svc,scaledobject,cm,secret,pvc
+kubectl -n ch55 get deploy api -o jsonpath='{.metadata.ownerReferences}'
+kubectl -n ch55 events --for colis.cours.example.com/principal
+```
+
+```sortie
+@@objets@@
+```
+
+Sept objets créés, un événement par objet sur le `Colis`. La réclamation de volume `donnees-postgres-0` n'a pas été créée par l'opérateur : c'est le contrôleur des StatefulSets qui l'a fabriquée, d'après le gabarit. Le Secret `colis-db` n'a pas de propriétaire, c'est voulu, on y revient plus bas.
+
+L'application fonctionne de bout en bout. Le web répond, l'API enregistre un colis, KEDA réveille le worker, qui calcule la date de livraison :
+
+```bash
+kubectl -n ch55 port-forward svc/web 18085:80 &
+curl -s http://127.0.0.1:18085/api/colis -o /dev/null -w '%{http_code}\n'
+curl -s http://127.0.0.1:18085/api/colis -X POST -H 'Content-Type: application/json' \
+  -d '{"destinataire": "Opérateur", "poids_kg": 2.5, "depart": "Brest", "arrivee": "Lille"}'
+```
+
+```sortie
+@@application@@
+```
+
+## Le piège des réécritures
+
+La première version de l'opérateur écrivait le gabarit de Pod sans précaution : `d.Spec.Template.Spec = pod`, à chaque passage. Elle fonctionnait, et l'installation devenait `Disponible`. Son journal disait autre chose. Le même scénario, rejoué avec cette version, pendant une minute environ :
+
+```sortie
+@@naif@@
+```
+
+79 mises à jour pour 7 créations, 40 événements `MisAJour` sur le `Colis`, et pourtant aucun Deployment n'a changé de génération : pas un seul nouveau ReplicaSet. Ces écritures ne modifiaient rien. L'API server complète chaque gabarit de Pod de valeurs par défaut (`imagePullPolicy`, `terminationMessagePath`, `dnsPolicy`, `schedulerName`, les délais des sondes...). Le gabarit relu contient ces valeurs, celui que l'opérateur construit ne les contient pas, et `CreateOrUpdate` conclut à chaque fois qu'il faut écrire. L'API server reçoit l'objet, le complète à nouveau, constate qu'il est identique à celui qu'il a, et n'incrémente rien. Chaque passage coûte une requête et un événement trompeur ; et chaque changement de statut d'un Deployment, pendant le démarrage des Pods, provoquait un passage.
+
+La correction compare le gabarit voulu au gabarit existant avec `equality.Semantic.DeepDerivative`, qui ignore les champs que le gabarit voulu laisse vides[^equality] :
+
+```go title="internal/controller/colis_controller.go (extrait)"
+@@code-remplacer@@
+```
+
+Avec elle, le journal du lancement ci-dessus ne compte que les sept créations. Un champ retiré du gabarit voulu est bien détecté : la comparaison exige des listes de même longueur. L'autre solution, plus récente, est l'application côté serveur (*server-side apply*, chapitre 18) : l'opérateur envoie seulement les champs qu'il possède, et l'API server fait la comparaison.
+
+## La dérive
+
+Un opérateur ne crée pas une fois pour toutes : il ramène sans cesse le réel vers le voulu. Trois modifications à la main, que l'opérateur annule :
+
+```bash
+kubectl -n ch55 delete deployment api
+kubectl -n ch55 scale deployment api --replicas=5
+kubectl -n ch55 patch configmap colis-config --type=merge -p '{"data":{"COLIS_VERSION":"9.9.9"}}'
+```
+
+```sortie
+@@derive@@
+```
+
+Le Deployment supprimé revient en @@delai-recreation@@, le temps que l'événement de suppression arrive par le *watch* et que la réconciliation recrée l'objet. Le nombre de répliques revient à 2, la ConfigMap à sa valeur. Pour changer quelque chose de façon durable, il faut modifier le `Colis` : c'est la seule source de vérité.
+
+### Ce que l'opérateur ne doit pas toucher
+
+La règle a des exceptions, et les oublier fait les pires bogues d'opérateurs.
+
+Le nombre de répliques du worker appartient à KEDA, qui le fait varier de 0 à 5 selon la file Redis (chapitre 31). Si l'opérateur réécrivait `replicas` à chaque passage, il annulerait chaque décision de l'autoscaler, et les deux contrôleurs se renverraient la valeur. La fonction `worker` ne fixe donc ce champ qu'à la création du Deployment :
+
+```go title="internal/controller/colis_controller.go (extrait)"
+@@code-worker@@
+```
+
+Le gabarit de volume du StatefulSet est immuable : la fonction `postgres` ne l'écrit que si l'objet n'existe pas encore (`CreationTimestamp.IsZero()`), comme les sélecteurs des Deployments et l'absence d'adresse du Service de la base.
+
+Le Secret du mot de passe, enfin, est créé une fois et n'est jamais réécrit. Il n'a pas de propriétaire, pour survivre à la suppression du `Colis` avec le volume de la base : un mot de passe neuf face à des données initialisées avec l'ancien rendrait la base inutilisable. Le deuxième exercice montre ce qui arrive quand ce Secret disparaît malgré tout.
+
+Les conflits restent possibles : entre la lecture d'un objet dans le cache et son écriture, KEDA ou un utilisateur peut l'avoir modifié. L'API server refuse alors l'écriture (`the object has been modified; please apply your changes to the latest version`), c'est sa concurrence optimiste, fondée sur `resourceVersion` (chapitres 34 et 35). L'opérateur traite ce cas à part : il recommence une seconde plus tard, sans événement d'erreur.
+
+## Mettre à l'échelle, monter de version
+
+La sous-ressource `scale` du type pointe vers `spec.api.replicas` ; `kubectl scale` sur le `Colis` passe donc par l'opérateur :
+
+```bash
+kubectl -n ch55 scale colis principal --replicas=3
+```
+
+```sortie
+@@echelle@@
+```
+
+Monter de version, c'est modifier un champ :
+
+```bash
+kubectl -n ch55 patch colis principal --type=merge -p '{"spec":{"version":"2.2.1"}}'
+```
+
+```sortie
+@@version@@
+```
+
+L'opérateur a changé l'image de l'API et du worker et la valeur de `COLIS_VERSION` ; le Deployment a fait sa mise à jour progressive (chapitre 19), Pod par Pod. Le retour en arrière est refusé par la règle CEL, avant d'atteindre l'opérateur.
+
+## Un seul Colis par namespace
+
+Les Services s'appellent `api`, `web`, `postgres` et `redis`, parce que l'image web cherche `api` par ce nom. Deux installations dans un même namespace se battraient pour les mêmes objets. L'opérateur règle la question par l'ancienneté : le plus ancien `Colis` du namespace est servi, les autres reçoivent une condition explicite.
+
+```sortie
+@@second@@
+```
+
+Une règle CEL ne pourrait pas faire ce contrôle : elle ne voit que l'objet qu'elle valide, jamais les autres objets du namespace. Un webhook d'admission (chapitre 45) le pourrait, au prix d'un service de plus à faire tourner.
+
+## Quand l'opérateur s'arrête
+
+Que se passe-t-il si l'opérateur s'arrête ? Les objets qu'il a créés continuent de tourner, servis par les contrôleurs de Kubernetes. Rien ne corrige plus les écarts :
+
+```sortie
+@@arret@@
+```
+
+Au redémarrage, le manager remplit ses caches, met en file une clé pour chaque `Colis` existant, et la première réconciliation constate le manque. Rien n'est rejoué événement par événement : l'état est simplement relu.
+
+## Supprimer un Colis
+
+<Figure svg={operateurObjets} num="55.2" alt="Le Colis principal à gauche. Il possède, par des références de propriétaire : la ConfigMap colis-config, les Services api, web, postgres et redis, les Deployments api, worker, web et redis, le StatefulSet postgres et le ScaledObject worker. Ces objets possèdent à leur tour : le ReplicaSet de l'API et ses Pods, le Pod postgres-0, le HPA keda-hpa-worker de KEDA. Sans propriétaire : le Secret colis-db, et la réclamation de volume donnees-postgres-0, créée par le contrôleur des StatefulSets d'après le gabarit et montée par le Pod. Supprimer le Colis supprime tout ce qui en dépend, de proche en proche ; le Secret et la réclamation de volume survivent.">
+Les objets d'une installation et leurs propriétaires. Le ramasse-miettes suit les flèches ; ce qui n'en a pas survit à la suppression.
+</Figure>
+
+Supprimer le `Colis` suffit à tout retirer : le ramasse-miettes supprime les objets qu'il possède, puis ceux qu'ils possèdent, de proche en proche. Deux objets restent, par construction :
+
+```bash
+kubectl -n ch55 delete colis principal
+kubectl -n ch55 get all,cm,secret,pvc,scaledobject
+kubectl apply -f principal.yaml
+```
+
+```sortie
+@@suppression@@
+```
+
+La réclamation de volume reste parce que la politique de rétention par défaut d'un StatefulSet est `Retain` ; le champ `persistentVolumeClaimRetentionPolicy`, stable depuis Kubernetes 1.32, permet de choisir `Delete`[^statefulset]. Le Secret reste parce que l'opérateur ne s'en est pas déclaré propriétaire. Recréé, le `Colis` retrouve la même base, le même mot de passe, et les données d'avant.
+
+## Tester avec envtest
+
+Tester un opérateur sur un vrai cluster est lent. kubebuilder fournit **envtest** : un vrai `kube-apiserver` et un vrai `etcd`, lancés comme de simples processus pour la durée des tests, sans kubelet ni contrôleurs[^envtest]. Le `Makefile` télécharge ces binaires dans `bin/k8s` (@@taille-envtest@@ ici). Les tests du projet, écrits avec Ginkgo et Gomega, appellent `Reconcile` directement et vérifient ce qu'elle a écrit :
+
+```go title="internal/controller/colis_controller_test.go (extrait)"
+@@code-test@@
+```
+
+```bash
+make test
+```
+
+```sortie
+@@tests@@
+```
+
+Cinq comportements vérifiés en sept secondes, dont la règle qui laisse les répliques du worker à KEDA. Ce qu'envtest ne fait pas compte autant que ce qu'il fait. Aucun contrôleur ne tourne : un Deployment créé ne donne ni ReplicaSet ni Pod, donc l'installation n'est jamais `Disponible` ; le ramasse-miettes non plus, donc on vérifie la présence des références de propriétaire, pas la suppression en cascade. La ressource personnalisée de KEDA n'existe pas non plus : le dossier `test/crds` contient une copie de sa définition, chargée au démarrage de l'environnement.
+
+## Livrer l'opérateur dans le cluster
+
+En production, l'opérateur tourne dans le cluster, dans son propre namespace, avec son propre compte de service. Le `Dockerfile` généré compile le binaire dans une image Go, puis le copie seul dans une image distroless (chapitre 13) :
+
+```bash
+make docker-build IMG=localhost:5001/colis-operateur:0.1.0
+docker push localhost:5001/colis-operateur:0.1.0
+make deploy IMG=host.minikube.internal:5001/colis-operateur:0.1.0
+```
+
+```sortie
+@@image@@
+```
+
+La première construction a pris 8 min 39 s, à télécharger l'image `golang:1.26` et les modules ; les suivantes réutilisent le cache de BuildKit. `make deploy` applique la configuration Kustomize de `config/default` :
+
+```sortie
+@@deploiement@@
+```
+
+L'opérateur arrêté sur le poste, celui du cluster a pris le bail d'élection (chapitre 36) et a repris le `Colis` sans rien recréer. Grâce à l'option `--leader-elect`, présente dans le manifeste généré, plusieurs copies peuvent tourner, une seule active. Le Deployment généré fixe des ressources (64 Mi demandés, 128 Mi au plus) ; il en utilise ici @@memoire-operateur@@.
+
+## Les métriques de l'opérateur
+
+controller-runtime publie des métriques Prometheus : nombre de réconciliations par résultat, durée, profondeur de la file de travail, erreurs. Le projet généré les sert en HTTPS, et seulement aux clients autorisés : l'opérateur vérifie le jeton de chaque requête auprès de l'API server (TokenReview), puis son droit de lire `/metrics` (SubjectAccessReview).
+
+```bash
+kubectl -n colis-operateur-system create serviceaccount lecteur-metriques
+kubectl create clusterrolebinding colis-operateur-lecteur-metriques \
+  --clusterrole=colis-operateur-metrics-reader --serviceaccount=colis-operateur-system:lecteur-metriques
+JETON=$(kubectl -n colis-operateur-system create token lecteur-metriques --duration=10m)
+kubectl -n colis-operateur-system port-forward svc/colis-operateur-controller-manager-metrics-service 18443:8443 &
+curl -sk https://127.0.0.1:18443/metrics -o /dev/null -w '%{http_code}\n'
+curl -sk -H "Authorization: Bearer $JETON" https://127.0.0.1:18443/metrics | grep 'controller="colis"'
+```
+
+```sortie
+@@metriques@@
+```
+
+Une seule réconciliation depuis le démarrage dans le cluster : rien n'a changé depuis. Le dossier `config/prometheus` contient un ServiceMonitor (chapitre 50) qui fait relever ces métriques par Prometheus ; il n'est pas activé par défaut.
+
+## Exercices
+
+:::exercice[Exercice 1 : suspendre la réconciliation (programmation)]
+
+Pendant une intervention à la main sur la base, on veut que l'opérateur cesse de tout réparer. Ajoutez au type un champ booléen `spec.suspendu`. Quand il vaut `true`, `Reconcile` ne crée ni ne modifie plus rien, et pose sur le `Colis` une condition `Prete` à `Unknown`, de raison `Suspendu`. Ajoutez un test envtest, puis vérifiez sur le cluster : suspendez, supprimez le Deployment `web`, constatez qu'il ne revient pas, levez la suspension.
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+Le corrigé, `corrige/suspendu.patch`, n'est pas dans l'archive. Il ajoute le champ au type, un test, et ces lignes au début de `Reconcile`, juste après la vérification du namespace :
+
+```go
+@@code-suspendu@@
+```
+
+Le champ change le schéma : il faut régénérer la CRD (`make manifests`) et l'installer de nouveau avant de s'en servir, sinon l'API server élague `suspendu` ou `kubectl` refuse le champ inconnu.
+
+```sortie
+@@ex1@@
+```
+
+Le statut garde le nombre de répliques prêtes connu : suspendre ne veut pas dire oublier. Kubernetes a la même idée sous d'autres noms : `spec.paused` d'un Deployment, `spec.suspend` d'un CronJob ou d'un Job, l'annotation de pause de KEDA.
+
+</details>
+
+:::exercice[Exercice 2 : le Secret disparu]
+
+Supprimez le Secret `colis-db`, puis redémarrez l'API (`kubectl rollout restart deployment api`). Que fait l'opérateur, et quand ? Que deviennent les nouveaux Pods de l'API ? Réparez sans perdre les données, puis proposez une modification de l'opérateur qui évite le piège.
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+```sortie
+@@ex2@@
+```
+
+L'opérateur ne surveille pas les Secrets (`Owns` ne les cite pas) : la suppression ne déclenche rien, le Secret reste absent. Le redémarrage de l'API modifie un Deployment possédé, ce qui provoque une réconciliation, et `secretBase` crée un Secret avec un mot de passe neuf. Les Pods déjà lancés gardent l'ancien dans leur environnement et continuent de marcher. Les nouveaux reçoivent le nouveau ; or l'image de PostgreSQL ne lit `POSTGRES_PASSWORD` qu'à l'initialisation d'un répertoire de données vide[^postgres], et la base garde l'ancien. L'API ne peut pas se connecter et redémarre en boucle.
+
+La réparation donne à PostgreSQL le nouveau mot de passe, par une connexion locale au Pod, que l'image officielle accepte sans mot de passe (authentification `trust` en local). Côté opérateur, le défaut est de traiter « Secret absent » comme « premier démarrage ». Une version plus prudente ne crée le mot de passe que si la réclamation de volume `donnees-postgres-0` n'existe pas encore ; sinon, elle pose une condition `Prete` à `False`, de raison `SecretPerdu`, et attend qu'un humain restaure le Secret, par exemple depuis une sauvegarde Velero (chapitre 52).
+
+</details>
+
+:::exercice[Exercice 3 : les droits de l'opérateur]
+
+Avec `kubectl auth can-i --as=system:serviceaccount:colis-operateur-system:colis-operateur-controller-manager`, dressez la liste de ce que l'opérateur peut faire en dehors de `ch55`. Qu'est-ce qui vous inquiète ? Comment le restreindre, et à quel prix ?
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+```sortie
+@@ex3@@
+```
+
+Le rôle généré est un ClusterRole lié par un ClusterRoleBinding : l'opérateur peut lire tous les Secrets du cluster, y compris ceux de `kube-system`, et supprimer les Deployments de n'importe quel namespace, dont `colis`. Un défaut de l'opérateur, ou la fuite de son jeton, aurait cette portée (chapitre 43). Il y a pire : le client de controller-runtime passe par le cache pour chaque type qu'il lit, et le premier `Get` sur un Secret a démarré un *watch* sur tous les Secrets du cluster, gardés en mémoire dans l'opérateur.
+
+Deux réductions, à combiner. Limiter le cache aux namespaces servis, par l'option `Cache.DefaultNamespaces` du manager, puis remplacer le ClusterRole par des Roles dans ces namespaces : les marqueurs RBAC acceptent un paramètre `namespace=`. Et restreindre le cache des Secrets à ceux de l'opérateur, par un sélecteur d'étiquettes (`Cache.ByObject`), ou lire les Secrets sans cache (`mgr.GetAPIReader()`). Le prix : déclarer à l'avance où l'opérateur travaille, et redéployer pour chaque nouveau namespace.
+
+</details>
+
+:::exercice[Exercice 4 : une sauvegarde avant de supprimer]
+
+On veut qu'à la suppression d'un `Colis`, l'opérateur lance un `pg_dump` de la base et ne laisse partir les objets qu'une fois la sauvegarde terminée. Pourquoi une référence de propriétaire ne suffit-elle pas ? Quel mécanisme de Kubernetes faut-il utiliser, et à quoi faut-il penser pour ne pas bloquer la suppression pour toujours ?
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+Le ramasse-miettes supprime les objets possédés dès que le propriétaire a disparu : l'opérateur n'est pas consulté, et quand il reçoit la clé, le `Colis` n'existe déjà plus. Il faut un **finaliseur** (chapitre 49) : l'opérateur ajoute à chaque `Colis` une valeur dans `metadata.finalizers`, par exemple `cours.example.com/sauvegarde`. À la suppression, l'API server ne supprime pas l'objet : il pose `metadata.deletionTimestamp` et attend que la liste des finaliseurs soit vide. `Reconcile` voit le `deletionTimestamp`, lance un Job de sauvegarde, attend qu'il réussisse, puis retire son finaliseur ; l'objet disparaît alors, et le ramasse-miettes fait le reste. Le marqueur `colis/finalizers` du ClusterRole généré est là pour ça.
+
+Le piège est le finaliseur qui ne part jamais : base injoignable, Job en échec permanent, opérateur désinstallé avant ses objets. Il faut une issue (une annotation qui permet de passer outre, un nombre d'essais au-delà duquel on abandonne en le signalant), et désinstaller les objets avant l'opérateur, comme pour Velero au chapitre 52.
+
+</details>
+
+## Nettoyer
+
+La suite de la partie ne se sert pas de cet opérateur. `make undeploy` retire le namespace de l'opérateur, ses rôles et la CRD, ce qui supprime le `Colis` et, par le ramasse-miettes, ses objets. Le namespace `ch55` garde le Secret et le volume : on le supprime aussi.
+
+```bash
+make undeploy
+kubectl delete namespace ch55
+kubectl delete clusterrolebinding colis-operateur-lecteur-metriques
+```
+
+Go, kubebuilder et le dossier `bin/` du projet restent sur le poste ; `bin/k8s` (les binaires d'envtest) se supprime sans dommage, `make test` les retéléchargera. L'image `colis-operateur:0.1.0` reste dans le registre du cours.
+
+[^coreos]: Brandon Philips, « Introducing Operators: Putting Operational Knowledge into Software », blog de CoreOS, 3 novembre 2016 (archive) : un opérateur est un contrôleur propre à une application, qui étend l'API de Kubernetes pour créer, configurer et gérer des instances d'applications complexes avec état. [web.archive.org/web/2016/https://coreos.com/blog/introducing-operators.html](https://web.archive.org/web/2016/https://coreos.com/blog/introducing-operators.html)
+[^operateur]: Kubernetes, « Operator pattern » : capturer le savoir d'un opérateur humain, ressources personnalisées et boucle de contrôle. [kubernetes.io/docs/concepts/extend-kubernetes/operator](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
+[^kubebuilder]: The Kubebuilder Book : projet, `init`, `create api`, manager, contrôleurs, marqueurs, déploiement. [book.kubebuilder.io](https://book.kubebuilder.io/) ; et la version 4.16.0 utilisée ici. [github.com/kubernetes-sigs/kubebuilder/releases/tag/v4.16.0](https://github.com/kubernetes-sigs/kubebuilder/releases/tag/v4.16.0)
+[^marqueurs]: The Kubebuilder Book, « Markers for Config/Code Generation » : marqueurs de validation, de valeurs par défaut, de sous-ressources, de colonnes et de RBAC. [book.kubebuilder.io/reference/markers.html](https://book.kubebuilder.io/reference/markers.html)
+[^conventions]: Kubernetes, « API Conventions », sections « Spec and Status » et « Typical status properties » : `observedGeneration`, conditions avec `type`, `status`, `reason`, `message`, `lastTransitionTime`. [github.com/kubernetes/community/.../api-conventions.md](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md)
+[^controllerutil]: controller-runtime, paquet `controllerutil` : `CreateOrUpdate`, `SetControllerReference`. [pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/controller/controllerutil](https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/controller/controllerutil)
+[^equality]: apimachinery, paquet `equality` : `Semantic.DeepDerivative` compare deux valeurs en ignorant les champs non renseignés de la première. [pkg.go.dev/k8s.io/apimachinery/pkg/api/equality](https://pkg.go.dev/k8s.io/apimachinery/pkg/api/equality)
+[^statefulset]: Kubernetes, « StatefulSets », section « PersistentVolumeClaim retention » : champ `persistentVolumeClaimRetentionPolicy`, `whenDeleted` et `whenScaled`, `Retain` par défaut, stable depuis 1.32. [kubernetes.io/docs/concepts/workloads/controllers/statefulset](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
+[^envtest]: The Kubebuilder Book, « Configuring envtest for integration tests » : API server et etcd sans contrôleurs ; pas de ramasse-miettes, tester les références de propriétaire. [book.kubebuilder.io/reference/envtest.html](https://book.kubebuilder.io/reference/envtest.html)
+[^postgres]: Docker Official Images, documentation de l'image `postgres` : les variables propres à l'image ne s'appliquent qu'à un répertoire de données vide ; authentification `trust` pour les connexions locales, dans le conteneur. [github.com/docker-library/docs/blob/master/postgres/README.md](https://github.com/docker-library/docs/blob/master/postgres/README.md)
