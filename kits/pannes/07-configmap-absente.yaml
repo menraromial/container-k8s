@@ -1,0 +1,18 @@
+# ContainerCreating sans fin : le volume vient d'une ConfigMap qui n'existe pas.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-absente
+  namespace: ch49
+spec:
+  containers:
+  - name: lecteur
+    image: busybox:1.37
+    command: ["sh", "-c", "echo tarif : $(cat /etc/colis/tarif); sleep 3600"]
+    volumeMounts:
+    - name: config
+      mountPath: /etc/colis
+  volumes:
+  - name: config
+    configMap:
+      name: colis-regles

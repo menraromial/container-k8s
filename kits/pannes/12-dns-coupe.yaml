@@ -1,0 +1,27 @@
+# DNS : un refus par défaut en sortie, sans exception pour le DNS.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: refus-sortie
+  namespace: ch49
+spec:
+  podSelector:
+    matchLabels:
+      app: client
+  policyTypes: [Egress]
+  egress:
+  - to:
+    - podSelector: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: client
+  namespace: ch49
+  labels:
+    app: client
+spec:
+  containers:
+  - name: client
+    image: busybox:1.37
+    command: ["sleep", "3600"]

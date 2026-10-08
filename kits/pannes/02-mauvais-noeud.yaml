@@ -1,0 +1,12 @@
+# Pending : aucun nœud ne porte l'étiquette demandée.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mauvais-noeud
+  namespace: ch49
+spec:
+  nodeSelector:
+    disque: nvme
+  containers:
+  - name: api
+    image: host.minikube.internal:5001/colis/api:2.1

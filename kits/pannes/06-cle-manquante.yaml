@@ -1,0 +1,24 @@
+# CreateContainerConfigError : la clé demandée n'existe pas dans le Secret.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: colis-db
+  namespace: ch49
+stringData:
+  POSTGRES_PASSWORD: mot-de-passe-d-essai
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cle-manquante
+  namespace: ch49
+spec:
+  containers:
+  - name: api
+    image: host.minikube.internal:5001/colis/api:2.1
+    env:
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: colis-db
+          key: POSTGRES_MOT_DE_PASSE

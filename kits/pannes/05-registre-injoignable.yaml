@@ -1,0 +1,10 @@
+# ImagePullBackOff : une faute dans le port du registre.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: registre-injoignable
+  namespace: ch49
+spec:
+  containers:
+  - name: api
+    image: host.minikube.internal:5010/colis/api:2.1

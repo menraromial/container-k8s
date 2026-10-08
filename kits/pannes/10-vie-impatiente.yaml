@@ -1,0 +1,30 @@
+# Sonde de vie trop impatiente : l'API met 20 s à démarrer, la sonde la tue avant.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vie-impatiente
+  namespace: ch49
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vie-impatiente
+  template:
+    metadata:
+      labels:
+        app: vie-impatiente
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: api
+        image: host.minikube.internal:5001/colis/api:2.1
+        command: ["sh", "-c", "echo préchauffage du cache; sleep 20; exec uvicorn colis.app:app --host 0.0.0.0 --port 8000"]
+        ports:
+        - name: http
+          containerPort: 8000
+        livenessProbe:
+          httpGet:
+            path: /sante
+            port: http
+          periodSeconds: 5
+          failureThreshold: 2

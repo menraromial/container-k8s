@@ -130,6 +130,7 @@ const sidebars: SidebarsConfig = {
       link: {type: 'doc', id: 'partie-7/index'},
       items: [
         'partie-7/deboguer',
+        'partie-7/pannes',
       ],
     },
   ],

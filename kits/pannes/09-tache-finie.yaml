@@ -1,0 +1,20 @@
+# CrashLoopBackOff avec un code 0 : un programme qui se termine, dans un Deployment.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tache-finie
+  namespace: ch49
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tache-finie
+  template:
+    metadata:
+      labels:
+        app: tache-finie
+    spec:
+      containers:
+      - name: purge
+        image: busybox:1.37
+        command: ["sh", "-c", "echo purge des colis de plus de 30 jours; echo 0 colis supprimé"]

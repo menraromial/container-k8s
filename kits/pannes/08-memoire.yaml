@@ -1,0 +1,35 @@
+# OOMKilled : le processus réserve 300 Mio avec une limite de 128 Mio.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memoire
+  namespace: ch49
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memoire
+  template:
+    metadata:
+      labels:
+        app: memoire
+    spec:
+      containers:
+      - name: calcul
+        image: host.minikube.internal:5001/colis/api:2.1
+        command: ["python", "-c"]
+        args:
+        - |
+          import time
+          print("chargement du référentiel des villes...", flush=True)
+          blocs = []
+          for i in range(30):
+              blocs.append(bytearray(10 * 1024 * 1024))
+              print(f"{(i + 1) * 10} Mio", flush=True)
+              time.sleep(0.2)
+          time.sleep(3600)
+        resources:
+          requests:
+            memory: 64Mi
+          limits:
+            memory: 128Mi

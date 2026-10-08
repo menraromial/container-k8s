@@ -1,0 +1,10 @@
+# Terminating sans fin : un finaliseur que personne ne retirera.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: regles-tarifaires
+  namespace: ch49
+  finalizers:
+  - cours.exemple/archivage
+data:
+  tarif: "4.90"

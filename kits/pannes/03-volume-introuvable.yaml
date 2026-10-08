@@ -1,0 +1,32 @@
+# Pending : la réclamation de volume vise une classe de stockage qui n'existe pas.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: donnees
+  namespace: ch49
+spec:
+  storageClassName: rapide
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-introuvable
+  namespace: ch49
+spec:
+  containers:
+  - name: postgres
+    image: postgres:18-alpine
+    env:
+    - name: POSTGRES_PASSWORD
+      value: essai
+    volumeMounts:
+    - name: donnees
+      mountPath: /var/lib/postgresql
+  volumes:
+  - name: donnees
+    persistentVolumeClaim:
+      claimName: donnees

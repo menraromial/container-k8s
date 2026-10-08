@@ -13,6 +13,7 @@ La partie avance du plus immédiat au plus lointain. On commence par **l'enquêt
 | Chapitre | Ce que vous y apprenez |
 |---|---|
 | [48. Déboguer](deboguer.md) | une méthode couche par couche, `describe` et les événements, journaux courants et précédents, conteneurs éphémères, copies de Pods, le nœud vu de l'intérieur |
+| [49. Catalogue de pannes](pannes.md) | treize pannes reproduites et corrigées, de `Pending` au finaliseur bloqué, leur signature exacte, et un arbre de diagnostic interactif |
 
 ## Avant de commencer : faire de la place
 

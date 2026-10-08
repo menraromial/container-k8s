@@ -1,0 +1,14 @@
+# Pending : le Pod demande plus de mémoire qu'aucun nœud n'en annonce.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: trop-gourmand
+  namespace: ch49
+spec:
+  containers:
+  - name: api
+    image: host.minikube.internal:5001/colis/api:2.1
+    resources:
+      requests:
+        cpu: 100m
+        memory: 64Gi

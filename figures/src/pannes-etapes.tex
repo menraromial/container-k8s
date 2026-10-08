@@ -1,0 +1,26 @@
+% Figure 49.1 : les étapes de la vie d'un Pod, ce qu'affiche STATUS à chacune, et les pannes du chapitre qui l'y bloquent (chapitre 49).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    etape/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=3.5cm, minimum height=1.25cm},
+    statut/.style={font=\scriptsize\ttfamily, text=QMuted, align=left, anchor=north west, inner sep=0pt, text width=3.5cm},
+    panne/.style={qbox, font=\scriptsize, align=left, inner sep=3pt, text width=3.5cm, draw=QBrique, fill=QBriqueBg}]
+
+  \foreach \i/\x/\y/\t/\qui/\s/\p in {
+    1/0/0/{1. placement}/{scheduler}/{Pending}/{1 requests trop grosses\\2 nodeSelector sans nœud\\3 PVC non liée},
+    2/4.4/0/{2. volumes}/{kubelet}/{ContainerCreating}/{7 ConfigMap absente},
+    3/8.8/0/{3. image}/{kubelet et runtime}/{ErrImagePull,\\ImagePullBackOff}/{4 étiquette inexistante\\5 registre injoignable},
+    4/13.2/0/{4. configuration}/{kubelet}/{CreateContainer-\\ConfigError}/{6 clé absente du Secret},
+    5/0/-4.6/{5. exécution}/{runtime, noyau, kubelet}/{Running, puis\\CrashLoopBackOff}/{8 limite de mémoire (OOMKilled)\\9 programme qui se termine\\10 sonde de vie impatiente},
+    6/4.4/-4.6/{6. disponibilité}/{kubelet, EndpointSlices}/{Running, READY 0/1}/{11 sonde de disponibilité fausse},
+    7/8.8/-4.6/{7. service rendu}/{l'application}/{Running, READY 1/1}/{12 DNS bloqué par une NetworkPolicy},
+    8/13.2/-4.6/{8. suppression}/{contrôleurs}/{Terminating}/{13 finaliseur jamais retiré}}{
+    \node[etape] (e\i) at (\x,\y) {\textbf{\t}\\{\color{QMuted}\qui}};
+    \node[statut] (s\i) at ([yshift=-1.5mm]e\i.south west) {\s};
+    \node[panne, anchor=north west] (p\i) at ([yshift=-10mm]e\i.south west) {\p};
+  }
+  \foreach \a/\b in {1/2,2/3,3/4,5/6,6/7,7/8} {\draw[qarr] (e\a.east) -- (e\b.west);}
+  \draw[qarr] (e4.south east) .. controls +(1.4,-0.6) and +(0,1.6) .. ([xshift=1.2cm]e4.south east |- 0,-3.1) -- ([xshift=-0.3cm]e5.north west |- 0,-3.1) .. controls +(-0.8,0) and +(-0.8,0.4) .. (e5.west);
+\end{tikzpicture}
+\end{document}

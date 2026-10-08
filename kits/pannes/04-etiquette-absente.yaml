@@ -1,0 +1,10 @@
+# ImagePullBackOff : l'étiquette 2.9 n'a jamais été publiée.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: etiquette-absente
+  namespace: ch49
+spec:
+  containers:
+  - name: api
+    image: host.minikube.internal:5001/colis/api:2.9

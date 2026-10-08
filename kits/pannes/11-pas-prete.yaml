@@ -1,0 +1,39 @@
+# Running mais jamais prêt : la sonde de disponibilité vise un chemin qui n'existe pas.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pas-prete
+  namespace: ch49
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pas-prete
+  template:
+    metadata:
+      labels:
+        app: pas-prete
+    spec:
+      containers:
+      - name: api
+        image: host.minikube.internal:5001/colis/api:2.1
+        ports:
+        - name: http
+          containerPort: 8000
+        readinessProbe:
+          httpGet:
+            path: /prete
+            port: http
+          periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pas-prete
+  namespace: ch49
+spec:
+  selector:
+    app: pas-prete
+  ports:
+  - port: 8000
+    targetPort: http
