@@ -1,0 +1,38 @@
+% Figure du défi VII : la file d'estimation pendant l'incident, mesurée par Prometheus toutes les 30 s, et les événements.
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1.25cm,y=0.009cm,
+    ev/.style={qlbl, font=\scriptsize, align=center, fill=QPaper, inner sep=1.5pt}]
+  % phases (minutes depuis 18:37:00)
+  \fill[QBriqueBg] (0.27,0) rectangle (6.02,540);
+  \fill[QOcreBg]   (6.02,0) rectangle (7.35,540);
+  \fill[QVertBg]   (7.35,0) rectangle (8.92,540);
+  \node[font=\scriptsize\bfseries, text=QBrique, align=center] at (1.7,500) {phase 1\\worker \texttt{OOMKilled}};
+  \node[font=\scriptsize\bfseries, text=QOcre, align=center] at (6.68,500) {phase 2\\réseau};
+  \node[font=\scriptsize\bfseries, text=QVert, align=center] at (8.1,110) {la file\\se vide};
+  % axes
+  \draw[qarr] (0,0) -- (10.6,0) node[right, qlbl, font=\scriptsize] {UTC};
+  \draw[qarr] (0,0) -- (0,580) node[above, qlbl, font=\scriptsize] {colis en attente};
+  \foreach \m/\h in {0/18:37,2/18:39,4/18:41,6/18:43,8/18:45,10/18:47} {\draw[draw=QLine] (\m,0) -- (\m,-12) node[below, font=\scriptsize] {\h};}
+  \foreach \q in {100,200,300,400,500} {\draw[draw=QLine] (0,\q) -- (-0.1,\q) node[left, font=\scriptsize] {\q};}
+  % seuil de l'alerte
+  \draw[draw=QBrique, dashed] (0,20) -- (10.3,20) node[right, font=\scriptsize, text=QBrique] {20};
+  % la file, relevés de Prometheus
+  \draw[draw=QBleu, line width=1pt] plot coordinates {(0,0) (0.5,13) (1,45) (1.5,79) (2,109) (2.5,134) (3,160) (3.5,192)
+    (4,230) (4.5,270) (5,305) (5.5,332) (6,362) (6.5,395) (7,426) (7.5,467) (8,491) (8.5,307) (9,44) (9.5,2) (10,0)};
+  % événements
+  \foreach \x/\y/\t in {0.27/-150/{18:37:16\\changement},
+                        3.27/-150/{18:40:16\\page},
+                        6.02/-150/{18:43:01\\correctif 1},
+                        7.35/-150/{18:44:21\\correctif 2},
+                        8.92/-150/{18:45:55\\file vide},
+                        2.75/-320/{18:39:45\\alerte active},
+                        9.27/-320/{18:46:16\\page résolue}} {
+    \draw[draw=QMuted, densely dotted] (\x,0) -- (\x,\y+60);
+    \node[ev, anchor=north] at (\x,\y+60) {\t};
+  }
+  \fill[QBleu] (8,491) circle (2.2pt);
+  \node[font=\scriptsize, text=QBleu, anchor=south east] at (8,491) {491};
+\end{tikzpicture}
+\end{document}

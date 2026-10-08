@@ -27,3 +27,4 @@ __pycache__/
 
 # Mots de passe des overlays Kustomize (chapitre 30) : générés sur chaque poste, jamais versionnés
 kits/kustomize/**/secret.env
+kits/defi-7/debut-incident

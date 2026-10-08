@@ -135,6 +135,7 @@ const sidebars: SidebarsConfig = {
         'partie-7/journaux',
         'partie-7/sauvegarde',
         'partie-7/montee',
+        'partie-7/defi',
       ],
     },
   ],

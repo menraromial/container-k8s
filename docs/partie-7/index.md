@@ -18,6 +18,7 @@ La partie avance du plus immédiat au plus lointain. On commence par **l'enquêt
 | [51. Journaux et traces](journaux.md) | Loki, Tempo et le collecteur OpenTelemetry, LogQL et TraceQL, deux défauts d'instrumentation corrigés, une requête lente suivie jusqu'au verrou PostgreSQL |
 | [52. Sauvegarder et restaurer](sauvegarde.md) | instantané d'etcd et sa clé, restauré pour de vrai ; Velero et un stockage S3, quatre pièges réels, et Colis supprimé puis restauré avec ses données |
 | [53. Mettre à jour un cluster](montee.md) | le rythme des versions, le décalage permis, les API retirées, deux montées mesurées de 1.35 à 1.37, la migration des versions stockées, l'absence de retour arrière |
+| [Défi VII](defi.md) | un changement fait à la main casse le calcul des dates sans toucher à l'API : de la page au post-mortem, avec l'impact mesuré colis par colis |
 
 ## Avant de commencer : faire de la place
 
