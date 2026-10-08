@@ -1,0 +1,14 @@
+apiVersion: cours.example.com/v1alpha1
+kind: Colis
+metadata:
+  name: principal
+  namespace: ch54
+spec:
+  version: 2.2.1
+  api:
+    replicas: 2
+  worker:
+    min: 0
+    max: 5
+  base:
+    taille: 1Gi

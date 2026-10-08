@@ -1,0 +1,31 @@
+% Figure 54.1 : le trajet d'un objet personnalisé dans l'API server, à l'écriture puis à la lecture (chapitre 54).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    e/.style={qbox, font=\scriptsize, align=left, inner sep=3pt, text width=2.55cm, minimum height=1.55cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  % écriture
+  \node[qtitre, text=QBleu] at (-1.3,1.55) {écrire : kubectl apply, en v1alpha1};
+  \node[qbox, font=\scriptsize, align=center, text width=1.5cm, inner sep=4pt] (cli) at (-0.6,0) {requête\\en {\ttfamily v1alpha1}};
+  \node[e] (a) at (1.95,0) {\textbf{1. authentification, autorisation}\\RBAC sur {\ttfamily colis}, {\ttfamily colis/status}\dots};
+  \node[e, draw=QBleu, fill=QBleuBg] (b) at (4.8,0) {\textbf{2. décodage}\\champs inconnus élagués, valeurs par défaut de la version demandée};
+  \node[e, draw=QViolet] (c) at (7.65,0) {\textbf{3. admission en mutation}\\défauts réappliqués si un patch a changé l'objet};
+  \node[e, draw=QOcre, fill=QOcreBg] (d) at (10.5,0) {\textbf{4. validation}\\schéma OpenAPI, puis règles CEL ; ce qui n'a pas changé est toléré};
+  \node[e, draw=QOcre] (f) at (13.35,0) {\textbf{5. admission en validation}\\politiques et webhooks};
+  \node[e, draw=QVert, fill=QVertBg] (g) at (16.2,0) {\textbf{6. conversion}\\vers la version stockée, puis écriture en JSON};
+  \node[qbox, draw=QVert, fill=QVertBg, font=\scriptsize, align=center, text width=2.3cm, inner sep=4pt, minimum height=3.6cm] (etcd) at (19.2,-1.05) {etcd\\[3pt]{\ttfamily\tiny /registry/\\cours.example.com/\\colis/ch54/principal}\\[3pt]objet JSON, version stockée};
+  \foreach \x/\y in {cli/a,a/b,b/c,c/d,d/f,f/g} {\draw[qarr] (\x.east) -- (\y.west);}
+  \draw[qarr] (g.east) -- (g.east -| etcd.west);
+  % lecture
+  \node[qtitre, text=QVert] at (-1.3,-1.55) {lire : kubectl get, en v1};
+  \node[e, draw=QVert, fill=QVertBg] (r1) at (13.35,-2.65) {\textbf{7. décodage}\\avec le schéma de la version stockée : élagage, défauts};
+  \node[e, draw=QVert] (r2) at (10.5,-2.65) {\textbf{8. conversion}\\vers la version demandée};
+  \node[e, draw=QOcre, dashed] (r3) at (7.65,-2.65) {\textbf{pas de validation}\\un objet invalide déjà stocké est rendu tel quel};
+  \node[qbox, font=\scriptsize, align=center, text width=1.5cm, inner sep=4pt] (rep) at (4.8,-2.65) {réponse\\en {\ttfamily v1}};
+  \draw[qarr] (etcd.west |- r1.east) -- (r1.east);
+  \draw[qarr] (r1.west) -- (r2.east);
+  \draw[qarr] (r2.west) -- (r3.east);
+  \draw[qarr] (r3.west) -- (rep.east);
+\end{tikzpicture}
+\end{document}

@@ -38,7 +38,8 @@ const PARTIES: Partie[] = [
     resume: 'Déboguer, reconnaître les pannes, métriques, logs, traces, sauvegardes, montées de version.',
     lien: '/cours/partie-7'},
   {n: 'VIII', couleur: 'var(--p8)', titre: 'Étendre Kubernetes et livrer', chapitres: 'Chapitres 54 à 60',
-    resume: 'CRD, écrire un opérateur, GitOps avec Argo CD, déploiements progressifs, service mesh.'},
+    resume: 'CRD, écrire un opérateur, GitOps avec Argo CD, déploiements progressifs, service mesh.',
+    lien: '/cours/partie-8'},
   {n: 'IX', couleur: 'var(--p9)', titre: 'Projet final', chapitres: 'Chapitres 61 à 63',
     resume: 'Colis « en production » sur un cluster multi-nœuds : tout ce que vous avez appris, ensemble.'},
 ];

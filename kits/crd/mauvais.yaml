@@ -1,0 +1,11 @@
+apiVersion: cours.example.com/v1alpha1
+kind: Colis
+metadata:
+  name: mauvais
+  namespace: ch54
+spec:
+  version: 2.2.1
+  api:
+    replicas: beaucoup
+  wroker:
+    max: 5

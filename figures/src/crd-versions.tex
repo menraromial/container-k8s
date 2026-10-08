@@ -1,0 +1,47 @@
+% Figure 54.2 : passer d'une version stockée à une autre, de v1alpha1 à v1 (chapitre 54).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    obj/.style={qbox, font=\ttfamily\scriptsize, inner sep=2pt, minimum width=1.55cm, align=center},
+    ancien/.style={obj, draw=QOcre, fill=QOcreBg},
+    neuf/.style={obj, draw=QVert, fill=QVertBg},
+    lien/.style={qlbl, font=\scriptsize, align=left}]
+  \foreach \i/\x/\titre/\versions in {
+      1/0/{1. une seule version}/{servie : {\ttfamily v1alpha1}\\stockée : {\ttfamily v1alpha1}},
+      2/4.6/{2. v1 ajoutée, stockée}/{servies : {\ttfamily v1alpha1}*, {\ttfamily v1}\\stockée : {\ttfamily v1}},
+      3/9.2/{3. après la migration}/{servies : {\ttfamily v1alpha1}*, {\ttfamily v1}\\stockée : {\ttfamily v1}},
+      4/13.8/{4. v1alpha1 retirée}/{servie : {\ttfamily v1}\\stockée : {\ttfamily v1}}} {
+    \node[qtitre, font=\titrefig\normalsize] at (\x-0.1,3.1) {\titre};
+    \node[lien, anchor=north west] at (\x-0.1,2.55) {\versions};
+    \node[qcadre, minimum width=3.9cm, minimum height=2.3cm, anchor=north west] (e\i) at (\x-0.1,1.35) {};
+    \node[qlbl, font=\scriptsize, anchor=north west] at (\x,1.3) {etcd};
+  }
+  % 1
+  \node[ancien] at (0.95,0.45) {principal};
+  % 2
+  \node[ancien] at (5.55,0.45) {principal};
+  \node[neuf] at (7.35,0.45) {ancien};
+  \node[lien, align=center, text width=3.6cm] at (6.45,-0.45) {{\ttfamily principal} est réécrit\\en {\ttfamily v1} à sa prochaine écriture};
+  % 3
+  \node[neuf] at (10.15,0.45) {principal};
+  \node[neuf] at (11.95,0.45) {ancien};
+  % 4
+  \node[neuf] at (14.75,0.45) {principal};
+  \node[neuf] at (16.55,0.45) {ancien};
+  % storedVersions
+  \foreach \x/\s/\c in {0/{[v1alpha1]}/QInk, 4.6/{[v1alpha1, v1]}/QBrique, 9.2/{[v1]}/QInk, 13.8/{[v1]}/QInk} {
+    \node[qlbl, font=\scriptsize, anchor=north west, align=left] at (\x-0.1,-1.15) {{\ttfamily storedVersions}\\{\ttfamily\color{\c}\s}};
+  }
+  \draw[qarr] (3.95,0.2) -- (4.4,0.2);
+  \draw[qarr] (8.55,0.2) -- (9.0,0.2);
+  \draw[qarr] (13.15,0.2) -- (13.6,0.2);
+  \node[qlbl, font=\scriptsize, align=center, text=QBrique] at (6.45,-2.35) {retirer {\ttfamily v1alpha1} ici est refusé};
+  \node[qlbl, font=\scriptsize, align=center] at (10.95,-2.35) {{\ttfamily StorageVersionMigration} :\\chaque objet relu et réécrit};
+  \node[qlbl, font=\scriptsize, align=left] at (15.0,-2.35) {* dépréciée : avertissement};
+  \node[ancien, minimum width=0.5cm] at (0.1,-2.35) {};
+  \node[qlbl, font=\scriptsize, anchor=west] at (0.45,-2.35) {stocké en {\ttfamily v1alpha1}};
+  \node[neuf, minimum width=0.5cm] at (0.1,-2.85) {};
+  \node[qlbl, font=\scriptsize, anchor=west] at (0.45,-2.85) {stocké en {\ttfamily v1}};
+\end{tikzpicture}
+\end{document}

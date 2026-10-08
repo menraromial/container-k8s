@@ -138,6 +138,16 @@ const sidebars: SidebarsConfig = {
         'partie-7/defi',
       ],
     },
+    {
+      type: 'category',
+      label: 'VIII · Étendre Kubernetes et livrer',
+      className: 'partie-8',
+      collapsed: false,
+      link: {type: 'doc', id: 'partie-8/index'},
+      items: [
+        'partie-8/crd',
+      ],
+    },
   ],
 };
 

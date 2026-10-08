@@ -1,0 +1,117 @@
+# Le type Colis complet : schéma, règles CEL, sous-ressources status et scale, colonnes, abréviation, champ sélectionnable.
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: colis.cours.example.com
+spec:
+  group: cours.example.com
+  scope: Namespaced
+  names:
+    kind: Colis
+    singular: colis
+    plural: colis
+    listKind: ColisList
+    shortNames: [cl]
+    categories: [cours]
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    subresources:
+      status: {}
+      scale:
+        specReplicasPath: .spec.api.replicas
+        statusReplicasPath: .status.api.replicas
+        labelSelectorPath: .status.selecteur
+    additionalPrinterColumns:
+    - {name: Version, type: string, jsonPath: .spec.version}
+    - {name: API, type: integer, jsonPath: .spec.api.replicas}
+    - {name: Prête, type: string, jsonPath: '.status.conditions[?(@.type=="Prete")].status'}
+    - {name: Age, type: date, jsonPath: .metadata.creationTimestamp}
+    selectableFields:
+    - jsonPath: .spec.version
+    schema:
+      openAPIV3Schema:
+        type: object
+        description: Une installation de l'application Colis.
+        required: [spec]
+        properties:
+          spec:
+            type: object
+            required: [version]
+            x-kubernetes-validations:
+            - rule: "!has(oldSelf.version) || semver(self.version).compareTo(semver(oldSelf.version)) >= 0"
+              message: pas de retour à une version antérieure
+            properties:
+              version:
+                type: string
+                maxLength: 20
+                description: Version de l'image de l'API et du worker.
+                pattern: '^[0-9]+\.[0-9]+\.[0-9]+$'
+              api:
+                type: object
+                default: {}
+                properties:
+                  replicas:
+                    type: integer
+                    minimum: 1
+                    maximum: 10
+                    default: 2
+              worker:
+                type: object
+                default: {min: 0, max: 5}   # un {} vide échouerait à la règle : self.min n'existe pas
+                x-kubernetes-validations:
+                - rule: self.min <= self.max
+                  messageExpression: "'min (%d) dépasse max (%d)'.format([self.min, self.max])"
+                properties:
+                  min:
+                    type: integer
+                    minimum: 0
+                    default: 0
+                  max:
+                    type: integer
+                    minimum: 1
+                    maximum: 20
+                    default: 5
+              base:
+                type: object
+                default: {}
+                properties:
+                  taille:
+                    type: string
+                    maxLength: 10
+                    default: 1Gi
+                    pattern: '^[0-9]+(Mi|Gi)$'
+                    x-kubernetes-validations:
+                    - rule: quantity(self).compareTo(quantity(oldSelf)) >= 0
+                      message: un volume ne rétrécit pas
+                  classe:
+                    type: string
+                    enum: [standard, csi-hostpath-sc]
+                    default: standard
+          status:
+            type: object
+            properties:
+              observedGeneration:
+                type: integer
+              selecteur:
+                type: string
+              api:
+                type: object
+                properties:
+                  replicas:
+                    type: integer
+              conditions:
+                type: array
+                maxItems: 8
+                x-kubernetes-list-type: map
+                x-kubernetes-list-map-keys: [type]
+                items:
+                  type: object
+                  required: [type, status]
+                  properties:
+                    type: {type: string, maxLength: 32}
+                    status: {type: string, enum: ["True", "False", "Unknown"]}
+                    reason: {type: string, maxLength: 64}
+                    message: {type: string, maxLength: 512}
+                    lastTransitionTime: {type: string, format: date-time}
