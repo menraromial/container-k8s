@@ -1,0 +1,15 @@
+% Figure 53.2 : l'ordre d'une montée de version d'un cluster kubeadm, une version mineure à la fois (chapitre 53).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    e/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=#1, minimum height=1.6cm}]
+  \node[e=2.9cm, draw=QBrique, fill=QBriqueBg] (a) at (0,0) {\textbf{0. avant}\\lire les notes de version ; API retirées ; instantané d'etcd et sa clé};
+  \node[e=2.9cm, draw=QOcre, fill=QOcreBg] (b) at (3.6,0) {\textbf{1. plan de contrôle}\\nœud par nœud : \texttt{kubeadm upgrade} ; l'API server d'abord};
+  \node[e=2.9cm, draw=QViolet, fill=QVioletBg] (c) at (7.2,0) {\textbf{2. extensions}\\CNI, CoreDNS, kube-proxy, contrôleurs installés à part};
+  \node[e=2.9cm, draw=QBleu, fill=QBleuBg] (d) at (10.8,0) {\textbf{3. nœuds de travail}\\un par un : \texttt{cordon}, \texttt{drain}, kubelet, \texttt{uncordon}};
+  \node[e=2.9cm, draw=QVert, fill=QVertBg] (f) at (14.4,0) {\textbf{4. après}\\manifestes vers les nouvelles API ; versions stockées};
+  \foreach \x/\y in {a/b,b/c,c/d,d/f} {\draw[qarr] (\x.east) -- (\y.west);}
+  \draw[qdarr] (f.south) -- ++(0,-0.7) -| node[qlbl, font=\scriptsize, pos=0.25, below] {version mineure suivante} (a.south);
+\end{tikzpicture}
+\end{document}

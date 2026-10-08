@@ -1,39 +1,25 @@
-% Figure 0.4 : politique de décalage de versions (version skew), pour un API server en 1.37.
+% Figure 53.1 : la politique de décalage de versions, pour un API server en 1.37 (chapitre 53).
 \documentclass[tikz,border=4pt]{standalone}
 \usepackage{quai}
 \begin{document}
-\begin{tikzpicture}[x=1.55cm,y=1cm,
-    ok/.style={draw=QVert, fill=QVertBg, line width=0.8pt, minimum width=1.4cm, minimum height=0.72cm, font=\ttfamily\footnotesize},
-    ko/.style={draw=QBrique, fill=QPaper, line width=0.5pt, dashed, minimum width=1.4cm, minimum height=0.72cm, font=\ttfamily\footnotesize, text=QMuted},
-    ref/.style={draw=QBleu, fill=QBleuBg, line width=1.2pt, minimum width=1.4cm, minimum height=0.72cm, font=\ttfamily\footnotesize},
-    ligne/.style={font=\ttfamily\small, anchor=east, text=QInk}]
-  % en-têtes de colonnes
-  \foreach \v [count=\i from 0] in {1.33,1.34,1.35,1.36,1.37,1.38,1.39} {
-    \node[qlbl] at (\i,3.25) {\v};
+\begin{tikzpicture}[x=1.6cm,y=1cm,
+    nom/.style={font=\scriptsize, anchor=east, align=right, text width=4.2cm},
+    barre/.style 2 args={draw=#1, fill=#2, rounded corners=1.5pt, minimum height=0.5cm},
+    lien/.style={qlbl, font=\scriptsize}]
+  \foreach \v [count=\i from 0] in {1.34,1.35,1.36,1.37,1.38} {
+    \node[font=\scriptsize\ttfamily, text=QMuted] at (\i,0.6) {\v};
+    \draw[draw=QGrisBg, line width=0.6pt] (\i,0.35) -- (\i,-4.9);
   }
-  \node[qlbl, anchor=east] at (-0.6,3.25) {version mineure};
-
-  % API server
-  \node[ligne] at (-0.6,2.4) {kube-apiserver};
-  \node[ref] at (4,2.4) {1.37};
-
-  % kubectl : une version de part et d'autre
-  \node[ligne] at (-0.6,1.2) {kubectl};
-  \foreach \i/\v in {0/1.33,1/1.34,2/1.35,6/1.39} { \node[ko] at (\i,1.2) {\v}; }
-  \foreach \i/\v in {3/1.36,4/1.37,5/1.38} { \node[ok] at (\i,1.2) {\v}; }
-  \draw[decorate, decoration={brace, amplitude=4pt, mirror}, QVert, line width=0.8pt]
-    (2.55,0.72) -- (5.45,0.72) node[midway, below=5pt, qlblc=QVert] {une version mineure de part et d'autre};
-
-  % kubelet : jusqu'à trois versions plus ancien, jamais plus récent
-  \node[ligne] at (-0.6,-0.6) {kubelet};
-  \foreach \i/\v in {0/1.33,5/1.38,6/1.39} { \node[ko] at (\i,-0.6) {\v}; }
-  \foreach \i/\v in {1/1.34,2/1.35,3/1.36,4/1.37} { \node[ok] at (\i,-0.6) {\v}; }
-  \draw[decorate, decoration={brace, amplitude=4pt, mirror}, QVert, line width=0.8pt]
-    (0.55,-1.08) -- (4.45,-1.08) node[midway, below=5pt, qlblc=QVert] {jusqu'à trois versions plus ancien};
-  \node[qlblc=QBrique, align=center] at (5.5,-1.55) {jamais plus récent\\que l'API server};
-
-  % repère vertical sur la version de l'API server
-  \draw[QBleu, line width=0.6pt, dotted] (4,2.02) -- (4,1.58);
-  \draw[QBleu, line width=0.6pt, dotted] (4,0.82) -- (4,-0.22);
+  \foreach \y/\n/\a/\b/\c/\note in {
+    0/{\textbf{kube-apiserver}\\la référence}/3/3/QOcre/{N},
+    -1/{\textbf{kube-controller-manager},\\\textbf{kube-scheduler}, \textbf{cloud-controller-manager}}/2/3/QViolet/{N ou N-1},
+    -2/{\textbf{kubelet}}/0/3/QBleu/{N à N-3},
+    -3/{\textbf{kube-proxy}}/0/3/QSarcelle/{N à N-3 (et trois versions d'écart au plus avec son kubelet)},
+    -4/{\textbf{kubectl}}/2/4/QVert/{N-1 à N+1}} {
+    \node[nom] at (-0.35,\y) {\n};
+    \node[barre={\c}{\c Bg}, minimum width={(\b-\a)*1.6cm+0.5cm}, anchor=west] at ({\a-0.16},\y) {};
+    \node[lien, anchor=west] at (4.35,\y) {\note};
+  }
+  \node[qlbl, font=\scriptsize, anchor=north west, text width=12cm, align=left] at (-2.9,-5.1) {Avec plusieurs API servers (haute disponibilité), les plus récents et les plus anciens ne peuvent différer que d'une version mineure : c'est pourquoi on monte d'une version mineure à la fois.};
 \end{tikzpicture}
 \end{document}
