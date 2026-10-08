@@ -133,6 +133,7 @@ const sidebars: SidebarsConfig = {
         'partie-7/pannes',
         'partie-7/metriques',
         'partie-7/journaux',
+        'partie-7/sauvegarde',
       ],
     },
   ],

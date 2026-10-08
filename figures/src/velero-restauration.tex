@@ -1,0 +1,24 @@
+% Figure 52.2 : ce que fait Velero pendant une sauvegarde puis une restauration avec copie de volumes (chapitre 52).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    e/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=#1},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  \node[qtitre] at (0,0.9) {sauvegarde};
+  \node[e=3.2cm] (s1) at (1.6,0) {\textbf{1.} crochet \emph{pre}\\\texttt{pg\_dump} dans l'emptyDir};
+  \node[e=3.2cm] (s2) at (5.4,0) {\textbf{2.} lire les objets du namespace par l'API};
+  \node[e=3.2cm, draw=QVert, fill=QVertBg] (s3) at (9.2,0) {\textbf{3.} node-agent : copier les fichiers des volumes (kopia)};
+  \node[e=3.2cm, draw=QSarcelle, fill=QSarcelleBg] (s4) at (13.0,0) {\textbf{4.} archive des objets et dépôt kopia dans S3};
+  \foreach \a/\b in {s1/s2,s2/s3,s3/s4} {\draw[qarr] (\a.east) -- (\b.west);}
+
+  \node[qtitre] at (0,-1.6) {restauration};
+  \node[e=3.2cm] (r1) at (1.6,-2.6) {\textbf{1.} recréer namespace, Secrets, ConfigMaps, Services, PVC};
+  \node[e=3.2cm, draw=QBrique, fill=QBriqueBg] (r2) at (5.4,-2.6) {\textbf{2.} recréer les Pods, avec un conteneur d'init \texttt{restore-wait} ajouté};
+  \node[e=3.2cm, draw=QVert, fill=QVertBg] (r3) at (9.2,-2.6) {\textbf{3.} node-agent : réécrire les fichiers dans le volume du Pod};
+  \node[e=3.2cm] (r4) at (13.0,-2.6) {\textbf{4.} \texttt{restore-wait} se termine ; crochet \emph{post} : \texttt{psql} recharge l'export};
+  \foreach \a/\b in {r1/r2,r2/r3,r3/r4} {\draw[qarr] (\a.east) -- (\b.west);}
+  \draw[qdarr] (s4.south) -- node[lien, right] {lue à la restauration} (r4.north);
+  \node[qlbl, font=\scriptsize, align=left, text width=7.5cm, anchor=north west] at (3.8,-3.75) {l'image de \texttt{restore-wait} et ses réglages de sécurité passent l'admission comme tout conteneur : politique d'images, Pod Security};
+\end{tikzpicture}
+\end{document}

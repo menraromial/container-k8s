@@ -1,0 +1,30 @@
+# Sauvegarde logique de la base de Colis par Velero. Le volume de PostgreSQL est un hostPath
+# (minikube-hostpath), que Velero ne sait pas copier : un crochet (hook) écrit avant chaque sauvegarde
+# un pg_dump dans un emptyDir, que Velero copie ; un autre recharge ce fichier après une restauration.
+# À appliquer par : kubectl -n colis patch statefulset postgres --patch-file postgres-crochets.yaml
+spec:
+  template:
+    metadata:
+      annotations:
+        # avant la sauvegarde : un export cohérent de la base, dans le volume « sauvegarde »
+        pre.hook.backup.velero.io/container: postgres
+        pre.hook.backup.velero.io/command: '["/bin/sh", "-c", "pg_dump -U colis -d colis --clean --if-exists -f /sauvegarde/colis.sql"]'
+        pre.hook.backup.velero.io/timeout: 2m
+        # Velero copie tous les volumes des Pods (defaultVolumesToFsBackup) : on écarte le hostPath
+        # (il le sauterait de toute façon), la socket et les fichiers temporaires
+        backup.velero.io/backup-volumes-excludes: donnees,socket,tmp
+        # après la restauration, une fois PostgreSQL prêt : recharger l'export
+        post.hook.restore.velero.io/container: postgres
+        post.hook.restore.velero.io/command: '["/bin/sh", "-c", "psql -U colis -d colis -q -v ON_ERROR_STOP=1 -f /sauvegarde/colis.sql"]'
+        post.hook.restore.velero.io/wait-for-ready: "true"
+        post.hook.restore.velero.io/exec-timeout: 2m
+    spec:
+      containers:
+      - name: postgres
+        volumeMounts:
+        - name: sauvegarde
+          mountPath: /sauvegarde
+      volumes:
+      - name: sauvegarde
+        emptyDir:
+          sizeLimit: 256Mi

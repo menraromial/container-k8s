@@ -1,0 +1,57 @@
+# Un namespace d'essai soumis aux mêmes règles que Colis : Pod Security restricted (chapitre 44)
+# et politique d'images (chapitre 45). Un Pod écrit un fichier dans un volume persistant.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ch52-essai
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    cours/politique-images: oui
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: carnet
+  namespace: ch52-essai
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: carnet
+  namespace: ch52-essai
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: carnet
+  template:
+    metadata:
+      labels:
+        app: carnet
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+      - name: carnet
+        image: busybox:1.37
+        command: ["sh", "-c", "test -f /donnees/carnet.txt || date > /donnees/carnet.txt; sleep 3600"]
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities: {drop: [ALL]}
+        volumeMounts:
+        - name: donnees
+          mountPath: /donnees
+      volumes:
+      - name: donnees
+        persistentVolumeClaim:
+          claimName: carnet

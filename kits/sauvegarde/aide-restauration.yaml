@@ -1,0 +1,13 @@
+# L'image du conteneur d'initialisation que Velero ajoute aux Pods dont il restaure les volumes.
+# Par défaut, docker.io/velero/velero : refusée par la politique d'images du chapitre 45.
+# On la copie dans le registre du cours, et Velero la prend ici.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fs-restore-action-config
+  namespace: velero
+  labels:
+    velero.io/plugin-config: ""
+    velero.io/pod-volume-restore: RestoreItemAction
+data:
+  image: host.minikube.internal:5001/velero/velero:v1.18.2

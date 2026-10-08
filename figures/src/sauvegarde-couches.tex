@@ -1,0 +1,25 @@
+% Figure 52.1 : ce qu'il faut sauvegarder dans un cluster, avec quoi, et ce que chaque outil ne couvre pas (chapitre 52).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    t/.style={font=\scriptsize\bfseries, text=QMuted, anchor=west},
+    c/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=#1, minimum height=1.25cm}]
+  \node[t] at (0,0.55) {ce qu'on perd};
+  \node[t] at (3.9,0.55) {outil};
+  \node[t] at (8.0,0.55) {où va la copie};
+  \node[t] at (12.1,0.55) {ce qu'il ne couvre pas};
+  \foreach \i/\quoi/\outil/\ou/\pas/\coul/\fond in {
+    0/{\textbf{tout le cluster}\\l'état complet de l'API}/{instantané d'etcd\\\texttt{etcdctl snapshot save}}/{un fichier, hors du nœud}/{les volumes ; inutilisable sans la clé de chiffrement}/QBleu/QBleuBg,
+    1/{\textbf{un namespace}\\ses objets, d'un cluster à l'autre}/{Velero\\sauvegarde d'objets}/{stockage objet S3\\(ici RustFS)}/{les Secrets y sont lisibles : protéger le stockage}/QSarcelle/QSarcelleBg,
+    2/{\textbf{les données des volumes}\\fichiers, bases}/{Velero : copie des fichiers (kopia) ou instantané CSI}/{le même stockage, chiffré par kopia}/{les volumes hostPath ; la cohérence d'une base en marche}/QVert/QVertBg,
+    3/{\textbf{une base de données}\\cohérente}/{export logique\\(\texttt{pg\_dump} par un crochet)}/{un volume que Velero copie}/{ce qui a changé depuis l'export}/QOcre/QOcreBg,
+    4/{\textbf{les clés}\\chiffrement, signatures}/{copie à part}/{un coffre, ailleurs que les sauvegardes}/{rien ne les régénère}/QBrique/QBriqueBg} {
+    \node[c=3.5cm, draw=\coul, fill=\fond, anchor=north west] at (0,-1.45*\i) {\quoi};
+    \node[c=3.7cm, anchor=north west] at (3.9,-1.45*\i) {\outil};
+    \node[c=3.7cm, anchor=north west] at (8.0,-1.45*\i) {\ou};
+    \node[c=3.7cm, anchor=north west, draw=QGris, fill=QGrisBg] at (12.1,-1.45*\i) {\pas};
+  }
+  \node[qlbl, font=\scriptsize, anchor=north west, text width=15.6cm, align=left] at (0,-7.35) {Et ce qui ne se sauvegarde pas dans le cluster parce qu'il vit ailleurs : les manifestes (dans Git, chapitre 57) et les images (dans le registre, qui a sa propre sauvegarde).};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,40 @@
+# Velero, avec le greffon S3 (AWS et compatibles) et l'agent de nœud qui copie le contenu des volumes.
+initContainers:
+- name: velero-plugin-for-aws
+  image: velero/velero-plugin-for-aws:v1.14.4
+  volumeMounts:
+  - mountPath: /target
+    name: plugins
+configuration:
+  backupStorageLocation:
+  - name: default
+    provider: aws
+    bucket: velero
+    default: true
+    config:
+      region: us-east-1               # sans importance pour RustFS, mais exigé
+      s3ForcePathStyle: "true"        # http://serveur/compartiment, et non http://compartiment.serveur
+      s3Url: http://rustfs.velero.svc:9000
+      # l'adresse que verra le client velero sur le poste (redirection de port) : il télécharge
+      # journaux et détails directement dans le stockage, par des URL signées
+      publicUrl: http://localhost:9010
+  volumeSnapshotLocation: []
+  # les volumes de minikube-hostpath ne savent pas faire d'instantanés : on copie les fichiers
+  defaultVolumesToFsBackup: true
+  uploaderType: kopia
+snapshotsEnabled: false
+deployNodeAgent: true
+credentials:
+  useSecret: true
+  secretContents:
+    cloud: |
+      [default]
+      aws_access_key_id=velero
+      aws_secret_access_key=sauvegardes-du-cours-52
+resources:
+  requests: {cpu: 50m, memory: 128Mi}
+  limits: {memory: 512Mi}
+nodeAgent:
+  resources:
+    requests: {cpu: 50m, memory: 64Mi}
+    limits: {memory: 512Mi}
