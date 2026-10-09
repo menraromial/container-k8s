@@ -1,0 +1,26 @@
+# Déclarée dans le dépôt, l'application colis-staging est gérée par l'application racine.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: colis-staging
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io    # supprimer l'application supprime ses objets
+spec:
+  project: default
+  source:
+    repoURL: http://gitea.git.svc.cluster.local:3000/cours/colis-config.git
+    targetRevision: main
+    path: overlays/staging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: colis-staging
+  syncPolicy:
+    automated: {prune: true, selfHeal: true}
+    syncOptions:
+    - RespectIgnoreDifferences=true   # même à la synchronisation, ne pas réécrire les champs ignorés
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    name: api
+    jsonPointers: [/spec/replicas]

@@ -1,0 +1,77 @@
+# Un serveur Git dans le cluster : Gitea, image sans root, base SQLite, sans SSH.
+# Argo CD le joindra par son Service ; vous, par une redirection de port.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: git
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitea
+  namespace: git
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea
+  namespace: git
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: {app.kubernetes.io/name: gitea}
+  template:
+    metadata:
+      labels: {app.kubernetes.io/name: gitea}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+      - name: gitea
+        image: gitea/gitea:28.1.0-rootless
+        env:
+        - {name: GITEA__security__INSTALL_LOCK, value: "true"}        # pas d'assistant d'installation
+        - {name: GITEA__database__DB_TYPE, value: sqlite3}
+        - {name: GITEA__server__ROOT_URL, value: "http://gitea.git.svc.cluster.local:3000/"}
+        - {name: GITEA__server__DISABLE_SSH, value: "true"}
+        - {name: GITEA__service__DISABLE_REGISTRATION, value: "true"}
+        - {name: GITEA__security__ALLOWED_HOST_LIST, value: "10.96.0.0/12"}  # webhooks vers les Services du cluster (Argo CD)
+        - {name: GITEA__webhook__SKIP_TLS_VERIFY, value: "true"}      # Argo CD a un certificat autosigné
+        ports:
+        - {name: http, containerPort: 3000}
+        readinessProbe:
+          httpGet: {path: /api/healthz, port: http}
+          periodSeconds: 5
+        resources:
+          requests: {cpu: 50m, memory: 96Mi}
+          limits: {memory: 256Mi}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities: {drop: [ALL]}
+        volumeMounts:
+        - {name: donnees, mountPath: /var/lib/gitea}
+        - {name: donnees, mountPath: /etc/gitea, subPath: config}   # app.ini et ses clés survivent au redémarrage
+      volumes:
+      - name: donnees
+        persistentVolumeClaim: {claimName: gitea}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitea
+  namespace: git
+spec:
+  selector: {app.kubernetes.io/name: gitea}
+  ports:
+  - {name: http, port: 3000, targetPort: http}

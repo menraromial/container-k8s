@@ -1,0 +1,365 @@
+---
+title: GitOps avec Argo CD
+sidebar_label: 57. GitOps avec Argo CD
+description: "Livrer depuis un dépôt Git : un serveur Gitea dans le cluster, Argo CD et sa première Application, la synchronisation manuelle puis automatique, le sondage de trois minutes et le webhook qui le remplace, la dérive corrigée et son attente exponentielle, l'élagage, le conflit avec un HPA, et une application racine qui déclare les autres."
+partie: 8
+chapitre: '57'
+---
+
+import gitopsBoucle from '@site/src/figures/gitops-boucle.svg';
+import gitopsRacine from '@site/src/figures/gitops-racine.svg';
+
+Qui a mis ce Deployment à trois répliques, et quand ? Au défi VII, il a fallu fouiller les `managedFields` pour répondre : la modification avait été faite par un `kubectl patch`, que rien d'autre n'avait enregistré. La réponse la plus courte serait un historique, avec un auteur, une date, une raison et la possibilité de revenir en arrière. Git a tout cela depuis longtemps. Il reste à faire en sorte que le cluster suive le dépôt, et rien d'autre.
+
+C'est l'idée du **GitOps**. Le groupe de travail OpenGitOps, sous l'égide de la CNCF, la résume en quatre principes : l'état voulu d'un système est déclaratif ; il est conservé de façon versionnée et immuable, avec tout son historique ; des agents logiciels vont le chercher eux-mêmes ; ils observent en continu l'état réel et le ramènent vers l'état voulu[^opengitops]. Le troisième principe est le plus concret. Personne ne pousse vers le cluster : un programme dans le cluster tire depuis le dépôt. Les droits d'écriture sur le cluster n'appartiennent plus aux personnes ni à la chaîne d'intégration, mais à ce programme.
+
+Ce chapitre utilise **Argo CD**, projet diplômé de la CNCF[^argocd], avec un dépôt hébergé dans le cluster même, sur un serveur Gitea. Le dépôt reprend le Colis des overlays Kustomize du chapitre 30, pour un environnement de préproduction, `colis-staging`. Les fichiers sont dans [l'archive gitops](pathname:///kits/gitops.tar.gz).
+
+## Un serveur Git dans le cluster
+
+Un vrai projet utiliserait GitHub, GitLab ou un serveur de l'entreprise. Pour rester sur le poste, on installe Gitea, un serveur Git léger, avec sa base SQLite :
+
+```yaml title="gitea.yaml (extrait)"
+@@f-gitea@@
+```
+
+L'image `rootless` tourne sans root ; `INSTALL_LOCK` saute l'assistant d'installation. La dernière variable sert plus loin, au webhook.
+
+```bash
+kubectl apply -f gitea.yaml
+kubectl -n git exec deploy/gitea -- gitea admin user create --username cours --password depot-du-cours-57 \
+  --email cours@example.com --admin --must-change-password=false
+kubectl -n git port-forward svc/gitea 3030:3000 &
+curl -s -u cours:depot-du-cours-57 -X POST -H 'Content-Type: application/json' \
+  -d '{"name":"colis-config","private":true,"default_branch":"main"}' http://localhost:3030/api/v1/user/repos
+```
+
+Le contenu du dépôt est dans le dossier `depot` de l'archive : la base du chapitre 30, passée à Colis 2.2.0, et un overlay `staging`.
+
+```yaml title="depot/overlays/staging/kustomization.yaml"
+@@f-overlay@@
+```
+
+Le Secret `colis-db` n'est pas dans le dépôt : un mot de passe n'a rien à faire dans un historique que tout le monde peut lire et que personne ne peut effacer. Il sera créé à part, dans le namespace (le quatrième exercice discute des façons de le versionner quand même).
+
+```bash
+cd depot && git init -b main && git add -A && git commit -m "Colis 2.2.0 : base et préproduction"
+git remote add origin http://cours:depot-du-cours-57@localhost:3030/cours/colis-config.git
+git push origin main
+```
+
+```sortie
+@@gitea@@
+```
+
+## Installer Argo CD
+
+Argo CD s'installe par un manifeste, dans son propre namespace :
+
+```bash
+kubectl create namespace argocd
+kubectl apply -n argocd --server-side -f https://raw.githubusercontent.com/argoproj/argo-cd/v3.5.4/manifests/install.yaml
+```
+
+```sortie
+@@argocd@@
+```
+
+Sept composants. Le **repo-server** clone les dépôts et produit les manifestes (avec Kustomize ou Helm s'il le faut). L'**application-controller** compare ces manifestes à l'état réel du cluster et applique les différences. L'**argocd-server** sert l'interface web, l'API et reçoit les webhooks. Redis sert de cache. Les trois autres sont facultatifs ici : Dex fournit la connexion unique (SSO) avec un annuaire d'entreprise, le contrôleur de notifications envoie des messages, celui d'ApplicationSet fabrique des Applications en série. On arrête les deux premiers :
+
+```bash
+kubectl -n argocd scale deployment argocd-dex-server argocd-notifications-controller --replicas=0
+kubectl -n argocd top pods
+```
+
+```sortie
+@@argocd-top@@
+```
+
+Le client `argocd` est un binaire à télécharger de la page des versions. On se connecte avec le mot de passe initial de l'administrateur, rangé dans un Secret, puis on déclare le dépôt, privé, avec ses identifiants :
+
+```bash
+kubectl -n argocd port-forward svc/argocd-server 8080:443 &
+argocd login localhost:8080 --username admin --insecure \
+  --password "$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)"
+argocd repo add http://gitea.git.svc.cluster.local:3000/cours/colis-config.git --username cours --password depot-du-cours-57
+```
+
+```sortie
+@@connexion@@
+```
+
+L'adresse du dépôt est celle que voit le repo-server, dans le cluster ; vous, vous passez par la redirection de port. Les identifiants sont rangés dans un Secret d'`argocd`, reconnu par son étiquette `argocd.argoproj.io/secret-type=repository` : on peut aussi le créer directement, sans le client.
+
+<Figure svg={gitopsBoucle} num="57.1" alt="De gauche à droite : vous modifiez un fichier et faites git push (1) vers le dépôt Git, l'état voulu. Dans Argo CD, le repo-server sonde le dépôt toutes les deux à trois minutes (2) ou reçoit un webhook par l'argocd-server en quelques secondes (2'), clone le dépôt et rend overlays/staging avec Kustomize ; il passe le rendu (3) à l'application-controller, qui le compare à l'état réel et déclare l'application Synced ou OutOfSync ; il applique les différences au namespace colis-staging (4) ; un watch lui signale toute dérive, qu'il corrige si selfHeal est actif (5).">
+La boucle d'Argo CD. Le dépôt dit ce qui doit être ; le contrôleur compare et applique ; un webhook remplace le sondage.
+</Figure>
+
+## Une première Application
+
+Le type `Application` relie un chemin d'un dépôt à une destination :
+
+```yaml title="application.yaml"
+@@f-application@@
+```
+
+Sans `syncPolicy`, la synchronisation est manuelle : Argo CD compare, mais n'applique rien de lui-même.
+
+```bash
+kubectl create namespace colis-staging
+kubectl -n colis-staging create secret generic colis-db --from-literal=POSTGRES_PASSWORD="$(head -c 18 /dev/urandom | base64 | tr -d '/+=')"
+kubectl apply -f application.yaml
+argocd app get colis-staging
+argocd app diff colis-staging
+```
+
+```sortie
+@@application@@
+```
+
+`OutOfSync` : le dépôt décrit treize objets, le cluster n'en a aucun (`Missing`), sauf le namespace, créé à la main pour y ranger le Secret. Le nom de la ConfigMap porte un suffixe, `colis-config-9cmhtm488h` : c'est le générateur de Kustomize qui l'ajoute, calculé à partir du contenu (chapitre 30). On synchronise :
+
+```bash
+argocd app sync colis-staging
+argocd app wait colis-staging --health
+```
+
+```sortie
+@@synchronisation@@
+```
+
+Deux secondes pour appliquer les objets, une vingtaine pour que tous soient en bonne santé. L'application répond, en version 2.2.0, sur `colis-staging.local`. L'état de santé (`Healthy`, `Progressing`, `Degraded`...) est calculé par Argo CD pour chaque type d'objet : un Deployment est en bonne santé quand ses répliques sont disponibles, un Service de type ClusterIP toujours, un PVC quand il est lié.
+
+## Changer par Git
+
+Passer en 2.2.1, c'est modifier deux lignes, et rien d'autre :
+
+```bash
+git commit -am "Colis 2.2.1" && git push origin main
+# ... attendre qu'Argo CD voie la révision, puis :
+kubectl -n argocd get configmap argocd-cm -o jsonpath='{.data.timeout\.reconciliation}'
+argocd app sync colis-staging
+curl -s --resolve colis-staging.local:80:192.168.49.102 http://colis-staging.local/api/sante
+argocd app history colis-staging
+```
+
+```sortie
+@@changement@@
+```
+
+Trois minutes et quatorze secondes avant qu'Argo CD voie la révision. Il sonde chaque dépôt toutes les 120 secondes, plus un délai aléatoire de 60 secondes au plus pour étaler les requêtes : trois minutes dans le pire cas[^faq]. La ConfigMap `argocd-cm` permet de changer ces valeurs (`timeout.reconciliation`), elle est vide ici, donc aux valeurs par défaut.
+
+La synchronisation manuelle s'est terminée sur une erreur : `1 resources require pruning`. Le contenu de la ConfigMap a changé, Kustomize lui a donné un nouveau suffixe, et l'ancienne, `colis-config-9cmhtm488h`, n'est plus dans le dépôt. Argo CD ne supprime pas un objet du cluster sans qu'on le lui demande : il signale qu'il faudrait l'**élaguer** (*prune*). Le reste a été appliqué, et l'API sert bien 2.2.1. `argocd app history` garde une ligne par synchronisation, avec la révision déployée.
+
+## Synchronisation automatique, et le webhook
+
+```bash
+kubectl -n argocd patch application colis-staging --type=merge \
+  -p '{"spec":{"syncPolicy":{"automated":{"prune":true,"selfHeal":true}}}}'
+```
+
+`automated` applique toute nouvelle révision ; `prune` supprime ce qui n'est plus dans le dépôt ; `selfHeal` ramène vers le dépôt tout ce qui a été modifié dans le cluster[^autosync]. Pour ne plus attendre le sondage, on demande à Gitea de prévenir Argo CD à chaque `push` (un webhook, chapitre 45) :
+
+```bash
+curl -s -u cours:depot-du-cours-57 -X POST -H 'Content-Type: application/json' \
+  http://localhost:3030/api/v1/repos/cours/colis-config/hooks \
+  -d '{"type":"gitea","active":true,"events":["push"],"config":{"url":"https://argocd-server.argocd.svc.cluster.local/api/webhook","content_type":"json"}}'
+```
+
+```sortie
+@@automatique@@
+```
+
+Le webhook n'a servi à rien : 208 secondes, le sondage encore. Le journal de Gitea dit pourquoi :
+
+```sortie
+@@webhook-refus@@
+```
+
+Gitea protège son réseau interne : un webhook est une requête que n'importe quel utilisateur peut faire partir du serveur, et donc un moyen d'atteindre des machines privées (une attaque dite SSRF, *server-side request forgery*). La première version du kit autorisait le nom `*.svc.cluster.local`, et ce n'est pas suffisant : le nom se résout en adresse privée, et Gitea exige que l'adresse elle-même soit autorisée. On autorise donc la plage d'adresses des Services du cluster, `10.96.0.0/12` sur minikube, par la variable `GITEA__security__ALLOWED_HOST_LIST`. La même mesure, sur l'application légère des exercices :
+
+```sortie
+@@webhook-ok@@
+```
+
+Une seconde et demie entre le `push` et la révision vue par Argo CD, six secondes jusqu'à la nouvelle version servie. Le sondage reste actif : si un webhook se perd, la révision sera vue au plus trois minutes plus tard.
+
+## La dérive
+
+`selfHeal` corrige ce qui a été modifié à la main :
+
+```bash
+kubectl -n colis-staging scale deployment api --replicas=3
+kubectl -n colis-staging delete service web
+```
+
+```sortie
+@@derive@@
+```
+
+Le Service supprimé revient en six secondes. Le nombre de répliques, lui, a mis une minute et demie. Argo CD n'a rien perdu : il espace ses corrections, et l'application en avait déjà subi plusieurs. Depuis la version 3, chaque nouvelle correction automatique attend plus longtemps que la précédente : 2 secondes la première fois, puis trois fois plus à chaque fois, jusqu'à 300 secondes au plus[^commande]. Le but est de ne pas se battre indéfiniment contre un autre programme qui réécrit le même champ. La mesure, écart après écart, sur l'application légère :
+
+```sortie
+@@selfheal@@
+```
+
+0,9 seconde, 3,4, 15,9, 52,2, puis 160,9 : la suite 2, 6, 18, 54, 162, à la durée de la boucle de mesure près. La conséquence est pratique : une modification faite à la main peut rester en place plusieurs minutes, et elle finira quand même par disparaître. Pour un changement qui doit durer, il n'y a qu'un chemin, le dépôt.
+
+## L'élagage
+
+Retirer un fichier du dépôt retire l'objet du cluster, avec `prune: true`. La préproduction n'a pas besoin de la purge :
+
+```bash
+git rm base/purge.yaml        # et la ligne correspondante de base/kustomization.yaml
+git commit -m "Préproduction : pas de purge" && git push origin main
+```
+
+```sortie
+@@elagage@@
+```
+
+Le CronJob a disparu. Argo CD ne supprime que les objets qu'il suit pour cette application, ceux qui viennent du dépôt : le Secret créé à la main, lui, n'est pas concerné.
+
+## Quand un autre contrôleur écrit le même champ
+
+Un HorizontalPodAutoscaler (chapitre 31) décide du nombre de répliques de l'API, entre 2 et 3. Le dépôt, lui, en déclare une (`replicas: api, count: 1` dans l'overlay). On ajoute le HPA au dépôt :
+
+```yaml title="hpa.yaml"
+@@f-hpa@@
+```
+
+```sortie
+@@hpa@@
+```
+
+Les deux contrôleurs se renvoient la valeur : le HPA monte à 2, Argo CD redescend à 1, le HPA remonte. Cinq montées et quatre descentes en une minute et demie, et chacune fait naître ou disparaître un Pod. C'est le cas que l'attente exponentielle de `selfHeal` atténue, sans le résoudre. La solution est de dire à Argo CD que ce champ ne lui appartient pas :
+
+```yaml
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    name: api
+    jsonPointers: [/spec/replicas]
+  syncPolicy:
+    syncOptions:
+    - RespectIgnoreDifferences=true
+```
+
+`ignoreDifferences` fait ignorer le champ dans la comparaison ; `RespectIgnoreDifferences` le fait ignorer aussi pendant la synchronisation, sans quoi la prochaine synchronisation réécrirait la valeur du dépôt[^diffing]. L'autre solution, plus propre, est de retirer `replicas` du dépôt pour ce Deployment : le champ n'a alors qu'un seul propriétaire. On l'a vu au chapitre 55 avec KEDA, du côté d'un opérateur ; Argo CD rencontre le même problème.
+
+## Des applications déclarées dans Git
+
+L'Application `colis-staging` a été créée par `kubectl apply`, et modifiée par `kubectl patch` : précisément ce que le GitOps voulait éviter. La réponse est récursive. Une Application est un objet Kubernetes comme un autre, elle peut donc être décrite dans le dépôt et déployée par une autre Application. Une **application racine** déploie le dossier `apps/` du dépôt, qui contient les définitions des autres ; c'est le motif *App of Apps*[^bootstrap].
+
+```yaml title="racine.yaml"
+@@f-racine@@
+```
+
+Le dossier `apps/` contient deux applications : `colis-staging`, avec la correction pour le HPA, et une petite application `quotas-staging`, qui pose un ResourceQuota (chapitre 23) sur le namespace.
+
+```sortie
+@@appofapps@@
+```
+
+L'application racine a repris `colis-staging`, qui existait déjà sous ce nom, et créé `quotas-staging`. Le nombre de répliques reste à 2, celui du HPA. `colis-staging` apparaît `Degraded` dans ce relevé, pris alors que le nœud arrivait au bout de sa mémoire (voir la section suivante).
+
+<Figure svg={gitopsRacine} num="57.2" alt="Le dépôt colis-config contient le dossier apps avec colis-staging.yaml et quotas-staging.yaml, et les dossiers base, overlays/staging et quotas/staging. L'Application racine lit apps et crée deux Applications : colis-staging, de source overlays/staging, qui déploie Deployments, Services, StatefulSet, HPA et HTTPRoute, et quotas-staging, de source quotas/staging, qui déploie le ResourceQuota limites, tous dans le namespace colis-staging. Ajouter une application revient à ajouter un fichier dans apps ; supprimer la racine avec son finaliseur supprime les enfants et leurs objets.">
+Une application racine déclare les autres. Le dépôt décrit alors tout, y compris la liste de ce qu'Argo CD doit déployer.
+</Figure>
+
+### Supprimer en cascade
+
+À la fin du rejeu, le nœud était à 4,95 Gio sur 5 : la préproduction devait partir. La racine porte le finaliseur `resources-finalizer.argocd.argoproj.io`, qui demande à Argo CD de supprimer ce qu'elle a créé avant de disparaître. Ce qui s'est passé :
+
+```sortie
+@@cascade-1@@
+```
+
+Les deux Applications enfants ont disparu, mais leurs objets sont restés : les enfants, eux, n'avaient pas le finaliseur, et une Application supprimée sans finaliseur laisse ses objets en place. La documentation d'Argo CD le dit : pour que la suppression de la racine emporte les objets des enfants, chaque enfant doit porter le finaliseur[^bootstrap]. Les fichiers `apps/` du kit l'ont maintenant. Sans finaliseur, la suppression d'une Application est l'opération la plus sûre (rien ne part du cluster) ; avec, c'est la plus complète. Le choix se fait application par application.
+
+## Exercices
+
+:::exercice[Exercice 1 : revenir en arrière]
+
+L'application `vitrine` (dans l'archive, dossier `vitrine`) est en synchronisation automatique et vient de passer de podinfo 6.14.1 à 6.15.0. Revenez à 6.14.1 de deux façons : avec `argocd app rollback`, puis par Git. Laquelle marche, et pourquoi l'autre est-elle refusée ?
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+```sortie
+@@ex1@@
+```
+
+`argocd app rollback` redéploie une révision de l'historique sans toucher au dépôt : le cluster et le dépôt divergeraient, et la synchronisation automatique ramènerait aussitôt la révision du dépôt. Argo CD refuse donc le retour arrière quand elle est active[^autosync]. Le chemin GitOps est un `git revert`, qui crée un nouveau commit annulant le précédent : l'historique garde la trace de l'aller et du retour, et la version 6.14.1 est servie huit secondes après le `push`.
+
+</details>
+
+:::exercice[Exercice 2 : protéger un objet de l'élagage]
+
+Ajoutez deux ConfigMaps à la vitrine, `garder` et `jetable`, la première avec l'annotation `argocd.argoproj.io/sync-options: Prune=false`. Retirez-les toutes deux du dépôt. Que devient chacune, et dans quel état est l'application ? Que se passe-t-il ensuite si l'on supprime l'Application, qui porte le finaliseur ?
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+```sortie
+@@ex2@@
+```
+
+`jetable` est élaguée, `garder` reste, et l'application reste `OutOfSync` : Argo CD signale l'écart (`ignored (no prune)`) sans le corriger. C'est la protection qu'on met sur un objet coûteux à recréer, un PVC par exemple. Elle ne protège que de l'élagage : la suppression de l'Application, avec son finaliseur, a emporté `garder` comme le reste (section « cascade » du troisième corrigé).
+
+</details>
+
+:::exercice[Exercice 3 : l'état des applications face au dépôt (programmation)]
+
+Écrivez un script Python qui affiche, pour chaque Application, son mode (automatique ou manuel), son état de synchronisation et de santé, la révision réellement déployée et la dernière révision de la branche suivie, lue dans le dépôt par `git ls-remote`. Il signale les applications en retard sur leur dépôt, désynchronisées ou en mauvaise santé, et sort avec le code 1 s'il en trouve. Attention au piège : `status.sync.revision` n'est pas la révision déployée.
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+Le corrigé, `corrige/etat-gitops.py`, n'est pas dans l'archive. `status.sync.revision` est la dernière révision **comparée** : Argo CD l'avance dès qu'il voit un nouveau commit, même sans rien appliquer. La révision **déployée** est celle de la dernière synchronisation, en tête de `status.history`. Le dépôt n'étant joignable depuis le poste que par la redirection de port, le script accepte une traduction d'adresse.
+
+```sortie
+@@ex3@@
+```
+
+Premier passage : la vitrine est désynchronisée à cause de la ConfigMap `garder` de l'exercice 2. Second passage, synchronisation automatique coupée et un commit poussé : la révision comparée a avancé, la révision déployée non, et le script le voit.
+
+</details>
+
+:::exercice[Exercice 4 : le Secret hors du dépôt]
+
+Le Secret `colis-db` a été créé à la main, hors du dépôt. Quelles sont les conséquences pour la reconstruction d'un environnement à partir de Git seul ? Proposez deux façons de le décrire dans le dépôt sans y écrire le mot de passe en clair.
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+Un cluster reconstruit depuis le dépôt n'aurait pas ce Secret : PostgreSQL ne démarrerait pas (`CreateContainerConfigError`, chapitre 49), et quelqu'un devrait savoir qu'il faut le recréer, avec quel nom et quelle clé. Le dépôt n'est plus la description complète de l'environnement. Le chapitre 46 a présenté deux solutions. Sealed Secrets chiffre le Secret avec la clé publique d'un contrôleur du cluster : l'objet `SealedSecret` peut être versionné, et seul ce contrôleur peut le déchiffrer. External Secrets Operator décrit dans le dépôt une référence vers un coffre (Vault, un gestionnaire de secrets d'un fournisseur de cloud) : le dépôt dit où est le secret, jamais ce qu'il contient. Dans les deux cas, Argo CD synchronise un objet qui n'est pas un secret en clair, et un contrôleur fabrique le vrai Secret dans le cluster.
+
+</details>
+
+## Interfaces et nettoyage
+
+L'interface web d'Argo CD est à `https://localhost:8080` derrière la redirection de port (compte `admin`, mot de passe du Secret `argocd-initial-admin-secret`), celle de Gitea à `http://localhost:3030` (compte `cours`). Argo CD et Gitea servent encore au chapitre 58 et au défi VIII. La préproduction et la vitrine ont été supprimées en fin de chapitre ; si vous les avez gardées :
+
+```bash
+kubectl -n argocd delete application racine vitrine --ignore-not-found
+kubectl delete namespace colis-staging vitrine --ignore-not-found
+```
+
+Pour tout retirer plus tard : `kubectl delete namespace argocd git`, puis les trois CRD `*.argoproj.io`, qu'Argo CD laisse derrière lui.
+
+[^opengitops]: OpenGitOps, « GitOps Principles v1.0.0 » : déclaratif, versionné et immuable, tiré automatiquement, réconcilié en continu. [opengitops.dev](https://opengitops.dev/) ; texte source : [github.com/open-gitops/documents/blob/main/PRINCIPLES.md](https://github.com/open-gitops/documents/blob/main/PRINCIPLES.md)
+[^argocd]: Argo CD, documentation de la version 3.5. [argo-cd.readthedocs.io](https://argo-cd.readthedocs.io/en/stable/)
+[^faq]: Argo CD, FAQ, « How often does Argo CD check for changes to my Git or Helm repository? » : sondage toutes les 120 s plus jusqu'à 60 s d'aléa, clés `timeout.reconciliation` et `timeout.reconciliation.jitter` de `argocd-cm`. [github.com/argoproj/argo-cd/blob/v3.5.4/docs/faq.md](https://github.com/argoproj/argo-cd/blob/v3.5.4/docs/faq.md)
+[^autosync]: Argo CD, « Automated Sync Policy » : `prune`, `selfHeal`, nouvel essai de correction après le délai de self-heal, retour arrière impossible quand la synchronisation automatique est active. [github.com/argoproj/argo-cd/blob/v3.5.4/docs/user-guide/auto_sync.md](https://github.com/argoproj/argo-cd/blob/v3.5.4/docs/user-guide/auto_sync.md)
+[^commande]: Argo CD, référence de `argocd-application-controller` : `--self-heal-backoff-timeout-seconds` (2), `--self-heal-backoff-factor` (3), `--self-heal-backoff-cap-seconds` (300). [github.com/argoproj/argo-cd/blob/v3.5.4/docs/operator-manual/server-commands/argocd-application-controller.md](https://github.com/argoproj/argo-cd/blob/v3.5.4/docs/operator-manual/server-commands/argocd-application-controller.md)
+[^diffing]: Argo CD, « Diffing Customization » et « Sync Options » (`RespectIgnoreDifferences`, `Prune=false`). [github.com/argoproj/argo-cd/blob/v3.5.4/docs/user-guide/sync-options.md](https://github.com/argoproj/argo-cd/blob/v3.5.4/docs/user-guide/sync-options.md)
+[^bootstrap]: Argo CD, « Cluster Bootstrapping » : motif App of Apps, et finaliseur à mettre sur les applications enfants pour que la suppression du parent emporte leurs objets. [github.com/argoproj/argo-cd/blob/v3.5.4/docs/operator-manual/cluster-bootstrapping.md](https://github.com/argoproj/argo-cd/blob/v3.5.4/docs/operator-manual/cluster-bootstrapping.md)

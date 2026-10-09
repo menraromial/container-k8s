@@ -1,0 +1,10 @@
+# Les limites de la préproduction : de quoi faire tourner Colis, pas plus.
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: limites
+spec:
+  hard:
+    pods: "15"
+    requests.memory: 2Gi
+    limits.memory: 4Gi

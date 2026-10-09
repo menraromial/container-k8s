@@ -1,0 +1,22 @@
+# L'application vitrine : synchronisation automatique, élagage, correction de la dérive, et un
+# finaliseur pour que la suppression de l'Application emporte ses objets.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vitrine
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: http://gitea.git.svc.cluster.local:3000/cours/colis-config.git
+    targetRevision: main
+    path: vitrine
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vitrine
+  syncPolicy:
+    automated: {prune: true, selfHeal: true}
+    syncOptions:
+    - CreateNamespace=true

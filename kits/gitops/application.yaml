@@ -1,0 +1,15 @@
+# L'application colis-staging : ce que dit le dépôt, à l'endroit où il doit être appliqué.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: colis-staging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: http://gitea.git.svc.cluster.local:3000/cours/colis-config.git
+    targetRevision: main
+    path: overlays/staging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: colis-staging

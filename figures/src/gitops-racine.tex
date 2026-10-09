@@ -1,0 +1,34 @@
+% Figure 57.2 : une application racine qui déploie des applications (App of Apps) (chapitre 57).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    app/.style={qbox, draw=QViolet, fill=QVioletBg, font=\scriptsize, align=left, inner sep=4pt, text width=#1},
+    obj/.style={qbox, font=\ttfamily\scriptsize, inner sep=3pt, align=center},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=left}]
+  % dépôt
+  \node[qcadre, draw=QOcre, minimum width=3.6cm, minimum height=3.4cm] (dep) at (0,0.9) {};
+  \node[qtitre, text=QOcre] at ([xshift=2mm,yshift=-2mm]dep.north west) {dépôt colis-config};
+  \node[lien, anchor=north west, font=\ttfamily\scriptsize] at (-1.6,1.9) {apps/\\
+    \ \ colis-staging.yaml\\
+    \ \ quotas-staging.yaml\\
+    base/\\
+    overlays/staging/\\
+    quotas/staging/};
+  % racine
+  \node[app=3.0cm] (racine) at (5,1.6) {\textbf{Application racine}\\source : {\ttfamily apps/}\\destination : {\ttfamily argocd}};
+  \node[app=3.0cm] (staging) at (9.6,2.6) {\textbf{colis-staging}\\source : {\ttfamily overlays/staging}};
+  \node[app=3.0cm] (quotas) at (9.6,0.4) {\textbf{quotas-staging}\\source : {\ttfamily quotas/staging}};
+  \draw[qarr] ([yshift=0.5cm]dep.east) -- node[lien, above] {lit} (racine.west);
+  \draw[qarr, draw=QViolet] (racine.east) -- node[lien, above, pos=0.4] {crée} (staging.west);
+  \draw[qarr, draw=QViolet] (racine.east) -- (quotas.west);
+  % objets
+  \node[qcadre, draw=QVert, dashed, fill=none, minimum width=5.0cm, minimum height=4.2cm] at (14.2,1.8) {};
+  \node[obj, draw=QVert] (o1) at (14.2,3.2) {Deployments, Services,\\StatefulSet, HPA, HTTPRoute};
+  \node[obj, draw=QVert] (o2) at (14.2,0.4) {ResourceQuota limites};
+  \draw[qarr, draw=QVert] (staging.east) -- (o1.west);
+  \draw[qarr, draw=QVert] (quotas.east) -- (o2.west);
+  \node[qlbl, font=\scriptsize, text=QVert] at (14.2,-0.55) {namespace colis-staging};
+  \node[lien, anchor=north west, text width=8.2cm] at (3.4,-0.9) {ajouter une application = ajouter un fichier dans {\ttfamily apps/} ;\\supprimer la racine (avec son finaliseur) supprime les enfants et leurs objets};
+\end{tikzpicture}
+\end{document}

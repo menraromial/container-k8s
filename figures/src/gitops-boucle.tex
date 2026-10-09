@@ -1,0 +1,24 @@
+% Figure 57.1 : la boucle GitOps d'Argo CD, du git push au cluster (chapitre 57).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    e/.style={qbox, font=\scriptsize, align=left, inner sep=4pt, text width=#1},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  \node[e=2.4cm] (dev) at (0,2.2) {\textbf{vous}\\modifier un fichier, {\ttfamily git push}};
+  \node[e=2.8cm, draw=QOcre, fill=QOcreBg] (git) at (3.8,2.2) {\textbf{dépôt Git} (Gitea)\\{\ttfamily colis-config}, branche {\ttfamily main} : l'état voulu};
+  \node[qcadre, draw=QViolet, minimum width=8.8cm, minimum height=4.4cm] (argo) at (12.4,1.2) {};
+  \node[qtitre, text=QViolet] at ([xshift=2mm,yshift=-2mm]argo.north west) {Argo CD (namespace argocd)};
+  \node[e=3.2cm, draw=QViolet] (repo) at (10.2,2.0) {\textbf{repo-server}\\clone le dépôt, rend {\ttfamily overlays/staging} avec Kustomize};
+  \node[e=3.6cm, draw=QViolet, fill=QVioletBg] (ctrl) at (14.4,2.0) {\textbf{application-controller}\\compare le rendu à l'état réel ;\\{\ttfamily Synced} ou {\ttfamily OutOfSync}};
+  \node[e=3.2cm, draw=QViolet] (srv) at (10.2,0.0) {\textbf{argocd-server}\\interface, API, CLI, réception des webhooks};
+  \node[e=3.0cm, draw=QVert, fill=QVertBg] (k8s) at (14.4,-2.4) {\textbf{cluster}\\namespace {\ttfamily colis-staging}};
+  \draw[qarr] (dev.east) -- node[lien, above] {1} (git.west);
+  \draw[qarr] (git.east) -- node[lien, above] {2. sondage\\(2 à 3 min)} (repo.west);
+  \draw[qdarr] (git.south) |- node[lien, pos=0.75, below] {2'. webhook (quelques s)} (srv.west);
+  \draw[qarr] (srv.east) -| node[lien, pos=0.3, below] {rafraîchir} (ctrl.south west);
+  \draw[qarr] (repo.east) -- node[lien, above] {3} (ctrl.west);
+  \draw[qarr] (ctrl.south) -- node[lien, right] {4. appliquer (sync)} (k8s.north);
+  \draw[qdarr] (k8s.east) -- ++(1.0,0) |- node[lien, pos=0.25, right] {5. watch : dérive\\corrigée ({\ttfamily selfHeal})} (ctrl.east);
+\end{tikzpicture}
+\end{document}
