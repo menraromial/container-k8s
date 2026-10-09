@@ -1,0 +1,28 @@
+# La sauvegarde continue : le compartiment, ses identifiants, et le greffon Barman Cloud
+# déclaré dans le cluster comme archiveur des journaux (WAL).
+apiVersion: v1
+kind: Secret
+metadata:
+  name: s3
+  namespace: ch56
+stringData:
+  ACCESS_KEY_ID: cnpg
+  ACCESS_SECRET_KEY: sauvegardes-du-cours-56
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: rustfs
+  namespace: ch56
+spec:
+  retentionPolicy: "7d"
+  configuration:
+    destinationPath: s3://sauvegardes/
+    endpointURL: http://rustfs.stockage.svc.cluster.local:9000
+    s3Credentials:
+      accessKeyId: {name: s3, key: ACCESS_KEY_ID}
+      secretAccessKey: {name: s3, key: ACCESS_SECRET_KEY}
+    wal:
+      compression: gzip
+    data:
+      compression: gzip

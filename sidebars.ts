@@ -147,6 +147,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'partie-8/crd',
         'partie-8/operateur',
+        'partie-8/cnpg',
       ],
     },
   ],

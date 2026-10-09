@@ -16,6 +16,7 @@ Les quatre suivants portent sur la livraison. Argo CD applique au cluster ce que
 |---|---|
 | [54. Les CRD](crd.md) | une CustomResourceDefinition pour le type `Colis` : schéma, élagage et valeurs par défaut, règles CEL et leurs pièges, sous-ressources `status` et `scale`, versions et migration du stockage, RBAC agrégé, coût d'une définition |
 | [55. Écrire un opérateur](operateur.md) | un opérateur en Go avec kubebuilder : projet généré, marqueurs, boucle de réconciliation, références de propriétaire, le piège des réécritures mesuré, dérive corrigée, tests envtest, image distroless, déploiement et métriques |
+| [56. CloudNativePG](cnpg.md) | PostgreSQL confié à un opérateur : trois instances sans StatefulSet, deux bascules et l'arrêt intelligent mesurés, sauvegarde continue et restauration à la seconde, puis la base de Colis migrée avec 55 secondes de maintenance |
 
 ## Avant de commencer : faire de la place
 

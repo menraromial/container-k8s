@@ -1,0 +1,398 @@
+---
+title: Utiliser un opérateur existant
+sidebar_label: 56. CloudNativePG
+description: "Confier PostgreSQL à CloudNativePG : un cluster de trois instances sans StatefulSet, la réplication en flux, deux bascules mesurées, l'arrêt « intelligent » qui retarde la promotion, la sauvegarde continue vers un stockage objet et la restauration à la seconde près, puis la migration réelle de la base de Colis avec 55 secondes de maintenance."
+partie: 8
+chapitre: '56'
+---
+
+import cnpgArchitecture from '@site/src/figures/cnpg-architecture.svg';
+import cnpgBascule from '@site/src/figures/cnpg-bascule.svg';
+
+Une base de données dans un StatefulSet à une seule instance a un défaut qu'aucune ligne de YAML ne corrige : quand son Pod tombe, la base tombe avec lui jusqu'à ce que le kubelet le redémarre. Ajouter des répliques au StatefulSet ne change rien, parce que Kubernetes ne sait pas qu'une seule de ces copies peut écrire, laquelle, ni comment en promouvoir une autre. Le reste suit le même chemin. Une sauvegarde par `pg_dump` (chapitre 52) perd tout ce qui a été écrit depuis la dernière ; une montée de version majeure de PostgreSQL ne se fait pas en changeant une étiquette d'image.
+
+Ce savoir-faire existe, et d'autres l'ont écrit dans un opérateur. Le chapitre 55 a montré comment on en construit un ; celui-ci montre comment on en utilise un, et ce qu'il faut vérifier avant de lui confier des données. L'opérateur est **CloudNativePG**, projet en incubation initiale (*sandbox*) à la CNCF, qui gère des clusters PostgreSQL de bout en bout[^cnpg]. On l'essaie d'abord dans un namespace jetable, `ch56`, puis on lui confie la vraie base de Colis. Les fichiers sont dans [l'archive cnpg](pathname:///kits/cnpg.tar.gz).
+
+## Installer l'opérateur
+
+CloudNativePG s'installe par un seul manifeste, publié avec chaque version, et se pilote en partie par un greffon de `kubectl` :
+
+```bash
+kubectl apply --server-side -f \
+  https://github.com/cloudnative-pg/cloudnative-pg/releases/download/v1.30.1/cnpg-1.30.1.yaml
+kubectl -n cnpg-system rollout status deployment/cnpg-controller-manager
+kubectl get crd -o name | grep cnpg.io
+curl -sL https://github.com/cloudnative-pg/cloudnative-pg/releases/download/v1.30.1/kubectl-cnpg_1.30.1_linux_x86_64.tar.gz \
+  | tar -xz -C ~/.local/bin kubectl-cnpg
+kubectl cnpg version
+```
+
+```sortie
+@@operateur@@
+```
+
+`--server-side` n'est pas décoratif. En mode client, `kubectl apply` recopie chaque objet dans l'annotation `last-applied-configuration` (chapitre 18) ; or la définition du type `Pooler` pèse 361 Ko en JSON, et l'API server n'accepte pas plus de 262 144 octets d'annotations par objet. Onze types arrivent. `Cluster` décrit un cluster PostgreSQL ; `Backup` et `ScheduledBackup` les sauvegardes ; `Pooler` un PgBouncer devant le cluster ; `Database`, `DatabaseRole`, `Publication` et `Subscription` des objets de PostgreSQL décrits comme des ressources Kubernetes. L'opérateur occupe une quarantaine de mégaoctets en mémoire (39 Mi selon `kubectl top`, sur le cluster du cours).
+
+La sauvegarde vers un stockage objet passe, depuis la version 1.26, par un greffon séparé, Barman Cloud, qui s'installe à côté de l'opérateur et demande cert-manager pour chiffrer leurs échanges[^barman]. Le stockage objet lui-même est RustFS, déjà utilisé avec Velero au chapitre 52, dans un namespace `stockage` :
+
+```bash
+kubectl apply -f https://github.com/cloudnative-pg/plugin-barman-cloud/releases/download/v0.15.1/manifest.yaml
+kubectl create namespace stockage
+kubectl apply -f rustfs.yaml
+```
+
+```sortie
+@@greffon@@
+```
+
+## Un premier cluster
+
+```yaml title="01-cluster.yaml"
+@@f-01@@
+```
+
+Trois instances, un volume de 1 Gio chacune. Rien d'autre n'est obligatoire : la version de PostgreSQL, l'utilisateur, la base, les certificats, la réplication ont des valeurs par défaut.
+
+```bash
+kubectl create namespace ch56
+kubectl apply -f 01-cluster.yaml
+```
+
+```sortie
+@@cluster@@
+```
+
+Moins d'une minute ici, avec l'image déjà sur le nœud. La toute première fois, il a fallu 5 min 16 s, dont 4 min 30 s pour télécharger l'image `postgresql:18.6-system-trixie` (279 Mo). L'opérateur crée la primaire, puis les répliques une à une, chacune clonée de la primaire. Il crée aussi trois Services, quatre Secrets (le compte de l'application, l'autorité de certification du cluster, le certificat du serveur, celui de la réplication) et un volume par instance.
+
+### Ni StatefulSet, ni Deployment
+
+```sortie
+@@anatomie-1@@
+```
+
+Pas de StatefulSet : les Pods appartiennent directement au `Cluster`. CloudNativePG gère lui-même ses Pods et ses volumes, ce que sa documentation justifie par les limites du StatefulSet pour une base de données : on ne peut pas y agrandir un volume, et un volume supprimé y serait recréé vide, à côté d'un autre qui en dépend, alors qu'il faut reconstruire l'instance entière[^controller]. Chaque Pod a deux conteneurs. Le conteneur d'initialisation `bootstrap-controller` utilise l'image de l'opérateur : il copie dans le Pod le **gestionnaire d'instance**, le programme qui devient ensuite le processus principal du conteneur `postgres` (`/controller/manager instance run`). C'est lui qui lance PostgreSQL, le surveille, répond aux sondes, expose les métriques et applique les ordres de l'opérateur ; CloudNativePG ne s'appuie sur aucun outil externe de bascule[^instance].
+
+Les rôles sont des étiquettes, et les Services sélectionnent par elles :
+
+```sortie
+@@anatomie-2@@
+```
+
+`essai-rw` mène toujours à la primaire, `essai-ro` aux répliques, `essai-r` à n'importe quelle instance[^services]. Une bascule consiste, côté Kubernetes, à changer l'étiquette `cnpg.io/instanceRole` de deux Pods. Le Secret `essai-app` contient tout ce qu'il faut à une application pour se connecter, sous plusieurs formes (URI, JDBC, fichier `pgpass`).
+
+<Figure svg={cnpgArchitecture} num="56.1" alt="L'opérateur CloudNativePG, dans cnpg-system, crée et surveille trois Pods d'instance. Chaque Pod contient le gestionnaire d'instance, processus principal, qui pilote PostgreSQL ; un conteneur d'initialisation a copié ce gestionnaire depuis l'image de l'opérateur, et un sidecar Barman Cloud est ajouté quand la sauvegarde est active. Chaque instance a son propre volume. La primaire envoie ses journaux (WAL) en flux aux deux répliques. Trois Services : rw vers la primaire, ro vers les répliques, r vers toutes. Le sidecar de la primaire envoie les journaux et les sauvegardes complètes vers le stockage objet, d'où un nouveau cluster peut être reconstruit à un instant choisi.">
+Un cluster CloudNativePG : pas de StatefulSet, un gestionnaire d'instance dans chaque Pod, des Services qui suivent l'étiquette de rôle, et le stockage objet pour les sauvegardes.
+</Figure>
+
+L'état complet du cluster, tel que le voit le greffon :
+
+```bash
+kubectl cnpg status essai -n ch56
+```
+
+```sortie
+@@status@@
+```
+
+## La réplication en flux
+
+La primaire envoie ses journaux de transactions (WAL, *write-ahead log*) aux répliques, qui les rejouent en continu : c'est la réplication en flux de PostgreSQL. Une table de cent mille lignes, créée sur la primaire, puis comptée sur chaque instance ; et une tentative d'écriture sur une réplique :
+
+```sortie
+@@replication@@
+```
+
+Les répliques sont en lecture seule. Elles servent la lecture (le Service `-ro`) et surtout la reprise : chacune peut devenir primaire.
+
+## Deux bascules
+
+Le client d'essai écrit une ligne toutes les 200 ms par le Service `essai-rw`, avec une connexion neuve à chaque écriture, et note l'heure et le résultat :
+
+```yaml title="ecrivain.yaml (extrait)"
+@@f-ecrivain@@
+```
+
+`PGCONNECT_TIMEOUT` n'est pas un détail. Sans lui, la première version du client s'est figée au premier essai : une connexion lancée vers l'adresse d'un Pod qui vient de disparaître attend que TCP abandonne, et le client est resté figé pendant toute la mesure.
+
+### Une bascule subie
+
+On supprime le Pod de la primaire :
+
+```sortie
+@@bascule@@
+```
+
+Quatre secondes sans écriture possible : onze tentatives refusées, la première par « the database system is shutting down », les suivantes par « Connection refused », le temps que l'opérateur constate la perte de la primaire, promeuve `essai-2` et que le Service `essai-rw` suive. La ligne de temps (`timelineID`) passe à 2 : c'est ainsi que PostgreSQL distingue l'histoire d'avant et d'après une promotion. L'ancienne primaire, recréée sous le même nom, est revenue comme réplique de la nouvelle.
+
+### Une bascule programmée
+
+Quand on sait à l'avance qu'une instance doit s'arrêter (vidage de nœud, maintenance), on demande une bascule programmée (*switchover*) :
+
+```sortie
+@@bascule-programmee@@
+```
+
+Programmée ne veut pas dire sans interruption : onze écritures refusées, cette fois encore, sur environ cinq secondes. L'ancienne primaire est arrêtée proprement avant la promotion, ce qui garantit qu'aucune transaction validée n'est perdue ; la bascule subie, elle, peut perdre les dernières transactions qui n'avaient pas atteint une réplique, puisque la réplication est asynchrone par défaut (`Sync State` vaut `async` dans le statut). Une application doit donc savoir refaire une écriture qui a échoué, quelle que soit la bascule.
+
+## L'arrêt « intelligent » et les connexions qui durent
+
+L'écrivain ouvrait une connexion par écriture. L'API de Colis, elle, garde ses connexions ouvertes, comme la plupart des applications. Le premier exercice rejoue la bascule subie sur la base de Colis, sous la charge du chapitre 50, et le résultat n'a rien à voir :
+
+```sortie
+@@ex1-defaut@@
+```
+
+Trois minutes entre la suppression du Pod et la promotion. La cause est dans la procédure d'arrêt d'une instance[^instance]. Quand son Pod est supprimé, le gestionnaire d'instance demande à PostgreSQL un arrêt **intelligent** (*smart shutdown*) : les nouvelles connexions sont refusées, mais les sessions déjà ouvertes continuent de travailler, jusqu'à `smartShutdownTimeout` secondes (180 par défaut). Ensuite seulement vient l'arrêt **rapide**, qui coupe les sessions. Pendant ces trois minutes, l'API de Colis a continué d'écrire sur l'ancienne primaire par ses connexions existantes, et l'opérateur a attendu qu'elle s'arrête pour promouvoir la réplique. Une seule réponse en erreur côté utilisateurs, mais trois minutes pendant lesquelles un nouveau Pod de l'API n'aurait pas pu se connecter.
+
+```sortie
+@@ex1-court@@
+```
+
+Avec `smartShutdownTimeout: 10`, la promotion arrive en 17 secondes. La documentation de CloudNativePG donne la règle à suivre : ne pas supprimer le Pod de la primaire, mais faire d'abord une bascule programmée, qui arrête l'ancienne primaire par un arrêt rapide[^instance]. Un `kubectl drain` sur le nœud de la primaire déclenche justement l'arrêt du Pod : c'est pour cela que CloudNativePG crée deux PodDisruptionBudgets par cluster, dont `colis-pg-primary` : quand un nœud qui porte la primaire doit être vidé, l'opérateur fait d'abord une bascule programmée, et le vidage reprend ensuite[^pdb].
+
+<Figure svg={cnpgBascule} num="56.2" alt="Trois bascules subies, sur une même échelle de temps à partir de la suppression du Pod primaire. Client à connexions courtes (cluster d'essai) : écritures refusées pendant environ 4 secondes, puis reprise sur la nouvelle primaire. API de Colis, réglage par défaut : l'ancienne primaire refuse les nouvelles connexions mais sert les sessions ouvertes pendant l'arrêt intelligent, jusqu'à 180 secondes ; la promotion arrive 3 minutes 4 secondes après la suppression. Avec smartShutdownTimeout à 10 secondes : promotion après 17 secondes.">
+Trois bascules mesurées. La durée dépend moins de PostgreSQL que des connexions ouvertes par les clients et du délai d'arrêt intelligent.
+</Figure>
+
+## La sauvegarde continue
+
+Une sauvegarde par `pg_dump` est une photographie : tout ce qui est écrit après est perdu si la base disparaît. CloudNativePG combine deux choses, comme PostgreSQL le prévoit : des sauvegardes complètes du répertoire de données (*base backups*), et l'archivage continu de chaque segment de journal (WAL) dès qu'il est rempli. Avec les deux, on peut reconstruire la base à n'importe quel instant entre la première sauvegarde complète et le dernier journal archivé.
+
+Le compartiment, ses identifiants et l'objet `ObjectStore` du greffon :
+
+```yaml title="02-sauvegarde.yaml"
+@@f-02@@
+```
+
+Le cluster déclare le greffon comme archiveur de ses journaux, par quatre lignes ajoutées à sa définition :
+
+```yaml title="03-cluster-sauvegarde.yaml (fin)"
+@@f-03@@
+```
+
+```bash
+kubectl apply -f 02-sauvegarde.yaml -f 03-cluster-sauvegarde.yaml
+```
+
+```sortie
+@@sauvegarde@@
+```
+
+Les trois Pods ont été recréés, les répliques d'abord, la primaire en dernier, redémarrée sur place (*restarted without a switchover*) : c'est la mise à jour progressive de CloudNativePG, qui laisse la primaire pour la fin[^rolling]. Chacun a maintenant un deuxième conteneur, `plugin-barman-cloud`, déclaré comme conteneur d'initialisation avec `restartPolicy: Always`, c'est-à-dire un sidecar natif (chapitre 17). La condition `ContinuousArchiving` passe à `True` au premier journal archivé. Une sauvegarde complète se demande par un objet `Backup` :
+
+```yaml title="04-sauvegarde-complete.yaml"
+@@f-04@@
+```
+
+```sortie
+@@sauvegarde-complete@@
+```
+
+Dans le compartiment, un dossier par serveur, avec ses sauvegardes complètes (`base`) et ses journaux (`wals`). La ligne `Last Failed WAL` date du remplacement des Pods, quelques secondes plus tôt : un journal dont l'archivage a été refusé pendant le redémarrage, puis archivé au passage suivant. Le premier essai de ce rejeu avait échoué en chaîne : le compartiment n'avait pas été créé, RustFS ne répondant pas encore au moment de la requête, et le statut disait `Working WAL archiving: Failing`, puis la sauvegarde `failed` avec un simple `exit status 1`. Quand l'archivage échoue, le premier endroit à regarder est le compartiment.
+
+## Revenir à la seconde près
+
+L'accident classique : une commande lancée sur la mauvaise base. L'écrivain remplit la table pendant trente secondes, on note l'heure, puis :
+
+```sortie
+@@accident@@
+```
+
+La table a disparu de la primaire et, quelques millisecondes plus tard, des répliques : la réplication recopie fidèlement les erreurs. Les journaux archivés, eux, contiennent tout ce qui s'est passé avant. On reconstruit un nouveau cluster à partir du stockage objet, en rejouant les journaux jusqu'à l'instant noté :
+
+```yaml title="05-restauration.yaml"
+@@f-05@@
+```
+
+```sortie
+@@restauration@@
+```
+
+Cinquante et une secondes pour un cluster neuf, avec les 591 lignes et la dernière écrite à moins de deux secondes de l'instant choisi[^recovery]. On restaure dans un **nouveau** cluster, jamais dans celui qui a subi l'accident : on compare, on récupère les données perdues, et c'est seulement ensuite qu'on décide quoi faire de chacun.
+
+## Confier la base de Colis à CloudNativePG
+
+La base de Colis vit depuis le chapitre 26 dans un StatefulSet `postgres`, avec un volume et un Secret `colis-db`. La migration doit déplacer les données sans en perdre, faire pointer l'application vers la nouvelle base, et respecter les trois protections du namespace `colis` : le niveau `restricted` de Pod Security (chapitre 44), la politique d'images `images-colis` (chapitre 45) et le refus réseau par défaut (chapitre 41).
+
+### Des images qu'on accepte
+
+```sortie
+@@avant@@
+```
+
+Les images de CloudNativePG viennent de `ghcr.io/cloudnative-pg/`, qui n'est pas dans la liste. Avant de l'y ajouter, on vérifie qu'elles sont signées par le projet. Ses images sont signées sans clé : là où le chapitre 14 signait avec une paire de clés, la signature est ici liée à l'identité du flux GitHub Actions qui a construit l'image, et `cosign` vérifie cette identité.
+
+```sortie
+@@images@@
+```
+
+L'image de PostgreSQL et celle de l'opérateur sont signées par un flux de GitHub Actions du projet ; celle du sidecar Barman Cloud ne l'est pas, à cette version. La politique `images-colis` ne vérifie que le registre, pas la signature (la vérification par Kyverno a été retirée au début de la partie VII) : on accepte donc ce sidecar en connaissance de cause, et c'est à noter dans le registre des risques de l'équipe. Les Pods de CloudNativePG respectent le niveau `restricted` sans réglage : un essai à blanc de l'étiquette `pod-security.kubernetes.io/enforce=restricted` sur `ch56` n'avait produit aucun avertissement.
+
+### Le réseau
+
+Les politiques existantes des Pods `api`, `worker` et `purge` visent la base par l'étiquette `app.kubernetes.io/name=postgres`. Donner cette étiquette aux instances de CloudNativePG (le champ `inheritedMetadata` le permet) ferait passer le trafic sans toucher aux politiques. Ce serait une erreur : le Service `postgres` de l'ancienne base sélectionne ses Pods par cette même étiquette, et pendant la migration il enverrait une partie des requêtes de l'application vers les nouvelles instances, dont une réplique en lecture seule. On écrit donc des politiques pour l'étiquette que pose CloudNativePG, `cnpg.io/cluster=colis-pg` :
+
+```yaml title="colis/11-politiques.yaml (extrait)"
+@@f-politique@@
+```
+
+Les instances ont besoin de plus que l'application : se joindre entre elles pour la réplication, répondre à l'opérateur sur le port 8000 (l'état de chaque instance), joindre l'API server (le gestionnaire d'instance lit et met à jour des objets), envoyer leurs sauvegardes à RustFS, et laisser Prometheus lire leurs métriques. L'API server se joint par l'adresse du nœud et le port 8443, parce que la politique s'applique après la traduction d'adresse du Service `kubernetes` (chapitre 41). Le même fichier contient deux politiques temporaires, qui laissent les nouvelles instances lire l'ancienne base le temps de l'import, et une politique `vers-colis-pg` qui ouvre le chemin depuis l'application.
+
+```sortie
+@@politiques@@
+```
+
+### La maintenance
+
+Copier une base pendant que l'application y écrit, c'est risquer d'oublier les dernières écritures. La migration se fait donc dans une fenêtre de maintenance : l'API est arrêtée, KEDA mis en pause sur zéro worker (annotation `autoscaling.keda.sh/paused-replicas`, chapitre 31), la purge suspendue.
+
+```sortie
+@@maintenance@@
+```
+
+La passerelle répond 503 : elle n'a plus aucun Pod de l'API derrière elle. Le cluster `colis-pg` importe la base pendant sa création :
+
+```yaml title="colis/13-colis-pg.yaml"
+@@f-colis-pg@@
+```
+
+L'import de type `microservice` crée une base `colis` appartenant à un rôle `colis`, puis y copie la base de l'ancien serveur par `pg_dump` et `pg_restore`, depuis le Pod de la nouvelle primaire[^import]. Le mot de passe de l'ancien serveur est lu dans le Secret `colis-db` existant.
+
+```sortie
+@@creation@@
+```
+
+Quarante-quatre secondes. Le Secret `colis-pg-app` contient le compte de l'application, `colis`, avec un mot de passe neuf. La vérification compare les deux bases :
+
+```sortie
+@@verification@@
+```
+
+Même nombre de colis, mêmes statuts, même dernier numéro. La séquence des numéros a suivi : le prochain colis créé prendra le numéro qui suit. Reste à faire pointer l'application vers la nouvelle base, par un script qui modifie deux variables dans l'API, le worker et la purge :
+
+```bash title="colis/basculer.sh (extrait)"
+@@f-basculer@@
+```
+
+```sortie
+@@bascule-colis@@
+```
+
+Cinquante-cinq secondes de maintenance, de l'arrêt de l'API à la première réponse 200. Un colis neuf traverse toute l'application, la purge joint la base, et la première sauvegarde complète de `colis-pg` part vers RustFS :
+
+```sortie
+@@fonctionnement@@
+```
+
+L'ancienne base n'a pas reçu le colis 4044 : elle est désormais figée, et ne sert plus que de point de comparaison.
+
+### Retirer l'ancienne base
+
+Une fois la migration vérifiée, et une copie `pg_dump` de l'ancienne base mise de côté par précaution, on retire le StatefulSet, son Service, son volume, son Secret, les politiques qui le concernaient et les règles de sortie vers lui dans les politiques de l'application :
+
+```sortie
+@@retrait@@
+```
+
+La politique `purge` n'a plus de règle de sortie propre. Ce n'est pas un refus total : les politiques s'additionnent, et `vers-colis-pg` et `dns` autorisent ce dont la purge a besoin, comme le confirme le Job lancé à la fin. La base de Colis est maintenant `colis-pg` : deux instances, une bascule automatique, l'archivage continu des journaux et une sauvegarde complète. Le nœud est à @@memoire-noeud@@, un peu moins qu'avant la migration malgré la seconde instance, puisque l'ancien StatefulSet est parti.
+
+## Exercices
+
+:::exercice[Exercice 1 : la bascule vue par l'application]
+
+Avec `charge.py` (chapitre 50) en marche contre Colis, supprimez le Pod de la primaire de `colis-pg`. Mesurez le temps jusqu'à la promotion, et le nombre de réponses en erreur. Recommencez après avoir fixé `smartShutdownTimeout` à 10 secondes. Expliquez la différence avec la bascule du cluster d'essai.
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+Les mesures sont dans la section sur l'arrêt intelligent, plus haut : 3 min 4 s avec le réglage par défaut, 17 s avec 10 secondes. Le client d'essai ouvrait une connexion par écriture ; l'API de Colis garde les siennes, et l'arrêt intelligent les laisse travailler jusqu'au bout du délai. Dans les deux cas, l'API n'a renvoyé que une ou deux réponses 5xx : le code de Colis abandonne une connexion perdue, en ouvre une neuve à la requête suivante, et rejoue une fois les lectures. Réduire `smartShutdownTimeout` raccourcit la bascule subie ; la vraie réponse reste de ne pas supprimer la primaire, mais de demander une bascule programmée avant toute intervention.
+
+</details>
+
+:::exercice[Exercice 2 : une sauvegarde par jour]
+
+Écrivez une `ScheduledBackup` qui fait une sauvegarde complète de `colis-pg` chaque jour à 2 h. Vérifiez la date de la prochaine sauvegarde dans le journal de l'opérateur (ligne `Next backup schedule`).
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+```sortie
+@@ex2@@
+```
+
+L'expression habituelle de cron, `0 2 * * *`, est acceptée avec un avertissement, et elle est fausse : CloudNativePG lit six champs, le premier pour les secondes[^cron]. `0 2 * * *` y signifie « à la seconde 0 de la minute 2 de chaque heure » : une sauvegarde complète toutes les heures, à 7 h 02, 8 h 02, et ainsi de suite. La bonne écriture est `0 0 2 * * *`. Un CronJob de Kubernetes, lui, attend cinq champs (chapitre 27) : on ne peut pas recopier une expression de l'un à l'autre.
+
+</details>
+
+:::exercice[Exercice 3 : le retard des répliques (programmation)]
+
+Écrivez un script Python qui affiche, pour chaque réplique d'un cluster CloudNativePG, son état, son retard en octets (journaux produits par la primaire et pas encore rejoués) et en temps. Le script trouve la primaire dans le statut du `Cluster`, interroge la vue `pg_stat_replication` par `kubectl exec`, peut répéter la mesure, et sort avec le code 1 si une réplique dépasse un seuil ou s'il en manque une. Testez-le pendant qu'une grosse table est créée sur la primaire.
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+Le corrigé, `corrige/retard-replication.py`, n'est pas dans l'archive. La requête calcule le retard en octets par `pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn)`, et en temps par la colonne `replay_lag`. Pendant la création d'une table de deux millions de lignes :
+
+```sortie
+@@ex3@@
+```
+
+La réplique a eu jusqu'à 61 Mio de retard pendant une seconde, puis a rattrapé. En temps, le retard reste sous le dixième de seconde : la mesure en octets voit l'écart que la mesure en temps cache. C'est ce que mesure aussi la métrique `cnpg_pg_replication_lag` de l'exercice suivant, et la seule chose qui compte au moment d'une bascule subie, puisque ce retard est ce qu'on risque de perdre.
+
+</details>
+
+:::exercice[Exercice 4 : les métriques dans Prometheus]
+
+Chaque instance expose des métriques sur son port `metrics` (9187). Faites-les relever par le Prometheus du chapitre 50, puis trouvez dans Prometheus le retard de réplication et la taille de la base `colis`.
+
+:::
+
+<details>
+<summary>Corrigé</summary>
+
+Un PodMonitor sur l'étiquette `cnpg.io/cluster`, et la politique réseau `colis-pg` qui laisse entrer le namespace `supervision` sur le port 9187 :
+
+```yaml
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata: {name: colis-pg, namespace: colis}
+spec:
+  selector:
+    matchLabels: {cnpg.io/cluster: colis-pg}
+  podMetricsEndpoints:
+  - port: metrics
+    interval: 15s
+```
+
+```sortie
+@@ex4@@
+```
+
+Plus de 400 séries par instance, dont l'état du collecteur, le retard de chaque réplique, la taille de chaque base. Au premier essai, la nouvelle primaire, promue une minute plus tôt par l'exercice 1, avait `cnpg_collector_up` à 0 et seulement 49 séries : son collecteur échouait encore. Une alerte sur `cnpg_collector_up == 0` doit donc avoir une durée (`for`) de quelques minutes pour ne pas sonner à chaque bascule.
+
+</details>
+
+## Nettoyer
+
+Le namespace d'essai `ch56` a été supprimé à la fin de la démonstration. Le reste sert la suite : l'opérateur, le greffon, RustFS et `colis-pg` sont désormais l'installation de PostgreSQL de Colis. La `ScheduledBackup` et le PodMonitor des exercices peuvent rester. Si vous ne gardez pas la sauvegarde quotidienne, supprimez-la : elle remplirait le volume de RustFS.
+
+```bash
+kubectl -n colis delete scheduledbackup quotidienne
+```
+
+[^cnpg]: CloudNativePG, dépôt et documentation de la version 1.30.1 ; projet *sandbox* de la Cloud Native Computing Foundation (README). [github.com/cloudnative-pg/cloudnative-pg](https://github.com/cloudnative-pg/cloudnative-pg)
+[^barman]: CloudNativePG, greffon Barman Cloud (CNPG-I), version 0.15.1 : sauvegarde et archivage des journaux vers un stockage objet, objet `ObjectStore`. [github.com/cloudnative-pg/plugin-barman-cloud](https://github.com/cloudnative-pg/plugin-barman-cloud)
+[^controller]: CloudNativePG, « Custom Pod Controller » et FAQ (« Why isn't CloudNativePG using StatefulSets? ») : volumes gérés directement, redimensionnement, cohérence des volumes d'une instance. [github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/controller.md](https://github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/controller.md)
+[^instance]: CloudNativePG, « Postgres instance manager » : pas d'outil externe de bascule ; « Shutdown control » : `smartShutdownTimeout` (180 s) et `stopDelay` (1 800 s), arrêt intelligent puis rapide, et la consigne de ne pas supprimer le Pod de la primaire, mais de faire d'abord une bascule programmée. [github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/instance_manager.md](https://github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/instance_manager.md)
+[^services]: CloudNativePG, « Service management » : Services `rw`, `ro` et `r`. [github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/service_management.md](https://github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/service_management.md)
+[^rolling]: CloudNativePG, « Rolling Updates » : répliques d'abord, primaire en dernier, par redémarrage ou par bascule programmée. [github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/rolling_update.md](https://github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/rolling_update.md)
+[^recovery]: CloudNativePG, « Recovery » : reconstruction d'un nouveau cluster depuis un stockage objet, cible de restauration `targetTime`. [github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/recovery.md](https://github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/recovery.md)
+[^import]: CloudNativePG, « Importing Postgres databases » : type `microservice`, une base importée par `pg_dump` et `pg_restore` dans un cluster neuf. [github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/database_import.md](https://github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/database_import.md)
+[^cron]: CloudNativePG, « Backup », section « Cron Schedule » : expression à six champs, secondes comprises, au format du paquet Go `cron`. [github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/backup.md](https://github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/backup.md)
+[^pdb]: CloudNativePG, « Kubernetes Upgrade and Maintenance » : deux PodDisruptionBudgets par cluster, bascule programmée avant le vidage d'un nœud qui porte la primaire. [github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/kubernetes_upgrade.md](https://github.com/cloudnative-pg/cloudnative-pg/blob/v1.30.1/docs/src/kubernetes_upgrade.md)

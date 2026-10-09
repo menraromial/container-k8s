@@ -1,0 +1,41 @@
+% Figure 56.1 : un cluster CloudNativePG, ses Pods, ses Services et le stockage objet (chapitre 56).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    e/.style={qbox, font=\scriptsize, align=left, inner sep=3pt, text width=#1},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  % opérateur
+  \node[e=3.0cm, draw=QViolet, fill=QVioletBg] (op) at (7.2,4.6) {\textbf{opérateur CloudNativePG}\\{\ttfamily cnpg-system} : crée les Pods et les volumes, promeut, bascule};
+  % trois instances
+  \foreach \i/\x/\role/\c in {1/2.2/primaire/QBleu, 2/7.2/réplique/QVert, 3/12.2/réplique/QVert} {
+    \node[qcadre, draw=\c, minimum width=3.9cm, minimum height=3.0cm] (p\i) at (\x,1.6) {};
+    \node[qtitre, text=\c, font=\titrefig\small] at ([xshift=2mm,yshift=-2mm]p\i.north west) {Pod essai-\i{} (\role)};
+    \node[e=3.5cm, draw=\c] (m\i) at (\x,1.75) {gestionnaire d'instance,\\processus principal\\$\rightarrow$ PostgreSQL 18};
+    \node[e=3.3cm, dashed, font=\tiny] at (\x,0.75) {init : copie du gestionnaire\\sidecar Barman Cloud (sauvegarde)};
+    \node[qbox, draw=\c, font=\scriptsize, inner sep=2pt] (v\i) at (\x,-0.55) {volume essai-\i{}};
+    \draw[draw=QLine] (p\i.south) -- (v\i.north);
+  }
+  \draw[qarr] (op.south) -- node[lien, left] {état : port 8000} (p2.north);
+  \draw[qarr] (op.south west) -- (p1.north);
+  \draw[qarr] (op.south east) -- (p3.north);
+  % réplication
+  \draw[qarr, draw=QBleu] (p1.east) -- node[lien, above] {WAL} (p2.west);
+  \draw[qarr, draw=QBleu] ([xshift=-0.3cm]p1.south east) -- ++(0,-1.4) -| node[lien, pos=0.25, below] {WAL en flux vers chaque réplique} ([xshift=0.3cm]p3.south west);
+  % services
+  \node[qbox, font=\ttfamily\scriptsize, inner sep=3pt] (rw) at (-0.6,4.6) {essai-rw};
+  \node[qbox, font=\ttfamily\scriptsize, inner sep=3pt] (ro) at (14.4,4.6) {essai-ro};
+  \node[qbox, font=\ttfamily\scriptsize, inner sep=3pt] (r) at (15.6,1.6) {essai-r};
+  \draw[qarr, draw=QBleu] (rw.south) |- ([yshift=0.6cm]p1.west);
+  \draw[qarr, draw=QVert] (ro.south) -- (p3.north east);
+  \draw[qdarr] (ro.west) .. controls (11,4.2) and (8.5,3.6) .. (p2.north east);
+  \draw[qdarr] (r.west) -- (p3.east);
+  \node[qlbl, font=\scriptsize, align=left, anchor=north] at (-0.6,4.25) {rôle\\{\ttfamily primary}};
+  \node[qlbl, font=\scriptsize, align=left, anchor=south] at (14.4,4.95) {rôle {\ttfamily replica}};
+  % stockage objet
+  \node[e=4.4cm, draw=QOcre, fill=QOcreBg] (s3) at (2.2,-3.0) {\textbf{stockage objet} (RustFS)\\sauvegardes complètes ({\ttfamily base}) et journaux archivés ({\ttfamily wals})};
+  \draw[qarr, draw=QOcre] (v1.south west) ++(-0.2,0.05) -- node[lien, left] {archivage continu} ([xshift=-1.2cm]s3.north);
+  \node[e=3.7cm, draw=QOcre, dashed] (new) at (8.2,-3.0) {nouveau cluster, reconstruit jusqu'à un instant choisi};
+  \draw[qarr, draw=QOcre] (s3.east) -- node[lien, above] {restauration} (new.west);
+\end{tikzpicture}
+\end{document}

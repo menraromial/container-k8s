@@ -1,0 +1,38 @@
+# Un client qui écrit une ligne toutes les 200 ms par le Service essai-rw, avec une connexion
+# neuve à chaque fois, et note l'heure et le résultat : de quoi mesurer une bascule.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ecrivain
+  namespace: ch56
+spec:
+  restartPolicy: Never
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 26
+    seccompProfile: {type: RuntimeDefault}
+  containers:
+  - name: ecrivain
+    image: ghcr.io/cloudnative-pg/postgresql:18.6-system-trixie
+    env:
+    - name: PGCONNECT_TIMEOUT      # sans délai, une connexion vers un Pod disparu attend l'échec de TCP
+      value: "2"
+    - name: URI
+      valueFrom: {secretKeyRef: {name: essai-app, key: uri}}
+    command: [bash, -c]
+    args:
+    - |
+      psql "$URI" -qc "CREATE TABLE IF NOT EXISTS battements (n int, a timestamptz DEFAULT now(), serveur text DEFAULT inet_server_addr())"
+      n=0
+      while true; do
+        n=$((n+1))
+        if r=$(psql "$URI" -qtAc "INSERT INTO battements (n) VALUES ($n) RETURNING serveur" 2>&1); then
+          echo "$(date +%T.%3N) ok $n $r"
+        else
+          echo "$(date +%T.%3N) échec $n $(echo "$r" | head -1 | cut -c1-160)"
+        fi
+        sleep 0.2
+      done
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities: {drop: [ALL]}

@@ -1,0 +1,13 @@
+# Un cluster PostgreSQL de trois instances : une primaire, deux répliques en flux.
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: essai
+  namespace: ch56
+spec:
+  instances: 3
+  storage:
+    size: 1Gi
+  resources:
+    requests: {cpu: 50m, memory: 128Mi}
+    limits: {memory: 256Mi}

@@ -1,0 +1,91 @@
+# Le trafic des instances de colis-pg, dans un namespace où tout est refusé par défaut (chapitre 41).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: colis-pg
+  namespace: colis
+spec:
+  podSelector:
+    matchLabels: {cnpg.io/cluster: colis-pg}
+  policyTypes: [Ingress, Egress]
+  ingress:
+  - from:            # l'application
+    - podSelector:
+        matchExpressions:
+        - {key: app.kubernetes.io/name, operator: In, values: [api, api-canari, worker, purge]}
+    ports: [{port: 5432}]
+  - from:            # les autres instances : réplication, et l'état de chaque instance
+    - podSelector:
+        matchLabels: {cnpg.io/cluster: colis-pg}
+    ports: [{port: 5432}, {port: 8000}]
+  - from:            # l'opérateur interroge chaque instance sur son port 8000
+    - namespaceSelector:
+        matchLabels: {kubernetes.io/metadata.name: cnpg-system}
+    ports: [{port: 8000}]
+  - from:            # Prometheus relève les métriques sur le port 9187
+    - namespaceSelector:
+        matchLabels: {kubernetes.io/metadata.name: supervision}
+    ports: [{port: 9187}]
+  egress:
+  - to:
+    - podSelector:
+        matchLabels: {cnpg.io/cluster: colis-pg}
+    ports: [{port: 5432}, {port: 8000}]
+  - to:              # l'API server, par l'adresse du nœud après traduction (chapitre 41)
+    - ipBlock: {cidr: 192.168.49.2/32}
+    ports: [{port: 8443}]
+  - to:              # le stockage objet des sauvegardes
+    - namespaceSelector:
+        matchLabels: {kubernetes.io/metadata.name: stockage}
+      podSelector:
+        matchLabels: {app.kubernetes.io/name: rustfs}
+    ports: [{port: 9000}]
+---
+# L'application peut joindre colis-pg. Les règles vers l'ancien postgres restent dans les
+# politiques api, worker et purge le temps de la migration.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: vers-colis-pg
+  namespace: colis
+spec:
+  podSelector:
+    matchExpressions:
+    - {key: app.kubernetes.io/name, operator: In, values: [api, api-canari, worker, purge]}
+  policyTypes: [Egress]
+  egress:
+  - to:
+    - podSelector:
+        matchLabels: {cnpg.io/cluster: colis-pg}
+    ports: [{port: 5432}]
+---
+# Le temps de l'import seulement : colis-pg lit l'ancienne base.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: import-depuis-postgres
+  namespace: colis
+spec:
+  podSelector:
+    matchLabels: {cnpg.io/cluster: colis-pg}
+  policyTypes: [Egress]
+  egress:
+  - to:
+    - podSelector:
+        matchLabels: {app.kubernetes.io/name: postgres}
+    ports: [{port: 5432}]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: import-vers-postgres
+  namespace: colis
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/name: postgres}
+  policyTypes: [Ingress]
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels: {cnpg.io/cluster: colis-pg}
+    ports: [{port: 5432}]

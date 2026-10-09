@@ -1,0 +1,38 @@
+# La base de Colis, confiée à CloudNativePG : deux instances, les données importées de l'ancien
+# StatefulSet par pg_dump et pg_restore, les journaux archivés en continu.
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: colis-pg
+  namespace: colis
+spec:
+  instances: 2
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.6-system-trixie
+  storage:
+    size: 1Gi
+  resources:
+    requests: {cpu: 50m, memory: 128Mi}
+    limits: {memory: 256Mi}
+  bootstrap:
+    initdb:
+      database: colis
+      owner: colis
+      import:
+        type: microservice
+        databases: [colis]
+        source:
+          externalCluster: ancien
+  externalClusters:
+  - name: ancien
+    connectionParameters:
+      host: postgres.colis.svc.cluster.local
+      user: colis
+      dbname: colis
+    password:
+      name: colis-db
+      key: POSTGRES_PASSWORD
+  plugins:
+  - name: barman-cloud.cloudnative-pg.io
+    isWALArchiver: true
+    parameters:
+      barmanObjectName: rustfs

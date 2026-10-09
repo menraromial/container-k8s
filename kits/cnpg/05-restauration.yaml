@@ -1,0 +1,26 @@
+# Un nouveau cluster, reconstruit depuis le stockage objet : la sauvegarde complète,
+# puis les journaux rejoués jusqu'à l'instant choisi, juste avant l'accident.
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: essai-restaure
+  namespace: ch56
+spec:
+  instances: 1
+  storage:
+    size: 1Gi
+  resources:
+    requests: {cpu: 50m, memory: 128Mi}
+    limits: {memory: 256Mi}
+  bootstrap:
+    recovery:
+      source: origine
+      recoveryTarget:
+        targetTime: "@@INSTANT@@"     # remplacé par l'instant choisi, au format ISO 8601 en UTC
+  externalClusters:
+  - name: origine
+    plugin:
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        barmanObjectName: rustfs
+        serverName: essai

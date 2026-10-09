@@ -1,0 +1,12 @@
+# Une sauvegarde complète (base backup), copiée par le greffon dans le compartiment.
+apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  name: premiere
+  namespace: ch56
+spec:
+  cluster:
+    name: essai
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io

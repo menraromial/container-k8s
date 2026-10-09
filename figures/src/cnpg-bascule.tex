@@ -1,0 +1,38 @@
+% Figure 56.2 : trois bascules subies, mesurées depuis la suppression du Pod primaire (chapitre 56).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=0.075cm,y=1cm,
+    lien/.style={qlbl, font=\scriptsize, align=left}]
+  % axe : secondes depuis la suppression, de 0 à 190
+  \draw[qarr] (0,0) -- (195,0) node[right, qlbl, font=\scriptsize] {s};
+  \foreach \t in {0,30,60,90,120,150,180} {\draw[draw=QLine] (\t,0) -- (\t,-0.12) node[below, font=\scriptsize] {\t};}
+  \node[qlbl, font=\scriptsize, anchor=north west] at (0,-0.5) {secondes depuis la suppression du Pod de la primaire};
+  % 1. écrivain, connexions courtes : 4 s d'écritures refusées
+  \node[lien, anchor=east] at (-2,3.6) {client à connexions\\courtes (essai)};
+  \fill[QBriqueBg] (0,3.35) rectangle (4.1,3.85);
+  \draw[draw=QBrique] (0,3.35) rectangle (4.1,3.85);
+  \fill[QVertBg] (4.1,3.35) rectangle (190,3.85);
+  \node[lien, anchor=west, text=QBrique] at (6,3.6) {4 s d'écritures refusées, puis reprise sur la nouvelle primaire};
+  % 2. API de Colis, défaut
+  \node[lien, anchor=east] at (-2,2.3) {API de Colis,\\réglage par défaut};
+  \fill[QOcreBg] (0,2.05) rectangle (180,2.55);
+  \draw[draw=QOcre] (0,2.05) rectangle (180,2.55);
+  \fill[QVertBg] (184,2.05) rectangle (190,2.55);
+  \draw[draw=QBleu, line width=1.2pt] (184,1.95) -- (184,2.65);
+  \node[lien, anchor=west] at (3,2.3) {arrêt intelligent : nouvelles connexions refusées, sessions ouvertes servies (180 s au plus)};
+  \node[lien, anchor=south, text=QBleu] at (184,2.65) {promotion à 184 s};
+  % 3. smartShutdownTimeout 10
+  \node[lien, anchor=east] at (-2,1.0) {API de Colis,\\{\ttfamily smartShutdownTimeout: 10}};
+  \fill[QOcreBg] (0,0.75) rectangle (10,1.25);
+  \draw[draw=QOcre] (0,0.75) rectangle (10,1.25);
+  \fill[QVertBg] (17,0.75) rectangle (190,1.25);
+  \draw[draw=QBleu, line width=1.2pt] (17,0.65) -- (17,1.35);
+  \node[lien, anchor=west, text=QBleu] at (20,1.0) {promotion à 17 s};
+  % légende
+  \fill[QOcreBg] (120,4.4) rectangle (126,4.7); \draw[draw=QOcre] (120,4.4) rectangle (126,4.7);
+  \node[lien, anchor=west] at (127,4.55) {ancienne primaire en arrêt};
+  \fill[QVertBg] (120,4.0) rectangle (126,4.3);
+  \node[lien, anchor=west] at (127,4.15) {nouvelle primaire en service};
+\end{tikzpicture}
+\end{document}
