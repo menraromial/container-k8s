@@ -1,0 +1,31 @@
+% Figure 58.2 : un déploiement bleu-vert, avant et après la promotion (chapitre 58).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    rs/.style={qbox, font=\scriptsize, align=center, inner sep=3pt, text width=2.6cm},
+    svc/.style={qbox, font=\ttfamily\scriptsize, inner sep=3pt},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  \foreach \x/\titre in {0/{1. nouvelle version déployée, en pause}, 7.6/{2. après la promotion}} {
+    \node[qtitre, font=\titrefig\normalsize] at (\x-0.6,3.4) {\titre};
+  }
+  % avant
+  \node[svc] (a1) at (0,2.4) {bv-actif};
+  \node[svc] (p1) at (3.6,2.4) {bv-apercu};
+  \node[rs, draw=QBleu, fill=QBleuBg] (b1) at (0,0.6) {ReplicaSet bleu\\6.14.1, 2 Pods};
+  \node[rs, draw=QVert, fill=QVertBg] (v1) at (3.6,0.6) {ReplicaSet vert\\6.15.0, 2 Pods};
+  \draw[qarr, draw=QBleu] (a1.south) -- (b1.north);
+  \draw[qarr, draw=QVert] (p1.south) -- (v1.north);
+  \node[qlbl, font=\scriptsize, align=center] at (1.8,-0.5) {les utilisateurs voient 6.14.1 ;\\l'équipe teste 6.15.0 sur bv-apercu};
+  % après
+  \node[svc] (a2) at (7.6,2.4) {bv-actif};
+  \node[svc] (p2) at (11.2,2.4) {bv-apercu};
+  \node[rs, draw=QBleu, dashed] (b2) at (7.6,0.6) {ReplicaSet bleu\\gardé 30 s, puis 0 Pod};
+  \node[rs, draw=QVert, fill=QVertBg] (v2) at (11.2,0.6) {ReplicaSet vert\\6.15.0, 2 Pods};
+  \draw[qarr, draw=QVert] (a2.south) -- (v2.north west);
+  \draw[qarr, draw=QVert] (p2.south) -- (v2.north);
+  \node[qlbl, font=\scriptsize, align=center] at (9.4,-0.5) {les deux Services pointent sur 6.15.0 :\\tout le trafic bascule d'un coup};
+  \draw[qarr, line width=1.2pt] (5.4,1.5) -- node[lien, above] {promote} (6.3,1.5);
+  \node[qlbl, font=\scriptsize, align=left, anchor=north west] at (-1.3,-1.25) {la bascule change le sélecteur du Service actif ({\ttfamily rollouts-pod-template-hash}) ; le retour en arrière, tant que le bleu existe, est le même changement en sens inverse};
+\end{tikzpicture}
+\end{document}

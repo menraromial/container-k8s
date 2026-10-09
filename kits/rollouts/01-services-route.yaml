@@ -1,0 +1,42 @@
+# Le namespace, les deux Services (stable et canari) et la route : Argo Rollouts règle les poids
+# de la route et le sélecteur de chaque Service.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ch58
+  labels:
+    passerelle: principale      # autorisé à publier sur la passerelle (chapitre 28)
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vitrine-stable
+  namespace: ch58
+spec:
+  selector: {app: vitrine}
+  ports:
+  - {name: http, port: 80, targetPort: http}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vitrine-canari
+  namespace: ch58
+spec:
+  selector: {app: vitrine}
+  ports:
+  - {name: http, port: 80, targetPort: http}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: vitrine
+  namespace: ch58
+spec:
+  parentRefs:
+  - {name: principale, namespace: passerelle, sectionName: http}
+  hostnames: [vitrine.local]
+  rules:
+  - backendRefs:
+    - {name: vitrine-stable, port: 80, weight: 100}
+    - {name: vitrine-canari, port: 80, weight: 0}

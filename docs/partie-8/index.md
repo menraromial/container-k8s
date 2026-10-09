@@ -18,6 +18,7 @@ Les quatre suivants portent sur la livraison. Argo CD applique au cluster ce que
 | [55. Écrire un opérateur](operateur.md) | un opérateur en Go avec kubebuilder : projet généré, marqueurs, boucle de réconciliation, références de propriétaire, le piège des réécritures mesuré, dérive corrigée, tests envtest, image distroless, déploiement et métriques |
 | [56. CloudNativePG](cnpg.md) | PostgreSQL confié à un opérateur : trois instances sans StatefulSet, deux bascules et l'arrêt intelligent mesurés, sauvegarde continue et restauration à la seconde, puis la base de Colis migrée avec 55 secondes de maintenance |
 | [57. GitOps avec Argo CD](gitops.md) | un dépôt Gitea dans le cluster, Argo CD, synchronisation manuelle puis automatique, sondage de 3 minutes et webhook de 1 seconde, dérive et attente exponentielle mesurée, élagage, conflit avec un HPA, App of Apps et suppression en cascade |
+| [58. Argo Rollouts](rollouts.md) | déploiements progressifs : greffon Gateway API servi depuis Gitea, canari à 10 puis 50 % mesuré sur la passerelle, promotion, analyse Prometheus qui abandonne seule une version à 40 % d'erreurs en 85 secondes, bleu-vert et sa bascule d'une seconde |
 
 ## Avant de commencer : faire de la place
 

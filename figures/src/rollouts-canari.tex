@@ -1,0 +1,29 @@
+% Figure 58.1 : un déploiement canari piloté par Argo Rollouts, ses étapes, son analyse et l'abandon (chapitre 58).
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{quai}
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm,
+    etape/.style={qbox, font=\scriptsize, align=center, inner sep=3pt, text width=2.1cm, minimum height=1.25cm},
+    lien/.style={qlbl, font=\scriptsize, fill=QPaper, inner sep=1pt, align=center}]
+  % étapes
+  \node[etape, draw=QBleu] (e0) at (0,3) {nouvelle version\\{\ttfamily set image}};
+  \node[etape, draw=QOcre, fill=QOcreBg] (e1) at (2.6,3) {{\ttfamily setWeight: 20}};
+  \node[etape, draw=QOcre] (e2) at (5.2,3) {{\ttfamily pause: 40s}};
+  \node[etape, draw=QOcre, fill=QOcreBg] (e3) at (7.8,3) {{\ttfamily setWeight: 50}};
+  \node[etape, draw=QOcre] (e4) at (10.4,3) {{\ttfamily pause: 40s}};
+  \node[etape, draw=QVert, fill=QVertBg] (e5) at (13.0,3) {{\ttfamily setWeight:\,100}\\nouvelle version stable};
+  \foreach \a/\b in {e0/e1,e1/e2,e2/e3,e3/e4,e4/e5} {\draw[qarr] (\a.east) -- (\b.west);}
+  % poids de la route
+  \foreach \x/\s/\c in {2.6/80/20, 7.8/50/50, 13.0/0/100} {
+    \node[qlbl, font=\ttfamily\scriptsize, align=center] at (\x,1.95) {stable \s{} / canari \c};
+  }
+  \node[qlbl, font=\scriptsize, anchor=east] at (-1.1,1.95) {poids de la HTTPRoute :};
+  % analyse
+  \draw[draw=QViolet, line width=1pt, -{Stealth[length=2.4mm,width=1.8mm]}] (1.6,1.2) -- (12.0,1.2);
+  \node[qlbl, font=\scriptsize, text=QViolet, align=center, anchor=south] at (6.8,1.25) {analyse en arrière-plan : toutes les 20 s, part des réponses 2xx de la version testée (Prometheus) $\geq$ 95 \%};
+  % abandon
+  \node[qbox, draw=QBrique, fill=QBriqueBg, font=\scriptsize, align=left, text width=5.8cm, inner sep=4pt] (ab) at (5.2,-0.4) {\textbf{échec de l'analyse} : abandon automatique\\poids remis à stable 100 / canari 0, Pods de la version testée supprimés, Rollout {\ttfamily Degraded}};
+  \draw[qdarr, draw=QBrique] (5.2,1.05) -- (ab.north);
+  \node[qlbl, font=\scriptsize, align=left, anchor=west] at (9.0,-0.4) {pendant tout le canari, les Pods stables restent au complet :\\le retour en arrière ne demande que de changer les poids};
+\end{tikzpicture}
+\end{document}

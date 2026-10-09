@@ -1,0 +1,49 @@
+# Le même Rollout, avec une analyse en arrière-plan : à partir de la première étape, Argo Rollouts
+# mesure la version en cours de déploiement, et abandonne tout seul si elle échoue.
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: vitrine
+  namespace: ch58
+spec:
+  replicas: 4
+  selector:
+    matchLabels: {app: vitrine}
+  template:
+    metadata:
+      labels: {app: vitrine}
+    spec:
+      containers:
+      - name: podinfo
+        image: ghcr.io/stefanprodan/podinfo:6.15.0    # la version stable du moment : appliquer ce fichier ne déploie rien
+        ports:
+        - {name: http, containerPort: 9898}
+        readinessProbe:
+          httpGet: {path: /readyz, port: http}
+          periodSeconds: 2
+        resources:
+          requests: {cpu: 10m, memory: 16Mi}
+          limits: {memory: 64Mi}
+  strategy:
+    canary:
+      stableService: vitrine-stable
+      canaryService: vitrine-canari
+      trafficRouting:
+        plugins:
+          argoproj-labs/gatewayAPI:
+            httpRoute: vitrine
+            namespace: ch58
+      analysis:
+        templates:
+        - templateName: taux-de-succes
+        startingStep: 1
+        args:
+        - name: hash
+          valueFrom:
+            podTemplateHashValue: Latest
+      steps:
+      - setWeight: 20
+      - pause: {duration: 40s}
+      - setWeight: 50
+      - pause: {duration: 40s}
+      - setWeight: 100

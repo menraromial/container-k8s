@@ -1,0 +1,14 @@
+# Prometheus relève les métriques de podinfo ; l'étiquette rollouts-pod-template-hash,
+# posée par Argo Rollouts sur chaque Pod, distingue le canari du stable.
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: vitrine
+  namespace: ch58
+spec:
+  selector:
+    matchLabels: {app: vitrine}
+  podTargetLabels: [rollouts-pod-template-hash]
+  podMetricsEndpoints:
+  - port: http
+    interval: 10s

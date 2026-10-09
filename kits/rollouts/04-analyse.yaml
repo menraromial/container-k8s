@@ -1,0 +1,24 @@
+# Le critère de réussite d'une version : au moins 95 % de réponses 2xx sur ses Pods, mesurées par
+# Prometheus. L'empreinte du gabarit de Pod (args.hash) désigne les Pods de la version testée.
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: taux-de-succes
+  namespace: ch58
+spec:
+  args:
+  - name: hash
+  metrics:
+  - name: taux-de-succes
+    initialDelay: 60s        # le temps que Prometheus ait deux relevés des nouveaux Pods
+    interval: 20s
+    count: 4
+    successCondition: result[0] >= 0.95
+    failureLimit: 1
+    provider:
+      prometheus:
+        address: http://supervision-kube-prometheu-prometheus.supervision.svc:9090
+        query: |
+          sum(rate(http_requests_total{namespace="ch58", rollouts_pod_template_hash="{{args.hash}}", status=~"2.."}[1m]))
+          /
+          sum(rate(http_requests_total{namespace="ch58", rollouts_pod_template_hash="{{args.hash}}"}[1m]))

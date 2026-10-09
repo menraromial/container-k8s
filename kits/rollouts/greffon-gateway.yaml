@@ -1,0 +1,30 @@
+# Le greffon de routage Gateway API : le contrôleur le télécharge à chaque démarrage, vérifie son
+# empreinte, et reçoit le droit de modifier les poids des HTTPRoutes.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argo-rollouts-config
+  namespace: argo-rollouts
+data:
+  trafficRouterPlugins: |-
+    - name: "argoproj-labs/gatewayAPI"
+      # copie du binaire de la version 0.17.0, servie par le Gitea du cluster (chapitre 57)
+      location: "http://gitea.git.svc.cluster.local:3000/cours/outils/releases/download/gatewayapi-v0.17.0/gatewayapi-plugin-linux-amd64"
+      sha256: "1904ca787d33107c140521899d61fff030ee75d99908bd175fca5a4647759061"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argo-rollouts-gatewayapi
+rules:
+- apiGroups: [gateway.networking.k8s.io]
+  resources: [httproutes]
+  verbs: [get, list, watch, update, patch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: argo-rollouts-gatewayapi
+roleRef: {apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: argo-rollouts-gatewayapi}
+subjects:
+- {kind: ServiceAccount, name: argo-rollouts, namespace: argo-rollouts}
